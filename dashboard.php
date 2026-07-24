@@ -72,7 +72,7 @@ function badgeClass($cat) {
         <div class="max-w-7xl mx-auto">
             <div class="flex items-center justify-between mb-8 fade-in">
                 <div class="flex items-center gap-4">
-                    <img src="<?= APP_URL ?>/assets/img/logo01.jpeg" alt="RedSalud" class="h-10">
+                    <img src="<?= APP_URL ?>/assets/img/logo2.jpg" alt="RedSalud" class="h-10">
                     <div>
                         <h1 class="text-2xl font-bold" style="color:#1A202C">Panel de Control</h1>
                         <p class="mt-1" style="color:#64748B">Bienvenido de nuevo, <?= htmlspecialchars(explode(' ', $usuario['nombre'])[0]) ?></p>
