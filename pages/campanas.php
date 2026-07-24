@@ -170,8 +170,8 @@ $coloresCategoria = [
                                     <span class="font-mono text-sm text-slate-600"><?= htmlspecialchars($row['numero']) ?></span>
                                 </td>
                                 <td class="px-6 py-4 max-w-md">
-                                    <p class="text-slate-700 truncate"><?= htmlspecialchars($row['conversacion']) ?></p>
-                                    <?php if ($row['obs']): ?>
+                                    <p class="text-slate-700 truncate"><?= htmlspecialchars($row['conversacion'] ?? '') ?></p>
+                                    <?php if (!empty($row['obs'])): ?>
                                         <p class="text-xs text-slate-400 mt-0.5 truncate"><?= htmlspecialchars($row['obs']) ?></p>
                                     <?php endif; ?>
                                 </td>
