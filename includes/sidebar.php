@@ -5,7 +5,7 @@ $paginaActual = basename($_SERVER['PHP_SELF']);
 <aside class="fixed left-0 top-0 h-full w-64 z-50 sidebar overflow-y-auto" style="background:#026168">
     <div class="p-6">
         <div class="flex justify-center mb-8">
-            <img src="<?= APP_URL ?>/assets/img/logo01.jpeg" alt="RedSalud" class="h-20 w-auto">
+            <img src="<?= APP_URL ?>/assets/img/logo01.jpeg" alt="RedSalud" class="h-20 w-auto rounded-2xl">
         </div>
 
         <div class="flex items-center gap-3 px-3 py-3 bg-white/5 rounded-xl mb-6">
