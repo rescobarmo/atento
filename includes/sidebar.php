@@ -49,7 +49,7 @@ $paginaActual = basename($_SERVER['PHP_SELF']);
             <a href="<?= APP_URL ?>/pages/leads.php"
                class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm <?= $paginaActual === 'leads.php' ? 'active text-white' : 'text-white/70' ?>">
                 <i class="fas fa-users w-5 text-center"></i>
-                Contactos
+                Leads
             </a>
             <hr class="border-white/10 my-4">
             <a href="<?= APP_URL ?>/logout.php"

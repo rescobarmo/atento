@@ -43,14 +43,14 @@ $categorias = $pdo->query("
 
 $coloresCategoria = [
     'Sin Categoría' => 'bg-gray-100 text-gray-600',
-    'cotizando' => 'badge-observacion',
-    'COTIZANDO' => 'badge-observacion',
-    'respondio' => 'badge-conforme',
-    'RESPONDIO' => 'badge-conforme',
-    'realizado' => 'badge-conforme',
-    'REALIZADO' => 'badge-conforme',
-    'llamado' => 'badge-conforme',
-    'LLAMADO' => 'badge-conforme',
+    'cotizando' => 'bg-red-600 text-white',
+    'COTIZANDO' => 'bg-red-600 text-white',
+    'respondio' => 'bg-green-600 text-white',
+    'RESPONDIO' => 'bg-green-600 text-white',
+    'realizado' => 'bg-blue-600 text-white',
+    'REALIZADO' => 'bg-blue-600 text-white',
+    'llamado' => 'bg-purple-600 text-white',
+    'LLAMADO' => 'bg-purple-600 text-white',
 ];
 ?>
 <?php $titulo = 'Red Salud'; include __DIR__ . '/../includes/header.php'; ?>
@@ -266,6 +266,7 @@ function getColorCategoria(cat) {
     if (c === 'cotizando') return 'bg-red-600 text-white';
     if (c === 'respondio') return 'bg-green-600 text-white';
     if (c === 'realizado') return 'bg-blue-600 text-white';
+    if (c === 'llamado') return 'bg-purple-600 text-white';
     return 'bg-slate-100 text-slate-600';
 }
 
