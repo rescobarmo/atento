@@ -32,11 +32,7 @@ $paginaActual = basename($_SERVER['PHP_SELF']);
                 <i class="fas fa-chart-pie w-5 text-center"></i>
                 Dashboard
             </a>
-            <a href="<?= APP_URL ?>/pages/evaluaciones.php"
-               class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm <?= $paginaActual === 'evaluaciones.php' ? 'active text-white' : 'text-white/70' ?>">
-                <i class="fas fa-tasks w-5 text-center"></i>
-                Evaluaciones
-            </a>
+
             <a href="<?= APP_URL ?>/pages/historial.php"
                class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm <?= $paginaActual === 'historial.php' ? 'active text-white' : 'text-white/70' ?>">
                 <i class="fas fa-clock-rotate w-5 text-center"></i>

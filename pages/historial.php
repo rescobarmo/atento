@@ -137,9 +137,7 @@ function badgeClassReport($cat) {
                                 </td>
                                 <td class="px-6 py-4 text-sm whitespace-nowrap" style="color:#64748B"><?= date('d/m/Y H:i', strtotime($r['fecha_actualizacion'] ?: $r['fecha_creacion'])) ?></td>
                                 <td class="px-6 py-4 text-right">
-                                    <button onclick="location.href='<?= APP_URL ?>/pages/evaluaciones.php'" class="text-sm font-medium" style="color:#008089">
-                                        <i class="fas fa-eye mr-1"></i> Ver
-                                    </button>
+                                    <span class="text-sm" style="color:#64748B">—</span>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
