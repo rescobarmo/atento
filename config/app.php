@@ -1,8 +1,8 @@
 <?php
 session_start();
 
-define('APP_NAME', 'Marketing Dashboard');
-define('APP_VERSION', '1.0.0');
+define('APP_NAME', 'RedSalud | Evaluaciones');
+define('APP_VERSION', '2.0.0');
 define('APP_URL', '');
 
 date_default_timezone_set('America/Santiago');

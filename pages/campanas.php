@@ -42,13 +42,15 @@ $categorias = $pdo->query("
 ")->fetchAll();
 
 $coloresCategoria = [
-    'Sin Categoría' => 'bg-slate-100 text-slate-600',
-    'cotizando' => 'bg-red-600 text-white',
-    'COTIZANDO' => 'bg-red-600 text-white',
-    'respondio' => 'bg-green-600 text-white',
-    'RESPONDIO' => 'bg-green-600 text-white',
-    'realizado' => 'bg-blue-600 text-white',
-    'REALIZADO' => 'bg-blue-600 text-white',
+    'Sin Categoría' => 'bg-gray-100 text-gray-600',
+    'cotizando' => 'badge-observacion',
+    'COTIZANDO' => 'badge-observacion',
+    'respondio' => 'badge-conforme',
+    'RESPONDIO' => 'badge-conforme',
+    'realizado' => 'badge-conforme',
+    'REALIZADO' => 'badge-conforme',
+    'llamado' => 'badge-conforme',
+    'LLAMADO' => 'badge-conforme',
 ];
 ?>
 <?php $titulo = 'Red Salud'; include __DIR__ . '/../includes/header.php'; ?>
@@ -58,55 +60,55 @@ $coloresCategoria = [
         <div class="max-w-7xl mx-auto">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
                 <div>
-                    <h1 class="text-2xl font-bold text-slate-800">Red Salud</h1>
-                    <p class="text-slate-500 mt-1">Conversaciones y contactos</p>
+                    <h1 class="text-2xl font-bold" style="color:#1A202C">Red Salud</h1>
+                    <p class="mt-1" style="color:#64748B">Conversaciones y contactos</p>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-                <div class="bg-white rounded-2xl p-5 border border-slate-100">
+                <div class="stat-card rounded-2xl p-5">
                     <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Mensajes</span>
-                        <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
-                            <i class="fas fa-comments text-blue-600"></i>
+                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:#64748B">Total Mensajes</span>
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(0,128,137,0.12)">
+                            <i class="fas fa-comments" style="color:#008089"></i>
                         </div>
                     </div>
-                    <p class="text-2xl font-bold text-slate-800"><?= $resumen['total'] ?></p>
-                    <p class="text-xs text-slate-400 mt-1">en la base de datos</p>
+                    <p class="text-2xl font-bold" style="color:#1A202C"><?= $resumen['total'] ?></p>
+                    <p class="text-xs mt-1" style="color:#64748B">en la base de datos</p>
                 </div>
-                <div class="bg-white rounded-2xl p-5 border border-slate-100">
+                <div class="stat-card rounded-2xl p-5">
                     <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Contactos Únicos</span>
-                        <div class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
-                            <i class="fas fa-users text-green-600"></i>
+                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:#64748B">Contactos Únicos</span>
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(0,128,137,0.12)">
+                            <i class="fas fa-users" style="color:#008089"></i>
                         </div>
                     </div>
-                    <p class="text-2xl font-bold text-slate-800"><?= $resumen['contactos_unicos'] ?></p>
-                    <p class="text-xs text-slate-400 mt-1">números distintos</p>
+                    <p class="text-2xl font-bold" style="color:#1A202C"><?= $resumen['contactos_unicos'] ?></p>
+                    <p class="text-xs mt-1" style="color:#64748B">números distintos</p>
                 </div>
-                <div class="bg-white rounded-2xl p-5 border border-slate-100">
+                <div class="stat-card rounded-2xl p-5">
                     <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Categorías</span>
-                        <div class="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center">
-                            <i class="fas fa-tags text-purple-600"></i>
+                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:#64748B">Categorías</span>
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(0,128,137,0.12)">
+                            <i class="fas fa-tags" style="color:#008089"></i>
                         </div>
                     </div>
-                    <p class="text-2xl font-bold text-slate-800"><?= $resumen['total_categorias'] ?></p>
-                    <p class="text-xs text-slate-400 mt-1">tipos de cliente</p>
+                    <p class="text-2xl font-bold" style="color:#1A202C"><?= $resumen['total_categorias'] ?></p>
+                    <p class="text-xs mt-1" style="color:#64748B">tipos de cliente</p>
                 </div>
-                <div class="bg-white rounded-2xl p-5 border border-slate-100">
+                <div class="stat-card rounded-2xl p-5">
                     <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Categorizados</span>
-                        <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
-                            <i class="fas fa-check-circle text-amber-600"></i>
+                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:#64748B">Categorizados</span>
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(0,128,137,0.12)">
+                            <i class="fas fa-check-circle" style="color:#008089"></i>
                         </div>
                     </div>
-                    <p class="text-2xl font-bold text-slate-800"><?= $resumen['categorizados'] ?></p>
-                    <p class="text-xs text-slate-400 mt-1">con categoría asignada</p>
+                    <p class="text-2xl font-bold" style="color:#1A202C"><?= $resumen['categorizados'] ?></p>
+                    <p class="text-xs mt-1" style="color:#64748B">con categoría asignada</p>
                 </div>
             </div>
 
-            <div class="bg-white rounded-2xl border border-slate-100 p-5 mb-6">
+            <div class="card rounded-2xl p-5 mb-6">
                 <form method="GET" class="flex flex-col sm:flex-row gap-3">
                     <div class="flex-1">
                         <input type="text" name="busqueda" value="<?= htmlspecialchars($filtroBusqueda) ?>"
@@ -121,11 +123,11 @@ $coloresCategoria = [
                             </option>
                         <?php endforeach; ?>
                     </select>
-                    <button type="submit" class="px-6 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-medium hover:bg-blue-700 transition-colors">
+                    <button type="submit" class="btn-primary px-6 py-2.5 rounded-xl text-sm font-medium text-white">
                         <i class="fas fa-search mr-1"></i> Filtrar
                     </button>
                     <a href="<?= APP_URL ?>/api/export_excel.php?<?= http_build_query($_GET) ?>"
-                       class="px-6 py-2.5 bg-green-600 text-white rounded-xl text-sm font-medium hover:bg-green-700 transition-colors flex items-center gap-2">
+                       class="btn-primary px-6 py-2.5 rounded-xl text-sm font-medium text-white flex items-center gap-2" style="background:#026168">
                         <i class="fas fa-file-excel"></i> Exportar Excel
                     </a>
                     <?php if ($filtroBusqueda || $filtroCategoria): ?>
@@ -136,19 +138,19 @@ $coloresCategoria = [
                 </form>
             </div>
 
-            <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden">
+            <div class="card rounded-2xl overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">
                         <thead>
-                            <tr class="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+                            <tr class="text-left text-xs uppercase tracking-wider" style="color:#64748B;background:#F4F8F8">
                                 <th class="px-6 py-4 font-medium">Contacto</th>
                                 <th class="px-6 py-4 font-medium">Teléfono</th>
                                 <th class="px-6 py-4 font-medium">Conversación</th>
                                 <th class="px-6 py-4 font-medium">Categoría</th>
-                                <th class="px-6 py-4 text-right">Fecha</th>
+                                <th class="px-6 py-4 font-medium text-right">Fecha</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100">
+                        <tbody class="divide-y" style="border-color:#E2E8F0">
                             <?php if (empty($conversaciones)): ?>
                                 <tr><td colspan="5" class="px-6 py-12 text-center text-slate-400">No se encontraron registros</td></tr>
                             <?php endif; ?>
@@ -240,7 +242,7 @@ function mostrarToast(cantidad) {
     const existente = document.querySelector('.toast-nuevos');
     if (existente) existente.remove();
     const toast = document.createElement('div');
-    toast.className = 'toast-nuevos fixed bottom-6 right-6 bg-blue-600 text-white px-5 py-3 rounded-xl shadow-lg z-50 flex items-center gap-3 fade-in';
+    toast.className = 'toast-nuevos fixed bottom-6 right-6 px-5 py-3 rounded-xl shadow-lg z-50 flex items-center gap-3 fade-in text-white'; toast.style.background = '#008089';
     toast.innerHTML = `<i class="fas fa-bell"></i> <span class="font-medium">${cantidad} nuevo(s) registro(s)</span>`;
     document.body.appendChild(toast);
     setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.5s'; setTimeout(() => toast.remove(), 500); }, 4000);

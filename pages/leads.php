@@ -28,34 +28,34 @@ $conversaciones = $stmt->fetchAll();
         <div class="max-w-7xl mx-auto">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
                 <div>
-                    <h1 class="text-2xl font-bold text-slate-800">Contactos Cotizando</h1>
-                    <p class="text-slate-500 mt-1">Gestiona contactos que están cotizando y registra llamadas</p>
+                    <h1 class="text-2xl font-bold" style="color:#1A202C">Contactos Cotizando</h1>
+                    <p class="mt-1" style="color:#64748B">Gestiona contactos que están cotizando y registra llamadas</p>
                 </div>
             </div>
 
-            <div class="bg-white rounded-2xl border border-slate-100 p-5 mb-6">
+            <div class="card rounded-2xl p-5 mb-6">
                 <form method="GET" class="flex flex-col sm:flex-row gap-3">
                     <div class="flex-1">
                         <input type="text" name="busqueda" value="<?= htmlspecialchars($filtroBusqueda) ?>"
                                placeholder="Buscar por nombre, teléfono o conversación..."
-                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none text-sm">
+                               class="w-full px-4 py-2.5 rounded-xl outline-none text-sm" style="border:1px solid #E2E8F0;background:#F4F8F8;color:#1A202C">
                     </div>
-                    <button type="submit" class="px-6 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-medium hover:bg-blue-700 transition-colors">
+                    <button type="submit" class="btn-primary px-6 py-2.5 rounded-xl text-sm font-medium text-white">
                         <i class="fas fa-search mr-1"></i> Buscar
                     </button>
                     <?php if ($filtroBusqueda): ?>
-                        <a href="leads.php" class="px-4 py-2.5 border border-slate-200 text-slate-600 rounded-xl text-sm font-medium hover:bg-slate-50 transition-colors">
+                        <a href="leads.php" class="px-4 py-2.5 rounded-xl text-sm font-medium" style="border:1px solid #E2E8F0;color:#64748B">
                             <i class="fas fa-times mr-1"></i> Limpiar
                         </a>
                     <?php endif; ?>
                 </form>
             </div>
 
-            <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden">
+            <div class="card rounded-2xl overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">
                         <thead>
-                            <tr class="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+                            <tr class="text-left text-xs uppercase tracking-wider" style="color:#64748B;background:#F4F8F8">
                                 <th class="px-6 py-4 font-medium">Nombre</th>
                                 <th class="px-6 py-4 font-medium">Teléfono</th>
                                 <th class="px-6 py-4 font-medium">Conversación</th>
@@ -65,7 +65,7 @@ $conversaciones = $stmt->fetchAll();
                                 <th class="px-6 py-4 font-medium">Fecha</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100">
+                        <tbody class="divide-y" style="border-color:#E2E8F0">
                             <?php if (empty($conversaciones)): ?>
                                 <tr><td colspan="7" class="px-6 py-12 text-center text-slate-400">No se encontraron registros</td></tr>
                             <?php endif; ?>
