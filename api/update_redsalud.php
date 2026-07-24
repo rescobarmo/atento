@@ -21,7 +21,7 @@ if (!$id || !$campo) {
     exit;
 }
 
-$camposPermitidos = ['categoria_cliente', 'obs'];
+$camposPermitidos = ['categoria_cliente', 'obs', 'horario'];
 if (!in_array($campo, $camposPermitidos)) {
     http_response_code(400);
     echo json_encode(['error' => 'Campo no permitido']);

@@ -60,6 +60,7 @@ $conversaciones = $stmt->fetchAll();
                                 <th class="px-6 py-4 font-medium">Teléfono</th>
                                 <th class="px-6 py-4 font-medium">Conversación</th>
                                 <th class="px-6 py-4 font-medium">Categoría</th>
+                                <th class="px-6 py-4 font-medium">Horario</th>
                                 <th class="px-6 py-4 font-medium text-center">Contactado</th>
                                 <th class="px-6 py-4 font-medium">Notas</th>
                                 <th class="px-6 py-4 font-medium">Fecha</th>
@@ -67,7 +68,7 @@ $conversaciones = $stmt->fetchAll();
                         </thead>
                         <tbody class="divide-y" style="border-color:#E2E8F0">
                             <?php if (empty($conversaciones)): ?>
-                                <tr><td colspan="7" class="px-6 py-12 text-center text-slate-400">No se encontraron registros</td></tr>
+                                <tr><td colspan="8" class="px-6 py-12 text-center text-slate-400">No se encontraron registros</td></tr>
                             <?php endif; ?>
                             <?php foreach ($conversaciones as $r): ?>
                             <?php
@@ -93,6 +94,14 @@ $conversaciones = $stmt->fetchAll();
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold text-white" style="background:<?= $colorBg ?>">
                                         <?= htmlspecialchars(strtoupper($cat ?: 'SIN CATEGORÍA')) ?>
                                     </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <input type="text"
+                                           class="w-24 px-2 py-1.5 text-xs border border-slate-200 rounded-lg focus:border-purple-400 focus:ring-2 focus:ring-purple-100 outline-none horario-input"
+                                           value="<?= htmlspecialchars($r['horario'] ?? '') ?>"
+                                           maxlength="20"
+                                           data-id="<?= htmlspecialchars($r['id']) ?>"
+                                           placeholder="Ej: 09:00-18:00">
                                 </td>
                                 <td class="px-6 py-4 text-center">
                                     <input type="checkbox"
@@ -154,6 +163,24 @@ document.querySelectorAll('.contact-checkbox').forEach(cb => {
             else alert('Error: ' + (data.error || 'desconocido'));
         })
         .catch(() => alert('Error de conexión'));
+    });
+});
+
+document.querySelectorAll('.horario-input').forEach(input => {
+    let saveTimer;
+    input.addEventListener('input', function() {
+        clearTimeout(saveTimer);
+        if (this.value.length > 20) this.value = this.value.substring(0, 20);
+        saveTimer = setTimeout(() => {
+            fetch('<?= APP_URL ?>/api/update_redsalud.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ id: this.dataset.id, campo: 'horario', valor: this.value })
+            })
+            .then(r => r.json())
+            .then(data => { if (!data.success) console.error(data.error); })
+            .catch(() => {});
+        }, 800);
     });
 });
 
