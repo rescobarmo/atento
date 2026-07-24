@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="w-full max-w-md">
         <div class="text-center mb-8">
             <div class="mb-4">
-                <img src="assets/img/logo2.jpg" alt="RedSalud" class="h-16 mx-auto">
+                <img src="assets/img/logo01.jpeg" alt="RedSalud" class="h-16 mx-auto rounded-2xl">
             </div>
             <h1 class="text-3xl font-bold" style="color:#026168">RedSalud</h1>
             <p class="mt-1" style="color:#64748B">Sistema de Evaluaciones</p>
