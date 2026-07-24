@@ -71,9 +71,12 @@ function badgeClass($cat) {
     <main class="flex-1 ml-64 p-6 lg:p-8">
         <div class="max-w-7xl mx-auto">
             <div class="flex items-center justify-between mb-8 fade-in">
-                <div>
-                    <h1 class="text-2xl font-bold" style="color:#1A202C">Panel de Control</h1>
-                    <p class="mt-1" style="color:#64748B">Bienvenido de nuevo, <?= htmlspecialchars(explode(' ', $usuario['nombre'])[0]) ?></p>
+                <div class="flex items-center gap-4">
+                    <img src="<?= APP_URL ?>/assets/img/logo01.jpeg" alt="RedSalud" class="h-10">
+                    <div>
+                        <h1 class="text-2xl font-bold" style="color:#1A202C">Panel de Control</h1>
+                        <p class="mt-1" style="color:#64748B">Bienvenido de nuevo, <?= htmlspecialchars(explode(' ', $usuario['nombre'])[0]) ?></p>
+                    </div>
                 </div>
                 <div class="flex items-center gap-3 text-sm" style="color:#64748B">
                     <i class="fas fa-calendar"></i>

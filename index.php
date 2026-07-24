@@ -63,8 +63,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body class="login-bg min-h-screen flex items-center justify-center p-4">
     <div class="w-full max-w-md">
         <div class="text-center mb-8">
-            <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4" style="background:rgba(0,128,137,0.2)">
-                <i class="fas fa-clipboard-check text-3xl" style="color:#008089"></i>
+            <div class="mb-4">
+                <img src="assets/img/logo01.jpeg" alt="RedSalud" class="h-16 mx-auto">
             </div>
             <h1 class="text-3xl font-bold text-white">RedSalud</h1>
             <p class="text-white/60 mt-1">Sistema de Evaluaciones</p>

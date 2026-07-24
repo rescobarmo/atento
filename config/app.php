@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-define('APP_NAME', 'RedSalud | Evaluaciones');
+define('APP_NAME', 'RedSalud');
 define('APP_VERSION', '2.0.0');
 define('APP_URL', '');
 
