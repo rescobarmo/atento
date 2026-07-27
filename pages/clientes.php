@@ -5,7 +5,7 @@ $pdo = getDB();
 
 $busqueda = $_GET['busqueda'] ?? '';
 
-$sql = "SELECT * FROM clientes";
+$sql = "SELECT * FROM clientesredsaud";
 $params = [];
 if ($busqueda) {
     $sql .= " WHERE nombre LIKE ? OR numero LIKE ? OR sucursal LIKE ?";
@@ -16,7 +16,7 @@ $clientes = $pdo->prepare($sql);
 $clientes->execute($params);
 $clientes = $clientes->fetchAll();
 
-$total = $pdo->query("SELECT COUNT(*) FROM clientes")->fetchColumn();
+$total = $pdo->query("SELECT COUNT(*) FROM clientesredsaud")->fetchColumn();
 ?>
 <?php $titulo = 'Clientes'; include __DIR__ . '/../includes/header.php'; ?>
 <div class="flex min-h-screen">

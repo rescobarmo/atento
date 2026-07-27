@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['importar'])) {
         $datos = json_decode($_POST['datos'], true) ?? [];
         $insertados = 0;
 
-        $stmt = $pdo->prepare("INSERT INTO clientes (nombre, numero, sucursal) VALUES (?, ?, ?)");
+        $stmt = $pdo->prepare("INSERT INTO clientesredsaud (nombre, numero, sucursal) VALUES (?, ?, ?)");
 
         foreach ($datos as $fila) {
             $nombre = $map['nombre'] !== '' && isset($fila[$map['nombre']]) ? trim($fila[$map['nombre']]) : '';
