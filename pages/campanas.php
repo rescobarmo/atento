@@ -6,20 +6,23 @@ $pdo = getDB();
 $filtroBusqueda = $_GET['busqueda'] ?? '';
 $filtroCategoria = $_GET['categoria'] ?? '';
 
-$sql = "SELECT * FROM redsalud WHERE 1=1";
+$sql = "SELECT r.*, c.nombre as cliente_nombre, c.sucursal
+        FROM redsalud r
+        LEFT JOIN clientesredsalud c ON r.numero = c.numero
+        WHERE 1=1";
 $params = [];
 
 if ($filtroBusqueda) {
-    $sql .= " AND (nombre LIKE ? OR numero LIKE ? OR conversacion LIKE ?)";
+    $sql .= " AND (r.nombre LIKE ? OR r.numero LIKE ? OR r.conversacion LIKE ?)";
     $params[] = "%$filtroBusqueda%";
     $params[] = "%$filtroBusqueda%";
     $params[] = "%$filtroBusqueda%";
 }
 if ($filtroCategoria) {
-    $sql .= " AND categoria_cliente = ?";
+    $sql .= " AND r.categoria_cliente = ?";
     $params[] = $filtroCategoria;
 }
-$sql .= " ORDER BY fecha_creacion DESC";
+$sql .= " ORDER BY r.fecha_creacion DESC";
 
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
@@ -162,7 +165,10 @@ $coloresCategoria = [
                                             <?= strtoupper(substr($row['nombre'] ?? $row['numero'], 0, 2)) ?>
                                         </div>
                                         <div>
-                                            <p class="font-medium text-slate-800"><?= htmlspecialchars($row['nombre'] ?? 'Sin nombre') ?></p>
+                                            <p class="font-medium text-slate-800"><?= htmlspecialchars($row['cliente_nombre'] ?: $row['nombre'] ?? 'Sin nombre') ?></p>
+                                            <?php if ($row['cliente_nombre'] && $row['sucursal']): ?>
+                                                <p class="text-xs text-slate-400"><?= htmlspecialchars($row['sucursal']) ?></p>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
                                 </td>
@@ -213,12 +219,14 @@ function cargarNuevos() {
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-slate-50 transition-colors nuevo-registro';
                 tr.style.animation = 'fadeIn 0.5s ease';
-                const avatar = (row.nombre || row.numero).substring(0, 2).toUpperCase();
+                const nombreCliente = row.cliente_nombre || row.nombre || 'Sin nombre';
+                const avatar = (row.cliente_nombre || row.nombre || row.numero).substring(0, 2).toUpperCase();
                 tr.innerHTML = `
                     <td class="px-6 py-4">
                         <div class="flex items-center gap-3">
                             <div class="w-9 h-9 rounded-full bg-blue-500/20 flex items-center justify-center text-sm font-bold text-blue-600">${avatar}</div>
-                            <div><p class="font-medium text-slate-800">${escapeHtml(row.nombre || 'Sin nombre')}</p></div>
+                            <div><p class="font-medium text-slate-800">${escapeHtml(nombreCliente)}</p>
+                            ${row.sucursal ? `<p class="text-xs text-slate-400">${escapeHtml(row.sucursal)}</p>` : ''}</div>
                         </div>
                     </td>
                     <td class="px-6 py-4"><span class="font-mono text-sm text-slate-600">${escapeHtml(row.numero)}</span></td>
