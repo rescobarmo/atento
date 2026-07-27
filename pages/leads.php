@@ -5,12 +5,12 @@ $pdo = getDB();
 
 $filtroBusqueda = $_GET['busqueda'] ?? '';
 
-$sql = "SELECT * FROM redsalud";
+$sql = "SELECT r.*, c.nombre as cliente_nombre, c.sucursal FROM redsalud r LEFT JOIN clientesredsalud c ON r.numero = c.numero";
 $where = ["LOWER(categoria_cliente) = 'cotizando' OR LOWER(categoria_cliente) = 'llamado'"];
 $params = [];
 
 if ($filtroBusqueda) {
-    $where[] = "(nombre LIKE ? OR numero LIKE ? OR conversacion LIKE ?)";
+    $where[] = "(r.nombre LIKE ? OR r.numero LIKE ? OR r.conversacion LIKE ?)";
     $p = "%$filtroBusqueda%";
     $params[] = $p; $params[] = $p; $params[] = $p;
 }
@@ -84,7 +84,10 @@ $conversaciones = $stmt->fetchAll();
                             ?>
                             <tr class="hover:bg-slate-50 transition-colors" data-id="<?= htmlspecialchars($r['id']) ?>">
                                 <td class="px-6 py-4">
-                                    <p class="font-medium text-slate-800"><?= htmlspecialchars($r['nombre'] ?? 'Sin nombre') ?></p>
+                                    <p class="font-medium" style="color:#1A202C"><?= htmlspecialchars($r['cliente_nombre'] ?: $r['nombre'] ?? 'Sin nombre') ?></p>
+                                    <?php if ($r['cliente_nombre'] && $r['sucursal']): ?>
+                                        <p class="text-xs" style="color:#64748B"><?= htmlspecialchars($r['sucursal']) ?></p>
+                                    <?php endif; ?>
                                 </td>
                                 <td class="px-6 py-4 font-mono text-sm text-slate-600"><?= htmlspecialchars($r['numero']) ?></td>
                                 <td class="px-6 py-4 max-w-xs">
