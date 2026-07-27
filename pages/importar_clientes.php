@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['excel'])) {
             } else {
                 try {
                     require_once __DIR__ . '/../lib/SimpleXLSX.php';
-                    $xlsx = SimpleXLSX::parse($archivo['tmp_name']);
+                    $xlsx = Shuchkin\SimpleXLSX::parse($archivo['tmp_name']);
                     if ($xlsx) {
                         $rows = $xlsx->rows();
                         if (!empty($rows)) {
