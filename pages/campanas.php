@@ -22,11 +22,17 @@ if ($filtroCategoria) {
     $sql .= " AND r.categoria_cliente = ?";
     $params[] = $filtroCategoria;
 }
-$sql .= " ORDER BY r.fecha_creacion DESC";
+$sql .= " ORDER BY COALESCE(NULLIF(c.nombre, ''), NULLIF(r.nombre, ''), r.numero) ASC, r.fecha_creacion DESC";
 
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $conversaciones = $stmt->fetchAll();
+
+$grupos = [];
+foreach ($conversaciones as $row) {
+    $nombre = $row['cliente_nombre'] ?: $row['nombre'] ?? 'Sin nombre';
+    $grupos[$nombre][] = $row;
+}
 
 $resumen = $pdo->query("
     SELECT
@@ -142,170 +148,110 @@ $coloresCategoria = [
             </div>
 
             <div class="card rounded-2xl overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm">
-                        <thead>
-                            <tr class="text-left text-xs uppercase tracking-wider" style="color:#64748B;background:#F4F8F8">
-                                <th class="px-6 py-4 font-medium">Contacto</th>
-                                <th class="px-6 py-4 font-medium">Teléfono</th>
-                                <th class="px-6 py-4 font-medium">Conversación</th>
-                                <th class="px-6 py-4 font-medium">Categoría</th>
-                                <th class="px-6 py-4 font-medium text-right">Fecha</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y" style="border-color:#E2E8F0">
-                            <?php if (empty($conversaciones)): ?>
-                                <tr><td colspan="5" class="px-6 py-12 text-center text-slate-400">No se encontraron registros</td></tr>
-                            <?php endif; ?>
-                            <?php foreach ($conversaciones as $row): ?>
-                            <tr class="hover:bg-slate-50 transition-colors">
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-9 h-9 rounded-full bg-blue-500/20 flex items-center justify-center text-sm font-bold text-blue-600">
-                                            <?= strtoupper(substr($row['nombre'] ?? $row['numero'], 0, 2)) ?>
-                                        </div>
-                                        <div>
-                                            <p class="font-medium text-slate-800"><?= htmlspecialchars($row['cliente_nombre'] ?: $row['nombre'] ?? 'Sin nombre') ?></p>
-                                            <?php if ($row['cliente_nombre'] && $row['sucursal']): ?>
-                                                <p class="text-xs text-slate-400"><?= htmlspecialchars($row['sucursal']) ?></p>
-                                            <?php endif; ?>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <span class="font-mono text-sm text-slate-600"><?= htmlspecialchars($row['numero']) ?></span>
-                                </td>
-                                <td class="px-6 py-4 max-w-md">
-                                    <p class="text-slate-700 truncate"><?= htmlspecialchars($row['conversacion'] ?? '') ?></p>
-                                    <?php if (!empty($row['obs'])): ?>
-                                        <p class="text-xs text-slate-400 mt-0.5 truncate"><?= htmlspecialchars($row['obs']) ?></p>
+                <?php if (empty($conversaciones)): ?>
+                <div class="px-6 py-12 text-center" style="color:#64748B">No se encontraron registros</div>
+                <?php endif; ?>
+                <div class="divide-y" style="border-color:#E2E8F0">
+                    <?php foreach ($grupos as $nombre => $rows):
+                        $total = count($rows);
+                        $ultimo = $rows[0];
+                        $cat = strtolower($ultimo['categoria_cliente'] ?? 'sin categoría');
+                        $colorBg = match($cat) {
+                            'cotizando' => '#dc2626',
+                            'respondio' => '#16a34a',
+                            'realizado' => '#2563eb',
+                            'llamado' => '#9333ea',
+                            default => '#64748b'
+                        };
+                    ?>
+                    <div class="grupo-contacto">
+                        <div class="grupo-header flex items-center justify-between px-6 py-4 cursor-pointer hover:bg-gray-50 transition-colors" onclick="toggleGrupo(this)">
+                            <div class="flex items-center gap-3 flex-1 min-w-0">
+                                <i class="fas fa-chevron-right text-xs transition-transform" style="color:#64748B"></i>
+                                <div class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white flex-shrink-0" style="background:<?= $colorBg ?>">
+                                    <?= strtoupper(substr($nombre, 0, 2)) ?>
+                                </div>
+                                <div class="min-w-0">
+                                    <p class="font-semibold text-sm" style="color:#1A202C"><?= htmlspecialchars($nombre) ?></p>
+                                    <?php if ($rows[0]['cliente_nombre'] && $rows[0]['sucursal']): ?>
+                                        <p class="text-xs" style="color:#64748B"><?= htmlspecialchars($rows[0]['sucursal']) ?></p>
                                     <?php endif; ?>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium
-                                        <?= $coloresCategoria[$row['categoria_cliente']] ?? 'bg-slate-100 text-slate-600' ?>">
-                                        <?= strtoupper(htmlspecialchars($row['categoria_cliente'])) ?>
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 text-right whitespace-nowrap">
-                                    <p class="text-sm text-slate-600"><?= date('d/m/Y', strtotime($row['fecha_creacion'])) ?></p>
-                                    <p class="text-xs text-slate-400"><?= date('H:i', strtotime($row['fecha_creacion'])) ?></p>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4 text-xs" style="color:#64748B">
+                                <span><i class="far fa-comment mr-1"></i><?= $total ?> msgs</span>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold text-white" style="background:<?= $colorBg ?>">
+                                    <?= strtoupper(htmlspecialchars($ultimo['categoria_cliente'] ?? 'SIN CATEGORÍA')) ?>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="grupo-body hidden border-t" style="border-color:#E2E8F0">
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-sm">
+                                    <thead>
+                                        <tr class="text-left text-xs uppercase tracking-wider" style="color:#94a3b8;background:#FAFAFA">
+                                            <th class="px-6 py-3 font-medium pl-14">Teléfono</th>
+                                            <th class="px-6 py-3 font-medium">Conversación</th>
+                                            <th class="px-6 py-3 font-medium">Categoría</th>
+                                            <th class="px-6 py-3 font-medium text-right">Fecha</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y" style="border-color:#F1F5F9">
+                                        <?php foreach ($rows as $row): ?>
+                                        <tr class="hover:bg-gray-50 transition-colors">
+                                            <td class="px-6 py-3 pl-14 font-mono text-sm" style="color:#64748B"><?= htmlspecialchars($row['numero']) ?></td>
+                                            <td class="px-6 py-3 max-w-md">
+                                                <p class="truncate" style="color:#1A202C"><?= htmlspecialchars($row['conversacion'] ?? '') ?></p>
+                                                <?php if (!empty($row['obs'])): ?>
+                                                    <p class="text-xs mt-0.5 truncate" style="color:#94a3b8"><?= htmlspecialchars($row['obs']) ?></p>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td class="px-6 py-3">
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                                    <?= $coloresCategoria[$row['categoria_cliente']] ?? 'bg-slate-100 text-slate-600' ?>">
+                                                    <?= strtoupper(htmlspecialchars($row['categoria_cliente'])) ?>
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-3 text-right whitespace-nowrap text-xs" style="color:#64748B">
+                                                <?= date('d/m/Y', strtotime($row['fecha_creacion'])) ?> <?= date('H:i', strtotime($row['fecha_creacion'])) ?>
+                                            </td>
+                                        </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
         </div>
     </main>
 </div>
 <script>
-let ultimoTimestamp = '<?= $conversaciones[0]['fecha_creacion'] ?? date('Y-m-d H:i:s') ?>';
 let polling = true;
 
 function cargarNuevos() {
     if (!polling) return;
-    fetch('<?= APP_URL ?>/api/latest.php?desde=' + encodeURIComponent(ultimoTimestamp))
-        .then(r => r.json())
-        .then(resp => {
-            if (!resp.success || resp.total === 0) return;
-            ultimoTimestamp = resp.ultimo;
-            const tbody = document.querySelector('tbody');
-            const emptyRow = tbody.querySelector('td[colspan]');
-            if (emptyRow) tbody.innerHTML = '';
-
-            resp.data.forEach(row => {
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-slate-50 transition-colors nuevo-registro';
-                tr.style.animation = 'fadeIn 0.5s ease';
-                const nombreCliente = row.cliente_nombre || row.nombre || 'Sin nombre';
-                const avatar = (row.cliente_nombre || row.nombre || row.numero).substring(0, 2).toUpperCase();
-                tr.innerHTML = `
-                    <td class="px-6 py-4">
-                        <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 rounded-full bg-blue-500/20 flex items-center justify-center text-sm font-bold text-blue-600">${avatar}</div>
-                            <div><p class="font-medium text-slate-800">${escapeHtml(nombreCliente)}</p>
-                            ${row.sucursal ? `<p class="text-xs text-slate-400">${escapeHtml(row.sucursal)}</p>` : ''}</div>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4"><span class="font-mono text-sm text-slate-600">${escapeHtml(row.numero)}</span></td>
-                    <td class="px-6 py-4 max-w-md"><p class="text-slate-700 truncate">${escapeHtml(row.conversacion)}</p></td>
-                    <td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${getColorCategoria(row.categoria_cliente)}">${escapeHtml(row.categoria_cliente).toUpperCase()}</span></td>
-                    <td class="px-6 py-4 text-right whitespace-nowrap">
-                        <p class="text-sm text-slate-600">${formatDate(row.fecha_creacion)}</p>
-                        <p class="text-xs text-slate-400">${formatTime(row.fecha_creacion)}</p>
-                    </td>
-                `;
-                tbody.prepend(tr);
-            });
-
-            mostrarToast(resp.total);
-            actualizarResumen();
-        })
-        .catch(() => {});
-}
-
-function mostrarToast(cantidad) {
-    const existente = document.querySelector('.toast-nuevos');
-    if (existente) existente.remove();
-    const toast = document.createElement('div');
-    toast.className = 'toast-nuevos fixed bottom-6 right-6 px-5 py-3 rounded-xl shadow-lg z-50 flex items-center gap-3 fade-in text-white'; toast.style.background = '#008089';
-    toast.innerHTML = `<i class="fas fa-bell"></i> <span class="font-medium">${cantidad} nuevo(s) registro(s)</span>`;
-    document.body.appendChild(toast);
-    setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.5s'; setTimeout(() => toast.remove(), 500); }, 4000);
-}
-
-function actualizarResumen() {
     fetch('<?= APP_URL ?>/api/checkdata.php')
         .then(r => r.json())
         .then(d => {
-            const cards = document.querySelectorAll('.stat-card p.text-2xl');
-            if (cards.length >= 4 && d.redsalud !== undefined) {
-                cards[0].textContent = d.redsalud;
+            if (d.redsalud !== undefined) {
+                const cards = document.querySelectorAll('.stat-card p.text-2xl');
+                if (cards.length >= 4) cards[0].textContent = d.redsalud;
             }
         })
         .catch(() => {});
 }
 
-function getColorCategoria(cat) {
-    if (!cat) return 'bg-slate-100 text-slate-600';
-    const c = cat.toLowerCase();
-    if (c === 'cotizando') return 'bg-red-600 text-white';
-    if (c === 'respondio') return 'bg-green-600 text-white';
-    if (c === 'realizado') return 'bg-blue-600 text-white';
-    if (c === 'llamado') return 'bg-purple-600 text-white';
-    return 'bg-slate-100 text-slate-600';
-}
-
-function escapeHtml(str) {
-    if (!str) return '';
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
-}
-
-function parseDate(dt) {
-    if (!dt) return null;
-    const [f, h] = dt.split(' ');
-    const [y, m, d] = f.split('-').map(Number);
-    const [hh, mi, ss] = h ? h.split(':').map(Number) : [0, 0, 0];
-    return new Date(y, m - 1, d, hh, mi, ss);
-}
-
-function formatDate(dt) {
-    if (!dt) return '-';
-    const d = parseDate(dt);
-    return d.toLocaleDateString('es-CL', { day: '2-digit', month: '2-digit', year: 'numeric' });
-}
-
-function formatTime(dt) {
-    if (!dt) return '';
-    const d = parseDate(dt);
-    return d.toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
-}
-
 document.addEventListener('visibilitychange', () => { polling = !document.hidden; });
-setInterval(cargarNuevos, 5000);
+setInterval(cargarNuevos, 10000);
+
+function toggleGrupo(el) {
+    const icon = el.querySelector('.fa-chevron-right');
+    const body = el.nextElementSibling;
+    body.classList.toggle('hidden');
+    icon.style.transform = body.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(90deg)';
+}
 </script>
 <?php include __DIR__ . '/../includes/footer.php'; ?>
