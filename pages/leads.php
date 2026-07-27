@@ -5,7 +5,7 @@ $pdo = getDB();
 
 $filtroBusqueda = $_GET['busqueda'] ?? '';
 
-$sql = "SELECT r.*, c.nombre as cliente_nombre, c.sucursal FROM redsalud r LEFT JOIN clientesredsalud c ON r.numero = c.numero";
+$sql = "SELECT r.*, c.nombre as cliente_nombre, c.sucursal FROM redsalud r LEFT JOIN clientesredsalud c ON r.numero COLLATE utf8mb4_unicode_ci = c.numero";
 $where = ["LOWER(categoria_cliente) = 'cotizando' OR LOWER(categoria_cliente) = 'llamado'"];
 $params = [];
 

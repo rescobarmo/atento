@@ -8,7 +8,7 @@ $filtroCategoria = $_GET['categoria'] ?? '';
 
 $sql = "SELECT r.*, c.nombre as cliente_nombre, c.sucursal
         FROM redsalud r
-        LEFT JOIN clientesredsalud c ON r.numero = c.numero
+        LEFT JOIN clientesredsalud c ON r.numero COLLATE utf8mb4_unicode_ci = c.numero
         WHERE 1=1";
 $params = [];
 

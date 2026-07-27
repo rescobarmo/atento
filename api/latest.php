@@ -7,7 +7,7 @@ try {
     $pdo = getDB();
     $desde = $_GET['desde'] ?? date('Y-m-d H:i:s', strtotime('-1 hour'));
 
-    $stmt = $pdo->prepare("SELECT r.*, c.nombre as cliente_nombre, c.sucursal FROM redsalud r LEFT JOIN clientesredsalud c ON r.numero = c.numero WHERE r.fecha_creacion > ? ORDER BY r.fecha_creacion ASC");
+    $stmt = $pdo->prepare("SELECT r.*, c.nombre as cliente_nombre, c.sucursal FROM redsalud r LEFT JOIN clientesredsalud c ON r.numero COLLATE utf8mb4_unicode_ci = c.numero WHERE r.fecha_creacion > ? ORDER BY r.fecha_creacion ASC");
     $stmt->execute([$desde]);
     $registros = $stmt->fetchAll();
 
