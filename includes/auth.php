@@ -36,16 +36,16 @@ function tienePermiso(string ...$roles): bool {
     return in_array($usuario['rol_nombre'], $roles);
 }
 
-function intentarLogin(string $email, string $password): array {
+function intentarLogin(string $username, string $password): array {
     try {
         $pdo = getDB();
         $stmt = $pdo->prepare("
             SELECT u.*, r.nombre as rol_nombre
             FROM usuarios u
             JOIN roles r ON u.rol_id = r.id
-            WHERE u.email = ? AND u.activo = 1
+            WHERE (u.username = ? OR u.email = ?) AND u.activo = 1
         ");
-        $stmt->execute([$email]);
+        $stmt->execute([$username, $username]);
         $usuario = $stmt->fetch();
 
         if (!$usuario || !password_verify($password, $usuario['password'])) {

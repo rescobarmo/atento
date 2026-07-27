@@ -8,9 +8,9 @@ if (usuarioAutenticado()) {
 
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = $_POST['email'] ?? '';
+    $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
-    $resultado = intentarLogin($email, $password);
+    $resultado = intentarLogin($username, $password);
     if ($resultado['success']) {
         header('Location: ' . APP_URL . '/dashboard.php');
         exit;
@@ -81,12 +81,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <form method="POST" class="space-y-5">
                 <div>
-                    <label class="block text-sm font-medium mb-2" for="email" style="color:#64748B">
-                        <i class="fas fa-envelope mr-1" style="color:#64748B"></i> Correo electrónico
+                    <label class="block text-sm font-medium mb-2" for="username" style="color:#64748B">
+                        <i class="fas fa-user mr-1" style="color:#64748B"></i> Usuario
                     </label>
-                    <input type="email" id="email" name="email" required
+                    <input type="text" id="username" name="username" required
                            class="login-input w-full rounded-xl px-4 py-3 placeholder-slate-400 focus:outline-none"
-                           placeholder="tu@correo.cl" value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
+                           placeholder="admin" value="<?= htmlspecialchars($_POST['username'] ?? '') ?>">
                 </div>
                 <div>
                     <label class="block text-sm font-medium mb-2" for="password" style="color:#64748B">
@@ -106,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="mt-6 pt-6" style="border-top:1px solid #E2E8F0">
                 <p class="text-xs text-center" style="color:#64748B">
                     <i class="fas fa-shield-alt mr-1"></i>
-                    Credenciales demo: <span style="color:#C3E298">admin@redsalud.cl</span> / <span style="color:#C3E298">password</span>
+                    Credenciales: <span style="color:#C3E298">admin</span> / <span style="color:#C3E298">r3dsalud</span>
                 </p>
             </div>
         </div>
