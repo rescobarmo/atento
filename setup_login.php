@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/includes/auth.php';
+require_once __DIR__ . '/config/database.php';
 $pdo = getDB();
 try {
     $pdo->exec("ALTER TABLE usuarios ADD COLUMN username VARCHAR(50) DEFAULT NULL AFTER email");

@@ -1,6 +1,5 @@
 <?php
-require_once __DIR__ . '/includes/auth.php';
-requerirLogin();
+require_once __DIR__ . '/config/database.php';
 $pdo = getDB();
 try {
     $pdo->exec("CREATE TABLE IF NOT EXISTS clientes (
