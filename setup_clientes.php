@@ -31,3 +31,9 @@ try {
 } catch (Exception $e) {
     echo "<p style='color:green'>OK: columna sucursal ya existe</p>";
 }
+try {
+    $pdo->exec("ALTER TABLE clientes ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP");
+    echo "<p style='color:green'>OK: columna created_at agregada</p>";
+} catch (Exception $e) {
+    echo "<p style='color:green'>OK: columna created_at ya existe</p>";
+}

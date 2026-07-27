@@ -71,7 +71,7 @@ $total = $pdo->query("SELECT COUNT(*) FROM clientes")->fetchColumn();
                                 <td class="px-6 py-4 font-medium" style="color:#1A202C"><?= htmlspecialchars($c['nombre']) ?></td>
                                 <td class="px-6 py-4 font-mono text-sm" style="color:#64748B"><?= htmlspecialchars($c['numero']) ?></td>
                                 <td class="px-6 py-4" style="color:#64748B"><?= htmlspecialchars($c['sucursal'] ?? '-') ?></td>
-                                <td class="px-6 py-4 text-sm" style="color:#64748B"><?= date('d/m/Y H:i', strtotime($c['created_at'])) ?></td>
+                                <td class="px-6 py-4 text-sm" style="color:#64748B"><?= isset($c['created_at']) && $c['created_at'] ? date('d/m/Y H:i', strtotime($c['created_at'])) : '-' ?></td>
                             </tr>
                             <?php endforeach; ?>
                         </tbody>
