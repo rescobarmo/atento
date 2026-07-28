@@ -50,6 +50,11 @@ $paginaActual = basename($_SERVER['PHP_SELF']);
                 <i class="fas fa-address-book w-5 text-center"></i>
                 Clientes Red Salud
             </a>
+            <a href="<?= APP_URL ?>/pages/no_contesta.php"
+               class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm <?= $paginaActual === 'no_contesta.php' ? 'active text-white' : 'text-white/70' ?>">
+                <i class="fas fa-phone-slash w-5 text-center"></i>
+                No Contesta
+            </a>
             <hr class="border-white/10 my-4">
             <a href="<?= APP_URL ?>/logout.php"
                class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-white/50 hover:text-white">
