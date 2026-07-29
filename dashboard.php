@@ -104,7 +104,7 @@ function badgeClass($cat) {
                 </div>
                 <div class="stat-card rounded-2xl p-5">
                     <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:#64748B">Inspecciones Realizadas</span>
+                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:#64748B">Paciente Interesado</span>
                         <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(0,128,137,0.12)">
                             <i class="fas fa-check-double text-lg" style="color:#008089"></i>
                         </div>
@@ -114,7 +114,7 @@ function badgeClass($cat) {
                 </div>
                 <div class="stat-card rounded-2xl p-5">
                     <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:#64748B">Hallazgos Críticos</span>
+                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:#64748B">Con Horario de Llamada</span>
                         <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(229,62,62,0.12)">
                             <i class="fas fa-exclamation-triangle text-lg" style="color:#E53E3E"></i>
                         </div>
@@ -124,7 +124,7 @@ function badgeClass($cat) {
                 </div>
                 <div class="stat-card rounded-2xl p-5">
                     <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:#64748B">Pendientes</span>
+                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:#64748B">Paciente Sin Interes</span>
                         <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(245,158,11,0.12)">
                             <i class="fas fa-clock text-lg" style="color:#F59E0B"></i>
                         </div>
