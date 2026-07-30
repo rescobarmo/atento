@@ -66,12 +66,11 @@ $conversaciones = $stmt->fetchAll();
                                 <th class="px-6 py-4 font-medium">Horario</th>
                                 <th class="px-6 py-4 font-medium text-center">Contactado</th>
                                 <th class="px-6 py-4 font-medium">Notas</th>
-                                <th class="px-6 py-4 font-medium">Fecha</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y" style="border-color:#E2E8F0">
                             <?php if (empty($conversaciones)): ?>
-                                <tr><td colspan="8" class="px-6 py-12 text-center text-slate-400">No se encontraron registros</td></tr>
+                                <tr><td colspan="7" class="px-6 py-12 text-center text-slate-400">No se encontraron registros</td></tr>
                             <?php endif; ?>
                             <?php foreach ($conversaciones as $r): ?>
                             <?php
@@ -121,7 +120,6 @@ $conversaciones = $stmt->fetchAll();
                                         <span class="text-xs text-slate-400 obs-count"><?= mb_strlen($r['obs'] ?? '') ?>/200</span>
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 text-xs text-slate-500 whitespace-nowrap"><?= date('d/m/Y H:i', strtotime($r['fecha_actualizacion'] ?: $r['fecha_creacion'])) ?></td>
                             </tr>
                             <?php endforeach; ?>
                         </tbody>

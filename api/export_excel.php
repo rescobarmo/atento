@@ -41,13 +41,24 @@ echo '<head><meta charset="UTF-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:Ex
 echo '<body><table>';
 echo '<thead>';
 echo '<tr style="background:#1e293b;color:#fff;font-weight:bold">';
-echo '<th style="padding:8px">Contacto</th>';
-echo '<th style="padding:8px">Teléfono</th>';
-echo '<th style="padding:8px">Categoría</th>';
-echo '<th style="padding:8px">Conversación</th>';
-echo '<th style="padding:8px">Notas</th>';
-echo '<th style="padding:8px">Fecha Creación</th>';
-echo '<th style="padding:8px">Fecha Actualización</th>';
+
+if ($leads) {
+    echo '<th style="padding:8px">Nombre</th>';
+    echo '<th style="padding:8px">Teléfono</th>';
+    echo '<th style="padding:8px">Conversación</th>';
+    echo '<th style="padding:8px">Categoría</th>';
+    echo '<th style="padding:8px">Horario</th>';
+    echo '<th style="padding:8px">Contactado</th>';
+    echo '<th style="padding:8px">Notas</th>';
+} else {
+    echo '<th style="padding:8px">Contacto</th>';
+    echo '<th style="padding:8px">Teléfono</th>';
+    echo '<th style="padding:8px">Categoría</th>';
+    echo '<th style="padding:8px">Conversación</th>';
+    echo '<th style="padding:8px">Notas</th>';
+    echo '<th style="padding:8px">Fecha Creación</th>';
+    echo '<th style="padding:8px">Fecha Actualización</th>';
+}
 echo '</tr>';
 echo '</thead><tbody>';
 
@@ -61,13 +72,23 @@ foreach ($rows as $r) {
         default => '#64748b'
     };
     echo '<tr>';
-    echo '<td style="padding:6px;border:1px solid #e2e8f0">' . htmlspecialchars($r['nombre'] ?? '') . '</td>';
-    echo '<td style="padding:6px;border:1px solid #e2e8f0">' . htmlspecialchars($r['numero'] ?? '') . '</td>';
-    echo '<td style="padding:6px;border:1px solid #e2e8f0;background:' . $bg . ';color:#fff;font-weight:bold">' . strtoupper(htmlspecialchars($r['categoria_cliente'] ?? 'sin categoría')) . '</td>';
-    echo '<td style="padding:6px;border:1px solid #e2e8f0">' . htmlspecialchars($r['conversacion'] ?? '') . '</td>';
-    echo '<td style="padding:6px;border:1px solid #e2e8f0">' . htmlspecialchars($r['obs'] ?? '') . '</td>';
-    echo '<td style="padding:6px;border:1px solid #e2e8f0">' . htmlspecialchars($r['fecha_creacion'] ?? '') . '</td>';
-    echo '<td style="padding:6px;border:1px solid #e2e8f0">' . htmlspecialchars($r['fecha_actualizacion'] ?? '') . '</td>';
+    if ($leads) {
+        echo '<td style="padding:6px;border:1px solid #e2e8f0">' . htmlspecialchars($r['nombre'] ?? '') . '</td>';
+        echo '<td style="padding:6px;border:1px solid #e2e8f0">' . htmlspecialchars($r['numero'] ?? '') . '</td>';
+        echo '<td style="padding:6px;border:1px solid #e2e8f0">' . htmlspecialchars($r['conversacion'] ?? '') . '</td>';
+        echo '<td style="padding:6px;border:1px solid #e2e8f0;background:' . $bg . ';color:#fff;font-weight:bold">' . strtoupper(htmlspecialchars($r['categoria_cliente'] ?? 'sin categoría')) . '</td>';
+        echo '<td style="padding:6px;border:1px solid #e2e8f0">' . htmlspecialchars($r['horario'] ?? '') . '</td>';
+        echo '<td style="padding:6px;border:1px solid #e2e8f0">' . ($cat === 'llamado' ? 'Sí' : 'No') . '</td>';
+        echo '<td style="padding:6px;border:1px solid #e2e8f0">' . htmlspecialchars($r['obs'] ?? '') . '</td>';
+    } else {
+        echo '<td style="padding:6px;border:1px solid #e2e8f0">' . htmlspecialchars($r['nombre'] ?? '') . '</td>';
+        echo '<td style="padding:6px;border:1px solid #e2e8f0">' . htmlspecialchars($r['numero'] ?? '') . '</td>';
+        echo '<td style="padding:6px;border:1px solid #e2e8f0;background:' . $bg . ';color:#fff;font-weight:bold">' . strtoupper(htmlspecialchars($r['categoria_cliente'] ?? 'sin categoría')) . '</td>';
+        echo '<td style="padding:6px;border:1px solid #e2e8f0">' . htmlspecialchars($r['conversacion'] ?? '') . '</td>';
+        echo '<td style="padding:6px;border:1px solid #e2e8f0">' . htmlspecialchars($r['obs'] ?? '') . '</td>';
+        echo '<td style="padding:6px;border:1px solid #e2e8f0">' . htmlspecialchars($r['fecha_creacion'] ?? '') . '</td>';
+        echo '<td style="padding:6px;border:1px solid #e2e8f0">' . htmlspecialchars($r['fecha_actualizacion'] ?? '') . '</td>';
+    }
     echo '</tr>';
 }
 
