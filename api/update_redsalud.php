@@ -34,6 +34,10 @@ if ($campo === 'obs' && mb_strlen($valor) > 200) {
     exit;
 }
 
+if ($campo === 'presupuesto') {
+    $valor = $valor === '' ? null : (int)$valor;
+}
+
 try {
     $stmt = $pdo->prepare("UPDATE redsalud SET $campo = ?, fecha_actualizacion = NOW() WHERE id = ?");
     $stmt->execute([$valor, $id]);
