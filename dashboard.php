@@ -23,8 +23,10 @@ $cumplimiento = $redsalud['total_msgs'] > 0
 
 $pendientes = $redsalud['total_msgs'] - $redsalud['evaluados'];
 
+$nulos = $pdo->query("SELECT COUNT(1) FROM redsalud WHERE conversacion IS NULL")->fetchColumn();
+
 $msgsPorDia = $pdo->query("
-    SELECT DATE_FORMAT(fecha_creacion, '%d/%m') as dia, COUNT(DISTINCT numero) as total
+    SELECT DATE_FORMAT(fecha_creacion, '%d/%m') as dia, COUNT(*) as total
     FROM redsalud
     WHERE fecha_creacion >= DATE_SUB(CURDATE(), INTERVAL 14 DAY)
     GROUP BY DATE_FORMAT(fecha_creacion, '%d/%m')
@@ -38,7 +40,7 @@ $categorias = $pdo->query("
              WHEN LOWER(categoria_cliente) = 'realizado' THEN 'REALIZADO'
              WHEN LOWER(categoria_cliente) = 'llamado' THEN 'CONTACTADO'
              ELSE 'SIN EVALUAR' END as cat,
-        COUNT(DISTINCT numero) as total
+        COUNT(*) as total
     FROM redsalud GROUP BY cat ORDER BY total DESC
 ")->fetchAll();
 
