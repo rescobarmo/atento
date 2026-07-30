@@ -175,15 +175,15 @@ document.querySelectorAll('.contact-checkbox').forEach(cb => {
 
 document.querySelectorAll('.presupuesto-input').forEach(input => {
     input.addEventListener('keyup', function() {
-        const raw = this.value.replace(/\./g, '');
+        const raw = this.value.replace(/,/g, '');
         if (raw) {
             const num = parseInt(raw, 10);
-            if (!isNaN(num)) this.value = num.toLocaleString('es-CL');
+            if (!isNaN(num)) this.value = num.toLocaleString('en-US');
         }
     });
 
     input.addEventListener('input', function() {
-        this.value = this.value.replace(/[^0-9.]/g, '');
+        this.value = this.value.replace(/[^0-9,]/g, '');
     });
 
     let saveTimer;
@@ -191,7 +191,7 @@ document.querySelectorAll('.presupuesto-input').forEach(input => {
         clearTimeout(saveTimer);
         saveTimer = setTimeout(() => {
             const id = this.dataset.id;
-            const valor = this.value.replace(/\./g, '');
+            const valor = this.value.replace(/,/g, '');
 
             fetch('<?= APP_URL ?>/api/update_redsalud.php', {
                 method: 'POST',
