@@ -6,10 +6,14 @@ $pdo = getDB();
 
 $filtroBusqueda = $_GET['busqueda'] ?? '';
 $filtroCategoria = $_GET['categoria'] ?? '';
+$leads = $_GET['leads'] ?? '';
 
 $sql = "SELECT * FROM redsalud WHERE 1=1";
 $params = [];
 
+if ($leads) {
+    $sql .= " AND (LOWER(categoria_cliente) = 'cotizando' OR LOWER(categoria_cliente) = 'llamado')";
+}
 if ($filtroBusqueda) {
     $sql .= " AND (nombre LIKE ? OR numero LIKE ? OR conversacion LIKE ?)";
     $params[] = "%$filtroBusqueda%";

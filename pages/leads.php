@@ -31,6 +31,9 @@ $conversaciones = $stmt->fetchAll();
                     <h1 class="text-2xl font-bold" style="color:#1A202C">Contactos Cotizando</h1>
                     <p class="mt-1" style="color:#64748B">Gestiona contactos que están cotizando y registra llamadas</p>
                 </div>
+                <a href="<?= APP_URL ?>/api/export_excel.php?leads=1&busqueda=<?= urlencode($filtroBusqueda) ?>" class="btn-primary px-5 py-2.5 rounded-xl text-sm font-medium text-white inline-flex items-center gap-2">
+                    <i class="fas fa-file-excel"></i> Descargar Excel
+                </a>
             </div>
 
             <div class="card rounded-2xl p-5 mb-6">
