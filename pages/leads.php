@@ -64,13 +64,14 @@ $conversaciones = $stmt->fetchAll();
                                 <th class="px-6 py-4 font-medium">Conversación</th>
                                 <th class="px-6 py-4 font-medium">Categoría</th>
                                 <th class="px-6 py-4 font-medium">Horario</th>
+                                <th class="px-6 py-4 font-medium">Presupuesto</th>
                                 <th class="px-6 py-4 font-medium text-center">Contactado</th>
                                 <th class="px-6 py-4 font-medium">Notas</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y" style="border-color:#E2E8F0">
                             <?php if (empty($conversaciones)): ?>
-                                <tr><td colspan="7" class="px-6 py-12 text-center text-slate-400">No se encontraron registros</td></tr>
+                                <tr><td colspan="8" class="px-6 py-12 text-center text-slate-400">No se encontraron registros</td></tr>
                             <?php endif; ?>
                             <?php foreach ($conversaciones as $r): ?>
                             <?php
@@ -102,6 +103,13 @@ $conversaciones = $stmt->fetchAll();
                                 </td>
                                 <td class="px-6 py-4 text-sm" style="color:#64748B">
                                     <?= htmlspecialchars($r['horario'] ?? '-') ?>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <input type="number" step="0.01" min="0"
+                                           class="w-28 px-2 py-1.5 text-xs border border-slate-200 rounded-lg focus:border-purple-400 focus:ring-2 focus:ring-purple-100 outline-none presupuesto-input"
+                                           value="<?= htmlspecialchars($r['presupuesto'] ?? '') ?>"
+                                           data-id="<?= htmlspecialchars($r['id']) ?>"
+                                           placeholder="0.00">
                                 </td>
                                 <td class="px-6 py-4 text-center">
                                     <input type="checkbox"
@@ -162,6 +170,28 @@ document.querySelectorAll('.contact-checkbox').forEach(cb => {
             else alert('Error: ' + (data.error || 'desconocido'));
         })
         .catch(() => alert('Error de conexión'));
+    });
+});
+
+document.querySelectorAll('.presupuesto-input').forEach(input => {
+    let saveTimer;
+    input.addEventListener('input', function() {
+        clearTimeout(saveTimer);
+        saveTimer = setTimeout(() => {
+            const id = this.dataset.id;
+            const valor = this.value;
+
+            fetch('<?= APP_URL ?>/api/update_redsalud.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ id, campo: 'presupuesto', valor })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (!data.success) alert('Error: ' + (data.error || 'desconocido'));
+            })
+            .catch(() => {});
+        }, 800);
     });
 });
 

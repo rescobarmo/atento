@@ -48,6 +48,7 @@ if ($leads) {
     echo '<th style="padding:8px">Conversación</th>';
     echo '<th style="padding:8px">Categoría</th>';
     echo '<th style="padding:8px">Horario</th>';
+    echo '<th style="padding:8px">Presupuesto</th>';
     echo '<th style="padding:8px">Contactado</th>';
     echo '<th style="padding:8px">Notas</th>';
 } else {
@@ -78,6 +79,7 @@ foreach ($rows as $r) {
         echo '<td style="padding:6px;border:1px solid #e2e8f0">' . htmlspecialchars($r['conversacion'] ?? '') . '</td>';
         echo '<td style="padding:6px;border:1px solid #e2e8f0;background:' . $bg . ';color:#fff;font-weight:bold">' . strtoupper(htmlspecialchars($r['categoria_cliente'] ?? 'sin categoría')) . '</td>';
         echo '<td style="padding:6px;border:1px solid #e2e8f0">' . htmlspecialchars($r['horario'] ?? '') . '</td>';
+        echo '<td style="padding:6px;border:1px solid #e2e8f0">' . htmlspecialchars($r['presupuesto'] ?? '') . '</td>';
         echo '<td style="padding:6px;border:1px solid #e2e8f0">' . ($cat === 'llamado' ? 'Sí' : 'No') . '</td>';
         echo '<td style="padding:6px;border:1px solid #e2e8f0">' . htmlspecialchars($r['obs'] ?? '') . '</td>';
     } else {
