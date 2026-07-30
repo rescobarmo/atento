@@ -7,13 +7,12 @@ $usuario = usuarioActual();
 
 $redsalud = $pdo->query("
     SELECT
-        COUNT(*) as total_msgs,
-        COUNT(DISTINCT numero) as contactos_unicos,
-        COUNT(DISTINCT CASE WHEN LOWER(categoria_cliente) IN ('cotizando','respondio','realizado','llamado') THEN id END) as evaluados,
-        COUNT(DISTINCT CASE WHEN LOWER(categoria_cliente) = 'cotizando' THEN id END) as cotizando,
-        COUNT(DISTINCT CASE WHEN LOWER(categoria_cliente) = 'respondio' THEN id END) as respondio,
-        COUNT(DISTINCT CASE WHEN LOWER(categoria_cliente) = 'realizado' THEN id END) as realizado,
-        COUNT(DISTINCT CASE WHEN LOWER(categoria_cliente) = 'llamado' THEN id END) as llamado
+        COUNT(DISTINCT numero) as total_msgs,
+        COUNT(DISTINCT CASE WHEN LOWER(categoria_cliente) IN ('cotizando','respondio','realizado','llamado') THEN numero END) as evaluados,
+        COUNT(DISTINCT CASE WHEN LOWER(categoria_cliente) = 'cotizando' THEN numero END) as cotizando,
+        COUNT(DISTINCT CASE WHEN LOWER(categoria_cliente) = 'respondio' THEN numero END) as respondio,
+        COUNT(DISTINCT CASE WHEN LOWER(categoria_cliente) = 'realizado' THEN numero END) as realizado,
+        COUNT(DISTINCT CASE WHEN LOWER(categoria_cliente) = 'llamado' THEN numero END) as llamado
     FROM redsalud
 ")->fetch();
 
@@ -23,10 +22,10 @@ $cumplimiento = $redsalud['total_msgs'] > 0
 
 $pendientes = $redsalud['total_msgs'] - $redsalud['evaluados'];
 
-$nulos = $pdo->query("SELECT COUNT(1) FROM redsalud WHERE conversacion IS NULL")->fetchColumn();
+
 
 $msgsPorDia = $pdo->query("
-    SELECT DATE_FORMAT(fecha_creacion, '%d/%m') as dia, COUNT(*) as total
+    SELECT DATE_FORMAT(fecha_creacion, '%d/%m') as dia, COUNT(DISTINCT numero) as total
     FROM redsalud
     WHERE fecha_creacion >= DATE_SUB(CURDATE(), INTERVAL 14 DAY)
     GROUP BY DATE_FORMAT(fecha_creacion, '%d/%m')
@@ -40,7 +39,7 @@ $categorias = $pdo->query("
              WHEN LOWER(categoria_cliente) = 'realizado' THEN 'REALIZADO'
              WHEN LOWER(categoria_cliente) = 'llamado' THEN 'CONTACTADO'
              ELSE 'SIN EVALUAR' END as cat,
-        COUNT(*) as total
+        COUNT(DISTINCT numero) as total
     FROM redsalud GROUP BY cat ORDER BY total DESC
 ")->fetchAll();
 
@@ -111,8 +110,8 @@ function badgeClass($cat) {
                             <i class="fas fa-check-double text-lg" style="color:#008089"></i>
                         </div>
                     </div>
-                    <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format($nulos) ?></p>
-                    <p class="text-xs mt-1" style="color:#64748B">de <?= number_format($redsalud['total_msgs']) ?> registros</p>
+                    <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format($redsalud['total_msgs']) ?></p>
+                    <p class="text-xs mt-1" style="color:#64748B">contactos únicos</p>
                 </div>
                 <div class="stat-card rounded-2xl p-5">
                     <div class="flex items-center justify-between mb-3">
