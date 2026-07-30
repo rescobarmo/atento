@@ -5,16 +5,24 @@ requerirLogin();
 $pdo = getDB();
 $usuario = usuarioActual();
 
+$sucursales = $pdo->query("SELECT DISTINCT sucursal FROM clientesredsalud WHERE sucursal IS NOT NULL AND sucursal != '' ORDER BY sucursal")->fetchAll(PDO::FETCH_COLUMN);
+
+$sucursalSeleccionada = $_GET['sucursal'] ?? '';
+
+$joinSuc = "LEFT JOIN clientesredsalud c ON r.numero COLLATE utf8mb4_unicode_ci = c.numero";
+$whereSuc = $sucursalSeleccionada ? "AND c.sucursal = " . $pdo->quote($sucursalSeleccionada) : '';
+
 $redsalud = $pdo->query("
     SELECT
-        COUNT(DISTINCT numero) as total_msgs,
-        COUNT(DISTINCT numero) as contactos_unicos,
-        COUNT(DISTINCT CASE WHEN LOWER(categoria_cliente) IN ('cotizando','respondio','realizado','llamado') THEN id END) as evaluados,
-        COUNT(DISTINCT CASE WHEN LOWER(categoria_cliente) = 'cotizando' THEN id END) as cotizando,
-        COUNT(DISTINCT CASE WHEN LOWER(categoria_cliente) = 'respondio' THEN id END) as respondio,
-        COUNT(DISTINCT CASE WHEN LOWER(categoria_cliente) = 'realizado' THEN id END) as realizado,
-        COUNT(DISTINCT CASE WHEN LOWER(categoria_cliente) = 'llamado' THEN id END) as llamado
-    FROM redsalud
+        COUNT(DISTINCT r.numero) as total_msgs,
+        COUNT(DISTINCT CASE WHEN LOWER(r.categoria_cliente) IN ('cotizando','respondio','realizado','llamado') THEN r.id END) as evaluados,
+        COUNT(DISTINCT CASE WHEN LOWER(r.categoria_cliente) = 'cotizando' THEN r.id END) as cotizando,
+        COUNT(DISTINCT CASE WHEN LOWER(r.categoria_cliente) = 'respondio' THEN r.id END) as respondio,
+        COUNT(DISTINCT CASE WHEN LOWER(r.categoria_cliente) = 'realizado' THEN r.id END) as realizado,
+        COUNT(DISTINCT CASE WHEN LOWER(r.categoria_cliente) = 'llamado' THEN r.id END) as llamado
+    FROM redsalud r
+    $joinSuc
+    WHERE 1=1 $whereSuc
 ")->fetch();
 
 $cumplimiento = $redsalud['total_msgs'] > 0
@@ -23,15 +31,21 @@ $cumplimiento = $redsalud['total_msgs'] > 0
 
 $pendientes = $redsalud['total_msgs'] - $redsalud['evaluados'];
 
-$nulos = $pdo->query("SELECT COUNT(1) FROM redsalud WHERE conversacion IS NULL")->fetchColumn();
+$nulos = $pdo->query("
+    SELECT COUNT(1) FROM redsalud r
+    $joinSuc
+    WHERE conversacion IS NULL $whereSuc
+")->fetchColumn();
 
 $msgsPorDia = $pdo->query("
     SELECT DATE_FORMAT(primeros_registros.fecha, '%d/%m') as dia,
            COUNT(primeros_registros.numero) as total
     FROM (
-        SELECT numero, MIN(DATE(fecha_creacion)) as fecha
-        FROM redsalud
-        GROUP BY numero
+        SELECT r.numero, MIN(DATE(r.fecha_creacion)) as fecha
+        FROM redsalud r
+        $joinSuc
+        WHERE 1=1 $whereSuc
+        GROUP BY r.numero
     ) as primeros_registros
     WHERE primeros_registros.fecha >= DATE_SUB(CURDATE(), INTERVAL 14 DAY)
     GROUP BY primeros_registros.fecha
@@ -40,20 +54,30 @@ $msgsPorDia = $pdo->query("
 
 $categorias = $pdo->query("
     SELECT
-        CASE WHEN LOWER(categoria_cliente) = 'cotizando' THEN 'COTIZANDO'
-             WHEN LOWER(categoria_cliente) = 'respondio' THEN 'RESPONDIO'
-             WHEN LOWER(categoria_cliente) = 'realizado' THEN 'REALIZADO'
-             WHEN LOWER(categoria_cliente) = 'llamado' THEN 'CONTACTADO'
+        CASE WHEN LOWER(r.categoria_cliente) = 'cotizando' THEN 'COTIZANDO'
+             WHEN LOWER(r.categoria_cliente) = 'respondio' THEN 'RESPONDIO'
+             WHEN LOWER(r.categoria_cliente) = 'realizado' THEN 'REALIZADO'
+             WHEN LOWER(r.categoria_cliente) = 'llamado' THEN 'CONTACTADO'
              ELSE 'SIN EVALUAR' END as cat,
-        COUNT(*) as total
-    FROM redsalud GROUP BY cat ORDER BY total DESC
+        COUNT(DISTINCT r.numero) as total
+    FROM redsalud r
+    $joinSuc
+    WHERE 1=1 $whereSuc
+    GROUP BY cat ORDER BY total DESC
 ")->fetchAll();
 
 $ultimosContactos = $pdo->query("
     SELECT r.numero, r.nombre, r.fecha_creacion as ultimo, r.categoria_cliente
     FROM redsalud r
-    INNER JOIN (SELECT numero, MAX(fecha_creacion) as max_fecha FROM redsalud GROUP BY numero) ult
-        ON r.numero = ult.numero AND r.fecha_creacion = ult.max_fecha
+    $joinSuc
+    INNER JOIN (
+        SELECT r2.numero, MAX(r2.fecha_creacion) as max_fecha
+        FROM redsalud r2
+        LEFT JOIN clientesredsalud c2 ON r2.numero COLLATE utf8mb4_unicode_ci = c2.numero
+        WHERE 1=1 " . ($sucursalSeleccionada ? "AND c2.sucursal = " . $pdo->quote($sucursalSeleccionada) : "") . "
+        GROUP BY r2.numero
+    ) ult ON r.numero = ult.numero AND r.fecha_creacion = ult.max_fecha
+    WHERE 1=1 $whereSuc
     ORDER BY ultimo DESC LIMIT 10
 ")->fetchAll();
 
@@ -83,6 +107,18 @@ function badgeClass($cat) {
                     <p class="mt-1" style="color:#64748B">Bienvenido de nuevo, <?= htmlspecialchars(explode(' ', $usuario['nombre'])[0]) ?></p>
                 </div>
                 <div class="flex items-center gap-3 text-sm" style="color:#64748B">
+                    <form method="GET" id="sucursalForm" class="flex items-center gap-2">
+                        <label for="sucursal" class="text-xs font-medium" style="color:#64748B">Sucursal:</label>
+                        <select name="sucursal" id="sucursal" onchange="this.form.submit()"
+                                class="px-3 py-1.5 rounded-lg text-xs border border-slate-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none bg-white" style="color:#1A202C">
+                            <option value="">Todas</option>
+                            <?php foreach ($sucursales as $s): ?>
+                                <option value="<?= htmlspecialchars($s) ?>" <?= $sucursalSeleccionada === $s ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($s) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </form>
                     <i class="fas fa-calendar"></i>
                     <span><?= (new DateTime())->format('d/m/Y') ?></span>
                 </div>
