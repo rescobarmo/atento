@@ -56,6 +56,7 @@ if ($leads) {
     echo '<th style="padding:8px">Teléfono</th>';
     echo '<th style="padding:8px">Categoría</th>';
     echo '<th style="padding:8px">Conversación</th>';
+    echo '<th style="padding:8px">Horario</th>';
     echo '<th style="padding:8px">Notas</th>';
     echo '<th style="padding:8px">Fecha Creación</th>';
     echo '<th style="padding:8px">Fecha Actualización</th>';
@@ -87,6 +88,7 @@ foreach ($rows as $r) {
         echo '<td style="padding:6px;border:1px solid #e2e8f0">' . htmlspecialchars($r['numero'] ?? '') . '</td>';
         echo '<td style="padding:6px;border:1px solid #e2e8f0;background:' . $bg . ';color:#fff;font-weight:bold">' . strtoupper(htmlspecialchars($r['categoria_cliente'] ?? 'sin categoría')) . '</td>';
         echo '<td style="padding:6px;border:1px solid #e2e8f0">' . htmlspecialchars($r['conversacion'] ?? '') . '</td>';
+        echo '<td style="padding:6px;border:1px solid #e2e8f0">' . htmlspecialchars($r['horario'] ?? '') . '</td>';
         echo '<td style="padding:6px;border:1px solid #e2e8f0">' . htmlspecialchars($r['obs'] ?? '') . '</td>';
         echo '<td style="padding:6px;border:1px solid #e2e8f0">' . htmlspecialchars($r['fecha_creacion'] ?? '') . '</td>';
         echo '<td style="padding:6px;border:1px solid #e2e8f0">' . htmlspecialchars($r['fecha_actualizacion'] ?? '') . '</td>';
