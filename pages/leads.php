@@ -3,10 +3,12 @@ require_once __DIR__ . '/../includes/auth.php';
 requerirLogin();
 $pdo = getDB();
 
+require_once __DIR__ . '/../includes/sucursal_filter.php';
+
 $filtroBusqueda = $_GET['busqueda'] ?? '';
 
-$sql = "SELECT r.*, c.nombre as cliente_nombre, c.sucursal FROM redsalud r LEFT JOIN clientesredsalud c ON r.numero COLLATE utf8mb4_unicode_ci = c.numero";
-$where = ["LOWER(categoria_cliente) = 'cotizando' OR LOWER(categoria_cliente) = 'llamado'"];
+$sql = "SELECT r.*, c.nombre as cliente_nombre, c.sucursal FROM redsalud r $joinSuc";
+$where = ["(LOWER(r.categoria_cliente) = 'cotizando' OR LOWER(r.categoria_cliente) = 'llamado')"];
 $params = [];
 
 if ($filtroBusqueda) {
@@ -14,8 +16,9 @@ if ($filtroBusqueda) {
     $p = "%$filtroBusqueda%";
     $params[] = $p; $params[] = $p; $params[] = $p;
 }
+$where[] = "1=1 " . $whereSuc;
 if ($where) $sql .= " WHERE " . implode(" AND ", $where);
-$sql .= " ORDER BY fecha_actualizacion DESC, fecha_creacion DESC";
+$sql .= " ORDER BY r.fecha_actualizacion DESC, r.fecha_creacion DESC";
 
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
@@ -31,9 +34,28 @@ $conversaciones = $stmt->fetchAll();
                     <h1 class="text-2xl font-bold" style="color:#1A202C">Contactos Cotizando</h1>
                     <p class="mt-1" style="color:#64748B">Gestiona contactos que están cotizando y registra llamadas</p>
                 </div>
-                <a href="<?= APP_URL ?>/api/export_excel.php?leads=1&busqueda=<?= urlencode($filtroBusqueda) ?>" class="btn-primary px-5 py-2.5 rounded-xl text-sm font-medium text-white inline-flex items-center gap-2">
-                    <i class="fas fa-file-excel"></i> Descargar Excel
-                </a>
+                <div class="flex items-center gap-3">
+                    <form method="GET" id="sucursalForm" class="flex items-center gap-2 text-xs" style="color:#64748B">
+                        <span class="font-medium">Sucursal:</span>
+                        <select name="sucursal" onchange="this.form.submit()"
+                                class="px-3 py-1.5 rounded-lg text-xs border border-slate-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none bg-white" style="color:#1A202C">
+                            <option value="">Todas</option>
+                            <?php foreach ($sucursales as $s): ?>
+                                <option value="<?= htmlspecialchars($s) ?>" <?= $sucursalSeleccionada === $s ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($s) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <?php foreach ($_GET as $key => $val): ?>
+                            <?php if ($key !== 'sucursal'): ?>
+                                <input type="hidden" name="<?= htmlspecialchars($key) ?>" value="<?= htmlspecialchars($val) ?>">
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </form>
+                    <a href="<?= APP_URL ?>/api/export_excel.php?leads=1&busqueda=<?= urlencode($filtroBusqueda) ?>" class="btn-primary px-5 py-2.5 rounded-xl text-sm font-medium text-white inline-flex items-center gap-2">
+                        <i class="fas fa-file-excel"></i> Descargar Excel
+                    </a>
+                </div>
             </div>
 
             <div class="card rounded-2xl p-5 mb-6">

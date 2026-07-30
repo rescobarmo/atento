@@ -3,12 +3,14 @@ require_once __DIR__ . '/../includes/auth.php';
 requerirLogin();
 $pdo = getDB();
 
+require_once __DIR__ . '/../includes/sucursal_filter.php';
+
 $filtroBusqueda = $_GET['busqueda'] ?? '';
 $filtroEstado = $_GET['estado'] ?? '';
 $filtroDesde = $_GET['desde'] ?? date('Y-m-d', strtotime('-30 days'));
 $filtroHasta = $_GET['hasta'] ?? date('Y-m-d');
 
-$sql = "SELECT * FROM redsalud WHERE 1=1";
+$sql = "SELECT r.* FROM redsalud r $joinSuc WHERE 1=1 $whereSuc";
 $params = [];
 
 if ($filtroBusqueda) {
@@ -35,8 +37,9 @@ $stmt->execute($params);
 $registros = $stmt->fetchAll();
 
 $estados = $pdo->query("
-    SELECT DISTINCT LOWER(categoria_cliente) as cat FROM redsalud
-    WHERE categoria_cliente IS NOT NULL AND categoria_cliente != ''
+    SELECT DISTINCT LOWER(r.categoria_cliente) as cat FROM redsalud r
+    $joinSuc
+    WHERE r.categoria_cliente IS NOT NULL AND r.categoria_cliente != '' $whereSuc
     ORDER BY cat
 ")->fetchAll();
 
@@ -58,10 +61,29 @@ function badgeClassReport($cat) {
                     <h1 class="text-2xl font-bold" style="color:#1A202C">Historial y Reportes</h1>
                     <p class="mt-1" style="color:#64748B">Registro completo de evaluaciones realizadas</p>
                 </div>
-                <a href="<?= APP_URL ?>/api/export_excel.php?<?= http_build_query($_GET) ?>"
-                   class="btn-primary px-5 py-2.5 rounded-xl text-sm font-medium text-white flex items-center gap-2">
-                    <i class="fas fa-file-pdf"></i> Descargar Reporte
-                </a>
+                <div class="flex items-center gap-3">
+                    <form method="GET" id="sucursalForm" class="flex items-center gap-2 text-xs" style="color:#64748B">
+                        <span class="font-medium">Sucursal:</span>
+                        <select name="sucursal" onchange="this.form.submit()"
+                                class="px-3 py-1.5 rounded-lg text-xs border border-slate-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none bg-white" style="color:#1A202C">
+                            <option value="">Todas</option>
+                            <?php foreach ($sucursales as $s): ?>
+                                <option value="<?= htmlspecialchars($s) ?>" <?= $sucursalSeleccionada === $s ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($s) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <?php foreach ($_GET as $key => $val): ?>
+                            <?php if ($key !== 'sucursal'): ?>
+                                <input type="hidden" name="<?= htmlspecialchars($key) ?>" value="<?= htmlspecialchars($val) ?>">
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </form>
+                    <a href="<?= APP_URL ?>/api/export_excel.php?<?= http_build_query($_GET) ?>"
+                       class="btn-primary px-5 py-2.5 rounded-xl text-sm font-medium text-white flex items-center gap-2">
+                        <i class="fas fa-file-pdf"></i> Descargar Reporte
+                    </a>
+                </div>
             </div>
 
             <div class="card rounded-2xl p-5 mb-6 fade-in">

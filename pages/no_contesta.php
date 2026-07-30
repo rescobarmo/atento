@@ -3,12 +3,19 @@ require_once __DIR__ . '/../includes/auth.php';
 requerirLogin();
 $pdo = getDB();
 
+require_once __DIR__ . '/../includes/sucursal_filter.php';
+
 $busqueda = $_GET['busqueda'] ?? '';
+
+$whereNoContesta = "r.numero IS NULL";
+if ($sucursalSeleccionada) {
+    $whereNoContesta .= " AND c.sucursal = " . $pdo->quote($sucursalSeleccionada);
+}
 
 $sql = "SELECT c.*
         FROM clientesredsalud c
         LEFT JOIN redsalud r ON c.numero COLLATE utf8mb4_unicode_ci = r.numero
-        WHERE r.numero IS NULL";
+        WHERE $whereNoContesta";
 $params = [];
 
 if ($busqueda) {
@@ -36,9 +43,27 @@ $total = $pdo->query("SELECT COUNT(*)
         <div class="max-w-7xl mx-auto">
             <div class="flex items-center justify-between mb-8 fade-in">
                 <div>
-                    <h1 class="text-2xl font-bold" style="color:#1A202C">No Contesta</h1>
-                    <p class="mt-1" style="color:#64748B"><?= $total ?> clientes sin ningún mensaje en RedSalud</p>
+                    <h1 class="text-2xl font-bold" style="color:#1A202C">Clientes Sin Contacto</h1>
+                    <p class="mt-1" style="color:#64748B">Pacientes registrados sin interacción en RedSalud</p>
                 </div>
+                <form method="GET" id="sucursalForm" class="flex items-center gap-2 text-xs" style="color:#64748B">
+                    <span class="font-medium">Sucursal:</span>
+                    <select name="sucursal" onchange="this.form.submit()"
+                            class="px-3 py-1.5 rounded-lg text-xs border border-slate-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none bg-white" style="color:#1A202C">
+                        <option value="">Todas</option>
+                        <?php foreach ($sucursales as $s): ?>
+                            <option value="<?= htmlspecialchars($s) ?>" <?= $sucursalSeleccionada === $s ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($s) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <?php foreach ($_GET as $key => $val): ?>
+                        <?php if ($key !== 'sucursal'): ?>
+                            <input type="hidden" name="<?= htmlspecialchars($key) ?>" value="<?= htmlspecialchars($val) ?>">
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </form>
+            </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-8">
@@ -69,7 +94,7 @@ $total = $pdo->query("SELECT COUNT(*)
                             <i class="fas fa-comments text-lg" style="color:#F59E0B"></i>
                         </div>
                     </div>
-                    <p class="text-2xl font-bold" style="color:#1A202C"><?= $pdo->query("SELECT COUNT(*) FROM redsalud")->fetchColumn() ?></p>
+                    <p class="text-2xl font-bold" style="color:#1A202C"><?= $pdo->query("SELECT COUNT(*) FROM redsalud r $joinSuc WHERE 1=1 $whereSuc")->fetchColumn() ?></p>
                     <p class="text-xs mt-1" style="color:#64748B">mensajes enviados</p>
                 </div>
             </div>

@@ -4,11 +4,13 @@ requerirLogin();
 
 $pdo = getDB();
 
+require_once __DIR__ . '/../includes/sucursal_filter.php';
+
 $filtroBusqueda = $_GET['busqueda'] ?? '';
 $filtroCategoria = $_GET['categoria'] ?? '';
 $leads = $_GET['leads'] ?? '';
 
-$sql = "SELECT * FROM redsalud WHERE 1=1";
+$sql = "SELECT r.* FROM redsalud r $joinSuc WHERE 1=1 $whereSuc";
 $params = [];
 
 if ($leads) {

@@ -3,13 +3,15 @@ require_once __DIR__ . '/../includes/auth.php';
 requerirLogin();
 $pdo = getDB();
 
+require_once __DIR__ . '/../includes/sucursal_filter.php';
+
 $filtroBusqueda = $_GET['busqueda'] ?? '';
 $filtroCategoria = $_GET['categoria'] ?? '';
 
 $sql = "SELECT r.*, c.nombre as cliente_nombre, c.sucursal
         FROM redsalud r
-        LEFT JOIN clientesredsalud c ON r.numero COLLATE utf8mb4_unicode_ci = c.numero
-        WHERE 1=1";
+        $joinSuc
+        WHERE 1=1 $whereSuc";
 $params = [];
 
 if ($filtroBusqueda) {
@@ -37,16 +39,20 @@ foreach ($conversaciones as $row) {
 $resumen = $pdo->query("
     SELECT
         COUNT(*) as total,
-        COUNT(DISTINCT numero) as contactos_unicos,
-        COUNT(DISTINCT CASE WHEN categoria_cliente != 'Sin Categoría' THEN id END) as categorizados,
-        COUNT(DISTINCT categoria_cliente) as total_categorias
-    FROM redsalud
+        COUNT(DISTINCT r.numero) as contactos_unicos,
+        COUNT(DISTINCT CASE WHEN r.categoria_cliente != 'Sin Categoría' THEN r.id END) as categorizados,
+        COUNT(DISTINCT r.categoria_cliente) as total_categorias
+    FROM redsalud r
+    $joinSuc
+    WHERE 1=1 $whereSuc
 ")->fetch();
 
 $categorias = $pdo->query("
-    SELECT categoria_cliente, COUNT(*) as total
-    FROM redsalud
-    GROUP BY categoria_cliente
+    SELECT r.categoria_cliente, COUNT(*) as total
+    FROM redsalud r
+    $joinSuc
+    WHERE 1=1 $whereSuc
+    GROUP BY r.categoria_cliente
     ORDER BY total DESC
 ")->fetchAll();
 
@@ -71,6 +77,25 @@ $coloresCategoria = [
                 <div>
                     <h1 class="text-2xl font-bold" style="color:#1A202C">Red Salud</h1>
                     <p class="mt-1" style="color:#64748B">Conversaciones y contactos</p>
+                </div>
+                <div class="flex items-center gap-2 text-xs" style="color:#64748B">
+                    <span class="font-medium">Sucursal:</span>
+                    <form method="GET" id="sucursalForm" class="flex items-center gap-2">
+                        <select name="sucursal" onchange="this.form.submit()"
+                                class="px-3 py-1.5 rounded-lg text-xs border border-slate-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none bg-white" style="color:#1A202C">
+                            <option value="">Todas</option>
+                            <?php foreach ($sucursales as $s): ?>
+                                <option value="<?= htmlspecialchars($s) ?>" <?= $sucursalSeleccionada === $s ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($s) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <?php foreach ($_GET as $key => $val): ?>
+                            <?php if ($key !== 'sucursal'): ?>
+                                <input type="hidden" name="<?= htmlspecialchars($key) ?>" value="<?= htmlspecialchars($val) ?>">
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </form>
                 </div>
             </div>
 

@@ -5,12 +5,7 @@ requerirLogin();
 $pdo = getDB();
 $usuario = usuarioActual();
 
-$sucursales = $pdo->query("SELECT DISTINCT sucursal FROM clientesredsalud WHERE sucursal IS NOT NULL AND sucursal != '' ORDER BY sucursal")->fetchAll(PDO::FETCH_COLUMN);
-
-$sucursalSeleccionada = $_GET['sucursal'] ?? '';
-
-$joinSuc = "LEFT JOIN clientesredsalud c ON r.numero COLLATE utf8mb4_unicode_ci = c.numero";
-$whereSuc = $sucursalSeleccionada ? "AND c.sucursal = " . $pdo->quote($sucursalSeleccionada) : '';
+require_once __DIR__ . '/includes/sucursal_filter.php';
 
 $redsalud = $pdo->query("
     SELECT
@@ -73,8 +68,8 @@ $ultimosContactos = $pdo->query("
     INNER JOIN (
         SELECT r2.numero, MAX(r2.fecha_creacion) as max_fecha
         FROM redsalud r2
-        LEFT JOIN clientesredsalud c2 ON r2.numero COLLATE utf8mb4_unicode_ci = c2.numero
-        WHERE 1=1 " . ($sucursalSeleccionada ? "AND c2.sucursal = " . $pdo->quote($sucursalSeleccionada) : "") . "
+        $joinSuc2
+        WHERE 1=1 $whereSuc2
         GROUP BY r2.numero
     ) ult ON r.numero = ult.numero AND r.fecha_creacion = ult.max_fecha
     WHERE 1=1 $whereSuc
@@ -118,6 +113,11 @@ function badgeClass($cat) {
                                 </option>
                             <?php endforeach; ?>
                         </select>
+                        <?php foreach ($_GET as $key => $val): ?>
+                            <?php if ($key !== 'sucursal'): ?>
+                                <input type="hidden" name="<?= htmlspecialchars($key) ?>" value="<?= htmlspecialchars($val) ?>">
+                            <?php endif; ?>
+                        <?php endforeach; ?>
                     </form>
                     <i class="fas fa-calendar"></i>
                     <span><?= (new DateTime())->format('d/m/Y') ?></span>
