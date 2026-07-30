@@ -7,7 +7,7 @@ $usuario = usuarioActual();
 
 $redsalud = $pdo->query("
     SELECT
-        COUNT(*) as total_msgs,
+        COUNT(DISTINCT numero) as total_msgs,
         COUNT(DISTINCT numero) as contactos_unicos,
         COUNT(DISTINCT CASE WHEN LOWER(categoria_cliente) IN ('cotizando','respondio','realizado','llamado') THEN id END) as evaluados,
         COUNT(DISTINCT CASE WHEN LOWER(categoria_cliente) = 'cotizando' THEN id END) as cotizando,
