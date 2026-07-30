@@ -174,7 +174,7 @@ document.querySelectorAll('.contact-checkbox').forEach(cb => {
 });
 
 document.querySelectorAll('.presupuesto-input').forEach(input => {
-    input.addEventListener('blur', function() {
+    input.addEventListener('keyup', function() {
         const raw = this.value.replace(/,/g, '');
         if (raw) {
             const num = parseInt(raw, 10);
