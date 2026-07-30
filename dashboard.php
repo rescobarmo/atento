@@ -23,6 +23,8 @@ $cumplimiento = $redsalud['total_msgs'] > 0
 
 $pendientes = $redsalud['total_msgs'] - $redsalud['evaluados'];
 
+$nulos = $pdo->query("SELECT COUNT(1) FROM redsalud WHERE conversacion IS NULL")->fetchColumn();
+
 $msgsPorDia = $pdo->query("
     SELECT DATE_FORMAT(fecha_creacion, '%d/%m') as dia, COUNT(*) as total
     FROM redsalud
@@ -109,7 +111,7 @@ function badgeClass($cat) {
                             <i class="fas fa-check-double text-lg" style="color:#008089"></i>
                         </div>
                     </div>
-                    <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format($redsalud['evaluados']) ?></p>
+                    <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format($nulos) ?></p>
                     <p class="text-xs mt-1" style="color:#64748B">de <?= number_format($redsalud['total_msgs']) ?> registros</p>
                 </div>
                 <div class="stat-card rounded-2xl p-5">
@@ -130,7 +132,6 @@ function badgeClass($cat) {
                         </div>
                     </div>
                     <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format($pendientes) ?></p>
-                    <p class="text-xs mt-1" style="color:#64748B">sin evaluar</p>
                 </div>
             </div>
 
