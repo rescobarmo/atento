@@ -105,11 +105,11 @@ $conversaciones = $stmt->fetchAll();
                                     <?= htmlspecialchars($r['horario'] ?? '-') ?>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <input type="number" step="0.01" min="0"
-                                           class="w-28 px-2 py-1.5 text-xs border border-slate-200 rounded-lg focus:border-purple-400 focus:ring-2 focus:ring-purple-100 outline-none presupuesto-input"
-                                           value="<?= htmlspecialchars($r['presupuesto'] ?? '') ?>"
+                                    <input type="text" inputmode="numeric"
+                                           class="w-28 px-2 py-1.5 text-xs border border-slate-200 rounded-lg focus:border-purple-400 focus:ring-2 focus:ring-purple-100 outline-none presupuesto-input text-right"
+                                           value="<?= $r['presupuesto'] ? number_format((int)$r['presupuesto'], 0) : '' ?>"
                                            data-id="<?= htmlspecialchars($r['id']) ?>"
-                                           placeholder="0.00">
+                                           placeholder="0">
                                 </td>
                                 <td class="px-6 py-4 text-center">
                                     <input type="checkbox"
@@ -174,12 +174,24 @@ document.querySelectorAll('.contact-checkbox').forEach(cb => {
 });
 
 document.querySelectorAll('.presupuesto-input').forEach(input => {
+    input.addEventListener('blur', function() {
+        const raw = this.value.replace(/,/g, '');
+        if (raw) {
+            const num = parseInt(raw, 10);
+            if (!isNaN(num)) this.value = num.toLocaleString('en-US');
+        }
+    });
+
+    input.addEventListener('input', function() {
+        this.value = this.value.replace(/[^0-9,]/g, '');
+    });
+
     let saveTimer;
     input.addEventListener('input', function() {
         clearTimeout(saveTimer);
         saveTimer = setTimeout(() => {
             const id = this.dataset.id;
-            const valor = this.value;
+            const valor = this.value.replace(/,/g, '');
 
             fetch('<?= APP_URL ?>/api/update_redsalud.php', {
                 method: 'POST',
