@@ -107,7 +107,7 @@ $conversaciones = $stmt->fetchAll();
                                 <td class="px-6 py-4">
                                     <input type="text" inputmode="numeric"
                                            class="w-28 px-2 py-1.5 text-xs border border-slate-200 rounded-lg focus:border-purple-400 focus:ring-2 focus:ring-purple-100 outline-none presupuesto-input text-right"
-                                           value="<?= $r['presupuesto'] ? number_format((int)$r['presupuesto'], 0) : '' ?>"
+                                           value="<?= $r['presupuesto'] ? number_format((int)$r['presupuesto'], 0, ',', '.') : '' ?>"
                                            data-id="<?= htmlspecialchars($r['id']) ?>"
                                            placeholder="0">
                                 </td>
@@ -175,15 +175,15 @@ document.querySelectorAll('.contact-checkbox').forEach(cb => {
 
 document.querySelectorAll('.presupuesto-input').forEach(input => {
     input.addEventListener('keyup', function() {
-        const raw = this.value.replace(/,/g, '');
+        const raw = this.value.replace(/\./g, '');
         if (raw) {
             const num = parseInt(raw, 10);
-            if (!isNaN(num)) this.value = num.toLocaleString('en-US');
+            if (!isNaN(num)) this.value = num.toLocaleString('es-CL');
         }
     });
 
     input.addEventListener('input', function() {
-        this.value = this.value.replace(/[^0-9,]/g, '');
+        this.value = this.value.replace(/[^0-9.]/g, '');
     });
 
     let saveTimer;
@@ -191,7 +191,7 @@ document.querySelectorAll('.presupuesto-input').forEach(input => {
         clearTimeout(saveTimer);
         saveTimer = setTimeout(() => {
             const id = this.dataset.id;
-            const valor = this.value.replace(/,/g, '');
+            const valor = this.value.replace(/\./g, '');
 
             fetch('<?= APP_URL ?>/api/update_redsalud.php', {
                 method: 'POST',
