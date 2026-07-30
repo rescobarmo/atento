@@ -109,8 +109,8 @@ function badgeClass($cat) {
                             <i class="fas fa-check-double text-lg" style="color:#008089"></i>
                         </div>
                     </div>
-                    <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format($nulos) ?></p>
-                    <p class="text-xs mt-1" style="color:#64748B">de <?= number_format($redsalud['total_msgs']) ?> registros</p>
+                    <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format($redsalud['total_msgs']) ?></p>
+                    <p class="text-xs mt-1" style="color:#64748B">contactos únicos</p>
                 </div>
                 <div class="stat-card rounded-2xl p-5">
                     <div class="flex items-center justify-between mb-3">
