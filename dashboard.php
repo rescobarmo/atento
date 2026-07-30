@@ -26,11 +26,16 @@ $pendientes = $redsalud['total_msgs'] - $redsalud['evaluados'];
 $nulos = $pdo->query("SELECT COUNT(1) FROM redsalud WHERE conversacion IS NULL")->fetchColumn();
 
 $msgsPorDia = $pdo->query("
-    SELECT DATE_FORMAT(fecha_creacion, '%d/%m') as dia, COUNT(*) as total
-    FROM redsalud
-    WHERE fecha_creacion >= DATE_SUB(CURDATE(), INTERVAL 14 DAY)
-    GROUP BY DATE_FORMAT(fecha_creacion, '%d/%m')
-    ORDER BY MIN(fecha_creacion) ASC
+    SELECT DATE_FORMAT(primeros_registros.fecha, '%d/%m') as dia,
+           COUNT(primeros_registros.numero) as total
+    FROM (
+        SELECT numero, MIN(DATE(fecha_creacion)) as fecha
+        FROM redsalud
+        GROUP BY numero
+    ) as primeros_registros
+    WHERE primeros_registros.fecha >= DATE_SUB(CURDATE(), INTERVAL 14 DAY)
+    GROUP BY primeros_registros.fecha
+    ORDER BY primeros_registros.fecha ASC
 ")->fetchAll();
 
 $categorias = $pdo->query("
