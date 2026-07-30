@@ -102,23 +102,6 @@ function badgeClass($cat) {
                     <p class="mt-1" style="color:#64748B">Bienvenido de nuevo, <?= htmlspecialchars(explode(' ', $usuario['nombre'])[0]) ?></p>
                 </div>
                 <div class="flex items-center gap-3 text-sm" style="color:#64748B">
-                    <form method="GET" id="sucursalForm" class="flex items-center gap-2">
-                        <label for="sucursal" class="text-xs font-medium" style="color:#64748B">Sucursal:</label>
-                        <select name="sucursal" id="sucursal" onchange="this.form.submit()"
-                                class="px-3 py-1.5 rounded-lg text-xs border border-slate-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none bg-white" style="color:#1A202C">
-                            <option value="">Todas</option>
-                            <?php foreach ($sucursales as $s): ?>
-                                <option value="<?= htmlspecialchars($s) ?>" <?= $sucursalSeleccionada === $s ? 'selected' : '' ?>>
-                                    <?= htmlspecialchars($s) ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                        <?php foreach ($_GET as $key => $val): ?>
-                            <?php if ($key !== 'sucursal'): ?>
-                                <input type="hidden" name="<?= htmlspecialchars($key) ?>" value="<?= htmlspecialchars($val) ?>">
-                            <?php endif; ?>
-                        <?php endforeach; ?>
-                    </form>
                     <i class="fas fa-calendar"></i>
                     <span><?= (new DateTime())->format('d/m/Y') ?></span>
                 </div>

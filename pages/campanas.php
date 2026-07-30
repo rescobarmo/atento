@@ -78,25 +78,7 @@ $coloresCategoria = [
                     <h1 class="text-2xl font-bold" style="color:#1A202C">Red Salud</h1>
                     <p class="mt-1" style="color:#64748B">Conversaciones y contactos</p>
                 </div>
-                <div class="flex items-center gap-2 text-xs" style="color:#64748B">
-                    <span class="font-medium">Sucursal:</span>
-                    <form method="GET" id="sucursalForm" class="flex items-center gap-2">
-                        <select name="sucursal" onchange="this.form.submit()"
-                                class="px-3 py-1.5 rounded-lg text-xs border border-slate-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none bg-white" style="color:#1A202C">
-                            <option value="">Todas</option>
-                            <?php foreach ($sucursales as $s): ?>
-                                <option value="<?= htmlspecialchars($s) ?>" <?= $sucursalSeleccionada === $s ? 'selected' : '' ?>>
-                                    <?= htmlspecialchars($s) ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                        <?php foreach ($_GET as $key => $val): ?>
-                            <?php if ($key !== 'sucursal'): ?>
-                                <input type="hidden" name="<?= htmlspecialchars($key) ?>" value="<?= htmlspecialchars($val) ?>">
-                            <?php endif; ?>
-                        <?php endforeach; ?>
-                    </form>
-                </div>
+
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">

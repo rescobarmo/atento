@@ -20,6 +20,21 @@ $paginaActual = basename($_SERVER['PHP_SELF']);
             </div>
         </div>
 
+        <div class="mb-6 px-3">
+            <label class="text-white/50 text-xs uppercase tracking-wider block mb-2">Sucursal</label>
+            <select name="sucursal" onchange="cambiarSucursal(this.value)"
+                    class="w-full px-3 py-2 rounded-lg text-xs border-0 focus:ring-2 focus:ring-white/30 outline-none bg-white/10 text-white">
+                <option value="" class="text-gray-800">Todas</option>
+                <?php if (isset($sucursales)): ?>
+                    <?php foreach ($sucursales as $s): ?>
+                        <option class="text-gray-800" value="<?= htmlspecialchars($s) ?>" <?= ($sucursalSeleccionada ?? '') === $s ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($s) ?>
+                        </option>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </select>
+        </div>
+
         <nav class="space-y-1">
             <a href="<?= APP_URL ?>/dashboard.php"
                class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm <?= $paginaActual === 'dashboard.php' ? 'active text-white' : 'text-white/70' ?>">
@@ -64,3 +79,14 @@ $paginaActual = basename($_SERVER['PHP_SELF']);
         </nav>
     </div>
 </aside>
+<script>
+function cambiarSucursal(valor) {
+    const url = new URL(window.location.href);
+    if (valor) {
+        url.searchParams.set('sucursal', valor);
+    } else {
+        url.searchParams.delete('sucursal');
+    }
+    window.location.href = url.toString();
+}
+</script>

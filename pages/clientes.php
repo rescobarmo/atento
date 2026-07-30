@@ -3,12 +3,17 @@ require_once __DIR__ . '/../includes/auth.php';
 requerirLogin();
 $pdo = getDB();
 
+require_once __DIR__ . '/../includes/sucursal_filter.php';
+
 $busqueda = $_GET['busqueda'] ?? '';
 
-$sql = "SELECT * FROM clientesredsalud";
+$sql = "SELECT * FROM clientesredsalud WHERE 1=1";
 $params = [];
+if ($sucursalSeleccionada) {
+    $sql .= " AND sucursal = " . $pdo->quote($sucursalSeleccionada);
+}
 if ($busqueda) {
-    $sql .= " WHERE nombre LIKE ? OR numero LIKE ? OR sucursal LIKE ?";
+    $sql .= " AND (nombre LIKE ? OR numero LIKE ? OR sucursal LIKE ?)";
     $params[] = "%$busqueda%"; $params[] = "%$busqueda%"; $params[] = "%$busqueda%";
 }
 $sql .= " ORDER BY nombre ASC";
@@ -16,7 +21,7 @@ $clientes = $pdo->prepare($sql);
 $clientes->execute($params);
 $clientes = $clientes->fetchAll();
 
-$total = $pdo->query("SELECT COUNT(*) FROM clientesredsalud")->fetchColumn();
+$total = $pdo->query("SELECT COUNT(*) FROM clientesredsalud" . ($sucursalSeleccionada ? " WHERE sucursal = " . $pdo->quote($sucursalSeleccionada) : ""))->fetchColumn();
 ?>
 <?php $titulo = 'Clientes'; include __DIR__ . '/../includes/header.php'; ?>
 <div class="flex min-h-screen">

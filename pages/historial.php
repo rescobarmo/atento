@@ -62,23 +62,6 @@ function badgeClassReport($cat) {
                     <p class="mt-1" style="color:#64748B">Registro completo de evaluaciones realizadas</p>
                 </div>
                 <div class="flex items-center gap-3">
-                    <form method="GET" id="sucursalForm" class="flex items-center gap-2 text-xs" style="color:#64748B">
-                        <span class="font-medium">Sucursal:</span>
-                        <select name="sucursal" onchange="this.form.submit()"
-                                class="px-3 py-1.5 rounded-lg text-xs border border-slate-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none bg-white" style="color:#1A202C">
-                            <option value="">Todas</option>
-                            <?php foreach ($sucursales as $s): ?>
-                                <option value="<?= htmlspecialchars($s) ?>" <?= $sucursalSeleccionada === $s ? 'selected' : '' ?>>
-                                    <?= htmlspecialchars($s) ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                        <?php foreach ($_GET as $key => $val): ?>
-                            <?php if ($key !== 'sucursal'): ?>
-                                <input type="hidden" name="<?= htmlspecialchars($key) ?>" value="<?= htmlspecialchars($val) ?>">
-                            <?php endif; ?>
-                        <?php endforeach; ?>
-                    </form>
                     <a href="<?= APP_URL ?>/api/export_excel.php?<?= http_build_query($_GET) ?>"
                        class="btn-primary px-5 py-2.5 rounded-xl text-sm font-medium text-white flex items-center gap-2">
                         <i class="fas fa-file-pdf"></i> Descargar Reporte
