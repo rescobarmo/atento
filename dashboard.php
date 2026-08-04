@@ -20,10 +20,6 @@ $redsalud = $pdo->query("
     WHERE 1=1 $whereSuc
 ")->fetch();
 
-$cumplimiento = $redsalud['total_msgs'] > 0
-    ? round(($redsalud['evaluados'] / $redsalud['total_msgs']) * 100, 1)
-    : 0;
-
 $pendientes = $redsalud['total_msgs'] - $redsalud['evaluados'];
 
 $nulos = $pdo->query("
@@ -31,6 +27,10 @@ $nulos = $pdo->query("
     $joinSuc
     WHERE conversacion IS NULL $whereSuc
 ")->fetchColumn();
+
+$cumplimiento = $pendientes > 0
+    ? round(($nulos / $pendientes) * 100, 1)
+    : 0;
 
 $msgsPorDia = $pdo->query("
     SELECT DATE_FORMAT(primeros_registros.fecha, '%d/%m') as dia,
@@ -136,7 +136,7 @@ function badgeClass($cat) {
                         </div>
                     </div>
                     <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format($nulos) ?></p>
-                    <p class="text-xs mt-1" style="color:#64748B">de <?= number_format($redsalud['total_msgs']) ?> registros</p>
+                    <p class="text-xs mt-1" style="color:#64748B">de <?= number_format($nulos + $pendientes) ?> registros</p>
                 </div>
                 <div class="stat-card rounded-2xl p-5">
                     <div class="flex items-center justify-between mb-3">
