@@ -24,7 +24,7 @@ if ($esAgente) {
 $filtroBusqueda = $_GET['busqueda'] ?? '';
 
 $sql = "SELECT r.*, c.nombre as cliente_nombre, c.sucursal FROM redsalud r $joinSuc";
-$where = ["LOWER(r.categoria_cliente) = 'cotizando'"];
+$where = ["LOWER(r.categoria_cliente) = 'llamado'"];
 $params = [];
 
 if ($esAgente) {
@@ -48,10 +48,6 @@ $where[] = "1=1 " . $whereSuc;
 $sql .= " WHERE " . implode(" AND ", $where);
 $sql .= " ORDER BY r.fecha_actualizacion DESC, r.fecha_creacion DESC";
 
-if ($esAgente && (int)$usuario['limite_leads'] > 0) {
-    $sql .= " LIMIT " . (int)$usuario['limite_leads'];
-}
-
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $leads = $stmt->fetchAll();
@@ -59,16 +55,14 @@ $leads = $stmt->fetchAll();
 $resumen = $pdo->prepare("
     SELECT
         COUNT(*) as total,
-        SUM(CASE WHEN LOWER(r.categoria_cliente) = 'cotizando' THEN 1 ELSE 0 END) as cotizando,
-        SUM(CASE WHEN LOWER(r.categoria_cliente) = 'llamado' THEN 1 ELSE 0 END) as contactados,
         COALESCE(SUM(r.presupuesto), 0) as presupuesto
     FROM redsalud r
     $joinSuc
-    WHERE LOWER(r.categoria_cliente) = 'cotizando'
+    WHERE LOWER(r.categoria_cliente) = 'llamado'
     AND 1=1 $whereSuc
 ");
 $resumen->execute();
-$resumen = $resumen->fetch() ?: ['total' => 0, 'cotizando' => 0, 'contactados' => 0, 'presupuesto' => 0];
+$resumen = $resumen->fetch() ?: ['total' => 0, 'presupuesto' => 0];
 if ($esAgente) {
     if (empty($sucursalesAgente)) {
         $whereResumen = "r.agente_id = " . (int)$usuario['id'];
@@ -81,88 +75,45 @@ if ($esAgente) {
     $stmtR = $pdo->prepare("
         SELECT
             COUNT(*) as total,
-            SUM(CASE WHEN LOWER(r.categoria_cliente) = 'cotizando' THEN 1 ELSE 0 END) as cotizando,
-            SUM(CASE WHEN LOWER(r.categoria_cliente) = 'llamado' THEN 1 ELSE 0 END) as contactados,
             COALESCE(SUM(r.presupuesto), 0) as presupuesto
         FROM redsalud r
         $joinSuc
-        WHERE LOWER(r.categoria_cliente) = 'cotizando'
+        WHERE LOWER(r.categoria_cliente) = 'llamado'
         AND $whereResumen
     ");
     $stmtR->execute($paramResumen);
-    $resumen = $stmtR->fetch() ?: ['total' => 0, 'cotizando' => 0, 'contactados' => 0, 'presupuesto' => 0];
+    $resumen = $stmtR->fetch() ?: ['total' => 0, 'presupuesto' => 0];
 }
 ?>
-<?php $titulo = 'Panel Agente de Ventas'; include __DIR__ . '/../includes/header.php'; ?>
+<?php $titulo = 'Leads Contactados'; include __DIR__ . '/../includes/header.php'; ?>
 <div class="flex min-h-screen">
     <?php include __DIR__ . '/../includes/sidebar.php'; ?>
     <main class="flex-1 ml-64 p-6 lg:p-8">
         <div class="max-w-7xl mx-auto">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
                 <div>
-                    <h1 class="text-2xl font-bold" style="color:#1A202C">Panel Agente de Ventas</h1>
-                    <p class="mt-1" style="color:#64748B">Visión de sucursal y seguimiento de leads</p>
+                    <h1 class="text-2xl font-bold" style="color:#1A202C">Leads Contactados</h1>
+                    <p class="mt-1" style="color:#64748B">Clientes que respondieron al contacto</p>
                 </div>
                 <div class="flex items-center gap-3">
                     <div class="flex items-center gap-3 px-4 py-2.5 rounded-xl card">
-                        <span class="flex items-center justify-center w-10 h-10 rounded-xl" style="background:rgba(0,128,137,0.12)">
-                            <i class="fas fa-store text-lg" style="color:#008089"></i>
+                        <span class="flex items-center justify-center w-10 h-10 rounded-xl" style="background:rgba(147,51,234,0.12)">
+                            <i class="fas fa-phone-volume text-lg" style="color:#9333ea"></i>
                         </span>
                         <div>
-                            <p class="text-xs uppercase tracking-wider font-semibold" style="color:#64748B">Sucursal</p>
-                            <p class="font-bold" style="color:#1A202C"><?= $esAgente ? (empty($sucursalesAgente) ? 'Sin asignar' : htmlspecialchars($sucursalSeleccionada)) : htmlspecialchars($sucursalSeleccionada ?: 'Todas') ?></p>
+                            <p class="text-xs uppercase tracking-wider font-semibold" style="color:#64748B">Contactados</p>
+                            <p class="font-bold" style="color:#1A202C"><?= number_format((int)$resumen['total']) ?></p>
                         </div>
                     </div>
-                    <?php if ($esAgente && (int)$usuario['limite_leads'] > 0): ?>
                     <div class="flex items-center gap-3 px-4 py-2.5 rounded-xl card">
                         <span class="flex items-center justify-center w-10 h-10 rounded-xl" style="background:rgba(245,158,11,0.12)">
-                            <i class="fas fa-gauge-high text-lg" style="color:#F59E0B"></i>
+                            <i class="fas fa-coins text-lg" style="color:#F59E0B"></i>
                         </span>
                         <div>
-                            <p class="text-xs uppercase tracking-wider font-semibold" style="color:#64748B">Límite diario</p>
-                            <p class="font-bold" style="color:#1A202C"><?= (int)$usuario['limite_leads'] ?> leads</p>
+                            <p class="text-xs uppercase tracking-wider font-semibold" style="color:#64748B">Presupuesto</p>
+                            <p class="font-bold" style="color:#1A202C">$<?= number_format((int)$resumen['presupuesto'], 0, ',', '.') ?></p>
                         </div>
                     </div>
-                    <?php endif; ?>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-                <div class="stat-card rounded-2xl p-5">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:#64748B">Total Leads</span>
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(0,128,137,0.12)">
-                            <i class="fas fa-users text-lg" style="color:#008089"></i>
-                        </div>
-                    </div>
-                    <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format((int)$resumen['total']) ?></p>
-                </div>
-                <div class="stat-card rounded-2xl p-5">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:#64748B">Cotizando</span>
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(220,38,38,0.12)">
-                            <i class="fas fa-file-invoice-dollar text-lg" style="color:#dc2626"></i>
-                        </div>
-                    </div>
-                    <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format((int)$resumen['cotizando']) ?></p>
-                </div>
-                <div class="stat-card rounded-2xl p-5">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:#64748B">Contactados</span>
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(147,51,234,0.12)">
-                            <i class="fas fa-phone-volume text-lg" style="color:#9333ea"></i>
-                        </div>
-                    </div>
-                    <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format((int)$resumen['contactados']) ?></p>
-                </div>
-                <div class="stat-card rounded-2xl p-5">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:#64748B">Presupuesto Total</span>
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(245,158,11,0.12)">
-                            <i class="fas fa-coins text-lg" style="color:#F59E0B"></i>
-                        </div>
-                    </div>
-                    <p class="text-2xl font-bold" style="color:#1A202C">$<?= number_format((int)$resumen['presupuesto'], 0, ',', '.') ?></p>
                 </div>
             </div>
 
@@ -177,7 +128,7 @@ if ($esAgente) {
                         <i class="fas fa-search mr-1"></i> Buscar
                     </button>
                     <?php if ($filtroBusqueda): ?>
-                        <a href="agentes.php" class="px-4 py-2.5 rounded-xl text-sm font-medium" style="border:1px solid #E2E8F0;color:#64748B">
+                        <a href="contactados.php" class="px-4 py-2.5 rounded-xl text-sm font-medium" style="border:1px solid #E2E8F0;color:#64748B">
                             <i class="fas fa-times mr-1"></i> Limpiar
                         </a>
                     <?php endif; ?>
@@ -186,8 +137,8 @@ if ($esAgente) {
 
             <?php if (empty($leads)): ?>
                 <div class="card rounded-2xl p-12 text-center">
-                    <i class="fas fa-inbox text-4xl mb-4" style="color:#CBD5E1"></i>
-                    <p class="text-lg font-medium" style="color:#64748B">No se encontraron leads para esta sucursal</p>
+                    <i class="fas fa-phone-volume text-4xl mb-4" style="color:#CBD5E1"></i>
+                    <p class="text-lg font-medium" style="color:#64748B">No hay leads contactados aún</p>
                 </div>
             <?php else: ?>
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
@@ -195,13 +146,7 @@ if ($esAgente) {
                 <?php
                     $cat = strtolower($r['categoria_cliente'] ?? '');
                     $esLlamado = $cat === 'llamado';
-                    $colorBg = match($cat) {
-                        'cotizando' => '#dc2626',
-                        'respondio' => '#16a34a',
-                        'realizado' => '#2563eb',
-                        'llamado' => '#9333ea',
-                        default => '#64748b'
-                    };
+                    $colorBg = '#9333ea';
                     $inicial = mb_strtoupper(mb_substr(htmlspecialchars($r['cliente_nombre'] ?: $r['nombre'] ?? '?'), 0, 1));
                 ?>
                 <div class="card rounded-2xl overflow-hidden flex flex-col lead-card fade-in">

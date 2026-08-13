@@ -52,6 +52,11 @@ $paginaActual = basename($_SERVER['PHP_SELF']);
                 <i class="fas fa-user-tie w-5 text-center"></i>
                 Agente de Ventas
             </a>
+            <a href="<?= APP_URL ?>/pages/contactados.php"
+               class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm <?= $paginaActual === 'contactados.php' ? 'active text-white' : 'text-white/70' ?>">
+                <i class="fas fa-phone-volume w-5 text-center"></i>
+                Contactados
+            </a>
             <?php else: ?>
             <a href="<?= APP_URL ?>/dashboard.php"
                class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm <?= $paginaActual === 'dashboard.php' ? 'active text-white' : 'text-white/70' ?>">
