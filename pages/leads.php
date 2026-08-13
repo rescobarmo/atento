@@ -7,7 +7,7 @@ require_once __DIR__ . '/../includes/sucursal_filter.php';
 
 $filtroBusqueda = $_GET['busqueda'] ?? '';
 
-$sql = "SELECT r.*, c.nombre as cliente_nombre, c.sucursal FROM redsalud r $joinSuc";
+$sql = "SELECT r.*, c.nombre as cliente_nombre, c.sucursal, ag.nombre as agente_nombre FROM redsalud r $joinSuc LEFT JOIN usuarios ag ON ag.id = r.agente_id";
 $where = ["(LOWER(r.categoria_cliente) = 'cotizando' OR LOWER(r.categoria_cliente) = 'llamado')"];
 $params = [];
 
@@ -66,22 +66,18 @@ $conversaciones = $stmt->fetchAll();
                             <tr class="text-left text-xs uppercase tracking-wider" style="color:#64748B;background:#F4F8F8">
                                 <th class="px-6 py-4 font-medium">Nombre</th>
                                 <th class="px-6 py-4 font-medium">Teléfono</th>
-                                <th class="px-6 py-4 font-medium">Conversación</th>
                                 <th class="px-6 py-4 font-medium">Categoría</th>
                                 <th class="px-6 py-4 font-medium">Horario</th>
-                                <th class="px-6 py-4 font-medium">Presupuesto</th>
-                                <th class="px-6 py-4 font-medium text-center">Contactado</th>
-                                <th class="px-6 py-4 font-medium">Notas</th>
+                                <th class="px-6 py-4 font-medium">Agente Asignado</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y" style="border-color:#E2E8F0">
                             <?php if (empty($conversaciones)): ?>
-                                <tr><td colspan="8" class="px-6 py-12 text-center text-slate-400">No se encontraron registros</td></tr>
+                                <tr><td colspan="5" class="px-6 py-12 text-center text-slate-400">No se encontraron registros</td></tr>
                             <?php endif; ?>
                             <?php foreach ($conversaciones as $r): ?>
                             <?php
                                 $cat = strtolower($r['categoria_cliente'] ?? '');
-                                $esLlamado = $cat === 'llamado';
                                 $colorBg = match($cat) {
                                     'cotizando' => '#dc2626',
                                     'respondio' => '#16a34a',
@@ -98,9 +94,6 @@ $conversaciones = $stmt->fetchAll();
                                     <?php endif; ?>
                                 </td>
                                 <td class="px-6 py-4 font-mono text-sm text-slate-600"><?= htmlspecialchars($r['numero']) ?></td>
-                                <td class="px-6 py-4 max-w-xs">
-                                    <p class="text-slate-600 truncate"><?= htmlspecialchars(mb_substr($r['conversacion'] ?? '', 0, 100)) ?></p>
-                                </td>
                                 <td class="px-6 py-4">
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold text-white" style="background:<?= $colorBg ?>">
                                         <?= htmlspecialchars(strtoupper($cat ?: 'SIN CATEGORÍA')) ?>
@@ -110,28 +103,14 @@ $conversaciones = $stmt->fetchAll();
                                     <?= htmlspecialchars($r['horario'] ?? '-') ?>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <input type="text" inputmode="numeric"
-                                           class="w-28 px-2 py-1.5 text-xs border border-slate-200 rounded-lg focus:border-purple-400 focus:ring-2 focus:ring-purple-100 outline-none presupuesto-input text-right"
-                                           value="<?= $r['presupuesto'] ? number_format((int)$r['presupuesto'], 0, ',', '.') : '' ?>"
-                                           data-id="<?= htmlspecialchars($r['id']) ?>"
-                                           placeholder="0">
-                                </td>
-                                <td class="px-6 py-4 text-center">
-                                    <input type="checkbox"
-                                           class="w-5 h-5 rounded border-slate-300 text-purple-600 focus:ring-purple-500 cursor-pointer contact-checkbox"
-                                           <?= $esLlamado ? 'checked' : '' ?>
-                                           data-id="<?= htmlspecialchars($r['id']) ?>">
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center gap-2">
-                                        <input type="text"
-                                               class="w-40 px-2 py-1.5 text-xs border border-slate-200 rounded-lg focus:border-purple-400 focus:ring-2 focus:ring-purple-100 outline-none obs-input"
-                                               value="<?= htmlspecialchars($r['obs'] ?? '') ?>"
-                                               maxlength="200"
-                                               data-id="<?= htmlspecialchars($r['id']) ?>"
-                                               placeholder="Escribir nota...">
-                                        <span class="text-xs text-slate-400 obs-count"><?= mb_strlen($r['obs'] ?? '') ?>/200</span>
-                                    </div>
+                                    <?php if (!empty($r['agente_nombre'])): ?>
+                                        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-lg text-xs font-medium" style="background:rgba(0,128,137,0.1);color:#026168">
+                                            <i class="fas fa-user-tie"></i>
+                                            <?= htmlspecialchars($r['agente_nombre']) ?>
+                                        </span>
+                                    <?php else: ?>
+                                        <span class="text-xs text-slate-400">Sin asignar</span>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
@@ -143,102 +122,4 @@ $conversaciones = $stmt->fetchAll();
     </main>
 </div>
 
-<script>
-document.querySelectorAll('.contact-checkbox').forEach(cb => {
-    cb.addEventListener('change', function() {
-        const id = this.dataset.id;
-        const checked = this.checked;
-        const tr = this.closest('tr');
-        const obsInput = tr.querySelector('.obs-input');
-
-        if (!checked) {
-            obsInput.value = '';
-            const counter = obsInput.parentElement.querySelector('.obs-count');
-            if (counter) counter.textContent = '0/200';
-
-            fetch('<?= APP_URL ?>/api/update_redsalud.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({ id, campo: 'obs', valor: '' })
-            });
-        }
-
-        const valor = checked ? 'LLAMADO' : 'COTIZANDO';
-        fetch('<?= APP_URL ?>/api/update_redsalud.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({ id, campo: 'categoria_cliente', valor })
-        })
-        .then(r => r.json())
-        .then(data => {
-            if (data.success) location.reload();
-            else alert('Error: ' + (data.error || 'desconocido'));
-        })
-        .catch(() => alert('Error de conexión'));
-    });
-});
-
-document.querySelectorAll('.presupuesto-input').forEach(input => {
-    input.addEventListener('keyup', function() {
-        const raw = this.value.replace(/\./g, '');
-        if (raw) {
-            const num = parseInt(raw, 10);
-            if (!isNaN(num)) this.value = num.toLocaleString('es-CL');
-        }
-    });
-
-    input.addEventListener('input', function() {
-        this.value = this.value.replace(/[^0-9.]/g, '');
-    });
-
-    let saveTimer;
-    input.addEventListener('input', function() {
-        clearTimeout(saveTimer);
-        saveTimer = setTimeout(() => {
-            const id = this.dataset.id;
-            const valor = this.value.replace(/\./g, '');
-
-            fetch('<?= APP_URL ?>/api/update_redsalud.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({ id, campo: 'presupuesto', valor })
-            })
-            .then(r => r.json())
-            .then(data => {
-                if (!data.success) alert('Error: ' + (data.error || 'desconocido'));
-            })
-            .catch(() => {});
-        }, 800);
-    });
-});
-
-document.querySelectorAll('.obs-input').forEach(input => {
-    const counter = input.parentElement.querySelector('.obs-count');
-
-    input.addEventListener('input', function() {
-        const len = this.value.length;
-        if (counter) counter.textContent = len + '/200';
-    });
-
-    let saveTimer;
-    input.addEventListener('input', function() {
-        clearTimeout(saveTimer);
-        saveTimer = setTimeout(() => {
-            const id = this.dataset.id;
-            const valor = this.value;
-
-            fetch('<?= APP_URL ?>/api/update_redsalud.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({ id, campo: 'obs', valor })
-            })
-            .then(r => r.json())
-            .then(data => {
-                if (!data.success) alert('Error: ' + (data.error || 'desconocido'));
-            })
-            .catch(() => {});
-        }, 800);
-    });
-});
-</script>
 <?php include __DIR__ . '/../includes/footer.php'; ?>
