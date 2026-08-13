@@ -9,36 +9,83 @@ if (strtolower($usuario['rol_nombre'] ?? '') === 'agente de ventas') {
     exit;
 }
 
+$mensaje = '';
+$errorMensaje = '';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $asignaciones = $_POST['asignacion'] ?? [];
-    $borradas = 0;
-    $insertadas = 0;
+    $accion = $_POST['accion'] ?? 'asignar';
 
-    $del = $pdo->prepare("DELETE FROM agente_sucursales WHERE agente_id = ?");
-    $ins = $pdo->prepare("INSERT IGNORE INTO agente_sucursales (agente_id, sucursal) VALUES (?, ?)");
+    if ($accion === 'crear') {
+        $nombre = trim($_POST['nombre'] ?? '');
+        $email = trim($_POST['email'] ?? '');
+        $username = trim($_POST['username'] ?? '');
+        $password = $_POST['password'] ?? '';
 
-    foreach ($asignaciones as $agenteId => $sucursales) {
-        $agenteId = (int)$agenteId;
-        if ($agenteId <= 0) continue;
-        $del->execute([$agenteId]);
-        $borradas++;
-        $sucursales = is_array($sucursales) ? $sucursales : [];
-        foreach ($sucursales as $sucursal) {
-            if ($sucursal === '') continue;
-            $ins->execute([$agenteId, $sucursal]);
-            $insertadas++;
+        $rolId = $pdo->query("SELECT id FROM roles WHERE nombre = 'Agente de Ventas'")->fetchColumn();
+
+        if (!$nombre || !$email || !$password || !$rolId) {
+            $errorMensaje = 'Complete nombre, email y contraseña para crear el agente.';
+        } else {
+            if (!$username) {
+                $username = strtolower(explode('@', $email)[0]);
+            }
+            try {
+                $stmt = $pdo->prepare("
+                    INSERT INTO usuarios (nombre, email, username, password, rol_id, activo)
+                    VALUES (?, ?, ?, ?, ?, 1)
+                ");
+                $stmt->execute([$nombre, $email, $username, password_hash($password, PASSWORD_DEFAULT), $rolId]);
+                $mensaje = "Agente '$nombre' creado correctamente. Usuario: $username";
+            } catch (Exception $e) {
+                $errorMensaje = 'Error al crear el agente: ' . $e->getMessage();
+            }
         }
-    }
+    } elseif ($accion === 'desactivar') {
+        $agenteId = (int)($_POST['agente_id'] ?? 0);
+        if ($agenteId > 0) {
+            $pdo->prepare("UPDATE usuarios SET activo = 0 WHERE id = ?")->execute([$agenteId]);
+            $pdo->prepare("DELETE FROM agente_sucursales WHERE agente_id = ?")->execute([$agenteId]);
+            $mensaje = 'Agente desactivado.';
+        }
+    } else {
+        $asignaciones = $_POST['asignacion'] ?? [];
+        $borradas = 0;
+        $insertadas = 0;
 
-    $mensaje = "Asignaciones guardadas: $insertadas sucursales registradas en $borradas agentes.";
+        $del = $pdo->prepare("DELETE FROM agente_sucursales WHERE agente_id = ?");
+        $ins = $pdo->prepare("INSERT IGNORE INTO agente_sucursales (agente_id, sucursal) VALUES (?, ?)");
+
+        foreach ($asignaciones as $agenteId => $sucursales) {
+            $agenteId = (int)$agenteId;
+            if ($agenteId <= 0) continue;
+            $del->execute([$agenteId]);
+            $borradas++;
+            $sucursales = is_array($sucursales) ? $sucursales : [];
+            foreach ($sucursales as $sucursal) {
+                if ($sucursal === '') continue;
+                $ins->execute([$agenteId, $sucursal]);
+                $insertadas++;
+            }
+        }
+
+        $mensaje = "Asignaciones guardadas: $insertadas sucursales registradas en $borradas agentes.";
+    }
 }
 
 $agentes = $pdo->query("
-    SELECT u.id, u.nombre, u.email, u.sucursal
+    SELECT u.id, u.nombre, u.email, u.username, u.activo
     FROM usuarios u
     JOIN roles r ON u.rol_id = r.id
-    WHERE r.nombre = 'Agente de Ventas' AND u.activo = 1
-    ORDER BY u.nombre
+    WHERE r.nombre = 'Agente de Ventas'
+    ORDER BY u.activo DESC, u.nombre
+")->fetchAll();
+
+$agentes = $pdo->query("
+    SELECT u.id, u.nombre, u.email, u.username, u.activo
+    FROM usuarios u
+    JOIN roles r ON u.rol_id = r.id
+    WHERE r.nombre = 'Agente de Ventas'
+    ORDER BY u.activo DESC, u.nombre
 ")->fetchAll();
 
 $sucursales = $pdo->query("SELECT DISTINCT sucursal FROM clientesredsalud WHERE sucursal IS NOT NULL AND sucursal != '' ORDER BY sucursal")->fetchAll(PDO::FETCH_COLUMN);
@@ -67,11 +114,49 @@ foreach ($asignadas as $a) {
                 </div>
             <?php endif; ?>
 
+            <?php if (!empty($errorMensaje)): ?>
+                <div class="rounded-2xl px-4 py-3 mb-6 text-sm flex items-center gap-2" style="background:rgba(229,62,62,0.1);border:1px solid rgba(229,62,62,0.25);color:#E53E3E">
+                    <i class="fas fa-exclamation-circle"></i> <?= htmlspecialchars($errorMensaje) ?>
+                </div>
+            <?php endif; ?>
+
+            <div class="card rounded-2xl p-6 mb-6">
+                <h2 class="font-semibold mb-4" style="color:#1A202C"><i class="fas fa-user-plus mr-2" style="color:#008089"></i> Crear Agente de Ventas</h2>
+                <form method="POST" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <input type="hidden" name="accion" value="crear">
+                    <div>
+                        <label class="block text-xs font-medium mb-1" style="color:#64748B">Nombre</label>
+                        <input type="text" name="nombre" required placeholder="Nombre del agente"
+                               class="w-full px-3 py-2.5 rounded-xl outline-none text-sm" style="border:1px solid #E2E8F0;background:#F4F8F8;color:#1A202C">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium mb-1" style="color:#64748B">Email</label>
+                        <input type="email" name="email" required placeholder="agente@redsalud.cl"
+                               class="w-full px-3 py-2.5 rounded-xl outline-none text-sm" style="border:1px solid #E2E8F0;background:#F4F8F8;color:#1A202C">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium mb-1" style="color:#64748B">Usuario (opcional)</label>
+                        <input type="text" name="username" placeholder="auto desde email"
+                               class="w-full px-3 py-2.5 rounded-xl outline-none text-sm" style="border:1px solid #E2E8F0;background:#F4F8F8;color:#1A202C">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium mb-1" style="color:#64748B">Contraseña</label>
+                        <input type="password" name="password" required placeholder="••••••••"
+                               class="w-full px-3 py-2.5 rounded-xl outline-none text-sm" style="border:1px solid #E2E8F0;background:#F4F8F8;color:#1A202C">
+                    </div>
+                    <div class="sm:col-span-2 lg:col-span-4 flex justify-end">
+                        <button type="submit" class="btn-primary px-6 py-2.5 rounded-xl text-sm font-medium text-white">
+                            <i class="fas fa-plus mr-1"></i> Crear Agente
+                        </button>
+                    </div>
+                </form>
+            </div>
+
             <?php if (empty($agentes)): ?>
                 <div class="card rounded-2xl p-12 text-center" style="color:#64748B">
                     <i class="fas fa-user-tie text-5xl mb-4 opacity-30"></i>
-                    <p class="text-lg font-medium">No hay agentes de ventas activos</p>
-                    <p class="text-sm mt-1">Ejecuta setup_agentes.php para crear uno o verifica el rol en la base de datos.</p>
+                    <p class="text-lg font-medium">Aún no hay agentes de ventas</p>
+                    <p class="text-sm mt-1">Usa el formulario "Crear Agente de Ventas" para agregar uno.</p>
                 </div>
             <?php elseif (empty($sucursales)): ?>
                 <div class="card rounded-2xl p-12 text-center" style="color:#64748B">
@@ -81,20 +166,28 @@ foreach ($asignadas as $a) {
                 </div>
             <?php else: ?>
                 <form method="POST" class="card rounded-2xl overflow-hidden">
+                    <input type="hidden" name="accion" value="asignar">
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm">
                             <thead>
                                 <tr class="text-left text-xs uppercase tracking-wider" style="color:#64748B;background:#F4F8F8">
                                     <th class="px-6 py-4 font-medium">Agente</th>
                                     <th class="px-6 py-4 font-medium">Sucursales asignadas</th>
+                                    <th class="px-6 py-4 font-medium text-right">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y" style="border-color:#E2E8F0">
                                 <?php foreach ($agentes as $a): ?>
-                                <tr class="hover:bg-slate-50 transition-colors">
+                                <tr class="hover:bg-slate-50 transition-colors <?= (int)$a['activo'] ? '' : 'opacity-50' ?>">
                                     <td class="px-6 py-4 align-top">
-                                        <p class="font-medium" style="color:#1A202C"><?= htmlspecialchars($a['nombre']) ?></p>
+                                        <p class="font-medium" style="color:#1A202C">
+                                            <?= htmlspecialchars($a['nombre']) ?>
+                                            <?php if (!(int)$a['activo']): ?>
+                                                <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold text-white" style="background:#94a3b8">INACTIVO</span>
+                                            <?php endif; ?>
+                                        </p>
                                         <p class="text-xs mt-0.5" style="color:#94a3b8"><?= htmlspecialchars($a['email']) ?></p>
+                                        <p class="text-xs mt-0.5 font-mono" style="color:#94a3b8">@<?= htmlspecialchars($a['username'] ?? $a['email']) ?></p>
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="flex flex-wrap gap-3">
@@ -103,11 +196,23 @@ foreach ($asignadas as $a) {
                                                        style="border-color:#E2E8F0;background:#FAFAFA;color:#1A202C">
                                                     <input type="checkbox" name="asignacion[<?= (int)$a['id'] ?>][]" value="<?= htmlspecialchars($s) ?>"
                                                            class="w-4 h-4 rounded border-slate-300 text-purple-600 focus:ring-purple-500"
-                                                           <?= in_array($s, $mapa[(int)$a['id']] ?? [], true) ? 'checked' : '' ?>>
+                                                           <?= in_array($s, $mapa[(int)$a['id']] ?? [], true) ? 'checked' : '' ?>
+                                                           <?= (int)$a['activo'] ? '' : 'disabled' ?>>
                                                     <?= htmlspecialchars($s) ?>
                                                 </label>
                                             <?php endforeach; ?>
                                         </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-right align-top">
+                                        <?php if ((int)$a['activo']): ?>
+                                            <form method="POST" onsubmit="return confirm('¿Desactivar a <?= htmlspecialchars(addslashes($a['nombre'])) ?>? Ya no podrá ingresar al sistema.')">
+                                                <input type="hidden" name="accion" value="desactivar">
+                                                <input type="hidden" name="agente_id" value="<?= (int)$a['id'] ?>">
+                                                <button type="submit" class="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors hover:bg-red-50" style="border:1px solid #E2E8F0;color:#E53E3E">
+                                                    <i class="fas fa-user-slash mr-1"></i> Desactivar
+                                                </button>
+                                            </form>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                                 <?php endforeach; ?>
