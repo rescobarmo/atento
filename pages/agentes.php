@@ -64,7 +64,7 @@ $resumen = $pdo->prepare("
         COALESCE(SUM(r.presupuesto), 0) as presupuesto
     FROM redsalud r
     $joinSuc
-    WHERE LOWER(r.categoria_cliente) = 'cotizando'
+    WHERE (LOWER(r.categoria_cliente) = 'cotizando' OR LOWER(r.categoria_cliente) = 'llamado')
     AND 1=1 $whereSuc
 ");
 $resumen->execute();
@@ -86,7 +86,7 @@ if ($esAgente) {
             COALESCE(SUM(r.presupuesto), 0) as presupuesto
         FROM redsalud r
         $joinSuc
-        WHERE LOWER(r.categoria_cliente) = 'cotizando'
+        WHERE (LOWER(r.categoria_cliente) = 'cotizando' OR LOWER(r.categoria_cliente) = 'llamado')
         AND $whereResumen
     ");
     $stmtR->execute($paramResumen);
