@@ -43,7 +43,7 @@ $resumen = $pdo->prepare("
     FROM redsalud r
     $joinSuc
     WHERE (LOWER(r.categoria_cliente) = 'cotizando' OR LOWER(r.categoria_cliente) = 'llamado')
-    1=1 $whereSuc
+    AND 1=1 $whereSuc
 ");
 $resumen->execute();
 $resumen = $resumen->fetch() ?: ['total' => 0, 'cotizando' => 0, 'contactados' => 0, 'presupuesto' => 0];
