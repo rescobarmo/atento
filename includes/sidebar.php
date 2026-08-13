@@ -20,6 +20,8 @@ $paginaActual = basename($_SERVER['PHP_SELF']);
             </div>
         </div>
 
+        <?php $esAgenteSidebar = strtolower($usuario['rol_nombre'] ?? '') === 'agente de ventas'; ?>
+        <?php if (!$esAgenteSidebar): ?>
         <div class="mb-6 px-3">
             <label class="text-white/50 text-xs uppercase tracking-wider block mb-2">Sucursal</label>
             <select name="sucursal" onchange="cambiarSucursal(this.value)"
@@ -34,6 +36,14 @@ $paginaActual = basename($_SERVER['PHP_SELF']);
                 <?php endif; ?>
             </select>
         </div>
+        <?php else: ?>
+        <div class="mb-6 px-3">
+            <label class="text-white/50 text-xs uppercase tracking-wider block mb-2">Sucursal</label>
+            <div class="px-3 py-2 rounded-lg text-xs bg-white/10 text-white font-medium">
+                <?= htmlspecialchars($sucursalSeleccionada ?: 'Todas') ?>
+            </div>
+        </div>
+        <?php endif; ?>
 
         <nav class="space-y-1">
             <a href="<?= APP_URL ?>/dashboard.php"
@@ -59,6 +69,11 @@ $paginaActual = basename($_SERVER['PHP_SELF']);
                class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm <?= $paginaActual === 'leads.php' ? 'active text-white' : 'text-white/70' ?>">
                 <i class="fas fa-users w-5 text-center"></i>
                 Leads
+            </a>
+            <a href="<?= APP_URL ?>/pages/agentes.php"
+               class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm <?= $paginaActual === 'agentes.php' ? 'active text-white' : 'text-white/70' ?>">
+                <i class="fas fa-user-tie w-5 text-center"></i>
+                Agente de Ventas
             </a>
             <a href="<?= APP_URL ?>/pages/clientes.php"
                class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm <?= $paginaActual === 'clientes.php' ? 'active text-white' : 'text-white/70' ?>">

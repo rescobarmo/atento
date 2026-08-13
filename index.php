@@ -2,7 +2,12 @@
 require_once __DIR__ . '/includes/auth.php';
 
 if (usuarioAutenticado()) {
-    header('Location: ' . APP_URL . '/dashboard.php');
+    $u = usuarioActual();
+    if ($u && strtolower($u['rol_nombre'] ?? '') === 'agente de ventas') {
+        header('Location: ' . APP_URL . '/pages/agentes.php');
+    } else {
+        header('Location: ' . APP_URL . '/dashboard.php');
+    }
     exit;
 }
 
@@ -12,7 +17,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
     $resultado = intentarLogin($username, $password);
     if ($resultado['success']) {
-        header('Location: ' . APP_URL . '/dashboard.php');
+        $usuario = usuarioActual();
+        if ($usuario && strtolower($usuario['rol_nombre'] ?? '') === 'agente de ventas') {
+            header('Location: ' . APP_URL . '/pages/agentes.php');
+        } else {
+            header('Location: ' . APP_URL . '/dashboard.php');
+        }
         exit;
     }
     $error = $resultado['message'];

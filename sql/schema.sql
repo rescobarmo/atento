@@ -11,9 +11,11 @@ CREATE TABLE IF NOT EXISTS usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
+    username VARCHAR(50) DEFAULT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     avatar VARCHAR(255) DEFAULT NULL,
     rol_id INT DEFAULT 1,
+    sucursal VARCHAR(255) DEFAULT NULL,
     activo TINYINT(1) DEFAULT 1,
     ultimo_acceso DATETIME DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -110,7 +112,7 @@ CREATE TABLE IF NOT EXISTS visitas_sitio (
     FOREIGN KEY (canal_id) REFERENCES canales(id) ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
-INSERT INTO roles (id, nombre) VALUES (1, 'Administrador'), (2, 'Editor'), (3, 'Visualizador') ON DUPLICATE KEY UPDATE nombre=VALUES(nombre);
+INSERT INTO roles (id, nombre) VALUES (1, 'Administrador'), (2, 'Editor'), (3, 'Visualizador'), (4, 'Agente de Ventas') ON DUPLICATE KEY UPDATE nombre=VALUES(nombre);
 
 INSERT INTO usuarios (nombre, email, password, rol_id) VALUES
 ('Admin Marketing', 'admin@redsalud.cl', '$2y$10$.oWKnlMbgojApr/2n4WBnuCmKSd/FV4kEmRMxghaTw7oxVATcjMO6', 1),
