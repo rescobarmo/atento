@@ -72,9 +72,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $asignaciones = $_POST['asignacion'] ?? [];
         $borradas = 0;
         $insertadas = 0;
+        $leadsAsignados = 0;
 
         $del = $pdo->prepare("DELETE FROM agente_sucursales WHERE agente_id = ?");
         $ins = $pdo->prepare("INSERT IGNORE INTO agente_sucursales (agente_id, sucursal) VALUES (?, ?)");
+        $asigLeads = $pdo->prepare("
+            UPDATE redsalud r
+            JOIN clientesredsalud c ON r.numero COLLATE utf8mb4_unicode_ci = c.numero
+            SET r.agente_id = ?
+            WHERE c.sucursal = ?
+              AND (LOWER(r.categoria_cliente) = 'cotizando' OR LOWER(r.categoria_cliente) = 'llamado')
+        ");
 
         foreach ($asignaciones as $agenteId => $sucursales) {
             $agenteId = (int)$agenteId;
@@ -86,10 +94,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($sucursal === '') continue;
                 $ins->execute([$agenteId, $sucursal]);
                 $insertadas++;
+                $asigLeads->execute([$agenteId, $sucursal]);
+                $leadsAsignados += $asigLeads->rowCount();
             }
         }
 
-        $mensaje = "Asignaciones guardadas: $insertadas sucursales registradas en $borradas agentes.";
+        $mensaje = "Asignaciones guardadas: $insertadas sucursales en $borradas agentes. $leadsAsignados leads asignados.";
     }
 }
 
