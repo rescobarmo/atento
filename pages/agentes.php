@@ -8,12 +8,16 @@ require_once __DIR__ . '/../includes/sucursal_filter.php';
 
 $esAgente = strtolower($usuario['rol_nombre'] ?? '') === 'agente de ventas';
 
+$sucursalesAgente = [];
 if ($esAgente) {
+    $stmtSuc = $pdo->prepare("SELECT sucursal FROM agente_sucursales WHERE agente_id = ? ORDER BY sucursal");
+    $stmtSuc->execute([(int)$usuario['id']]);
+    $sucursalesAgente = $stmtSuc->fetchAll(PDO::FETCH_COLUMN);
+
     $whereSuc = '';
     $whereSuc2 = '';
-    if (!empty($usuario['sucursal'])) {
-        $_SESSION['sucursal'] = $usuario['sucursal'];
-        $sucursalSeleccionada = $usuario['sucursal'];
+    if (!empty($sucursalesAgente)) {
+        $sucursalSeleccionada = implode(', ', $sucursalesAgente);
     }
 }
 
@@ -24,8 +28,13 @@ $where = ["(LOWER(r.categoria_cliente) = 'cotizando' OR LOWER(r.categoria_client
 $params = [];
 
 if ($esAgente) {
-    $where[] = "r.agente_id = ?";
-    $params[] = (int)$usuario['id'];
+    if (empty($sucursalesAgente)) {
+        $where[] = "1 = 0";
+    } else {
+        $in = implode(',', array_fill(0, count($sucursalesAgente), '?'));
+        $where[] = "c.sucursal IN ($in)";
+        foreach ($sucursalesAgente as $s) $params[] = $s;
+    }
 }
 
 if ($filtroBusqueda) {
@@ -55,6 +64,7 @@ $resumen = $pdo->prepare("
 $resumen->execute();
 $resumen = $resumen->fetch() ?: ['total' => 0, 'cotizando' => 0, 'contactados' => 0, 'presupuesto' => 0];
 if ($esAgente) {
+    $whereResumen = empty($sucursalesAgente) ? "1 = 0" : "c.sucursal IN (" . implode(',', array_fill(0, count($sucursalesAgente), '?')) . ")";
     $stmtR = $pdo->prepare("
         SELECT
             COUNT(*) as total,
@@ -62,9 +72,11 @@ if ($esAgente) {
             SUM(CASE WHEN LOWER(r.categoria_cliente) = 'llamado' THEN 1 ELSE 0 END) as contactados,
             COALESCE(SUM(r.presupuesto), 0) as presupuesto
         FROM redsalud r
-        WHERE r.agente_id = ?
+        $joinSuc
+        WHERE (LOWER(r.categoria_cliente) = 'cotizando' OR LOWER(r.categoria_cliente) = 'llamado')
+        AND $whereResumen
     ");
-    $stmtR->execute([(int)$usuario['id']]);
+    $stmtR->execute($sucursalesAgente);
     $resumen = $stmtR->fetch() ?: ['total' => 0, 'cotizando' => 0, 'contactados' => 0, 'presupuesto' => 0];
 }
 ?>
@@ -85,7 +97,7 @@ if ($esAgente) {
                         </span>
                         <div>
                             <p class="text-xs uppercase tracking-wider font-semibold" style="color:#64748B">Sucursal</p>
-                            <p class="font-bold" style="color:#1A202C"><?= htmlspecialchars($sucursalSeleccionada ?: 'Todas') ?></p>
+                            <p class="font-bold" style="color:#1A202C"><?= $esAgente ? (empty($sucursalesAgente) ? 'Sin asignar' : htmlspecialchars($sucursalSeleccionada)) : htmlspecialchars($sucursalSeleccionada ?: 'Todas') ?></p>
                         </div>
                     </div>
                 </div>
@@ -182,7 +194,7 @@ if ($esAgente) {
                             <tr class="hover:bg-slate-50 transition-colors" data-id="<?= htmlspecialchars($r['id']) ?>">
                                 <td class="px-6 py-4">
                                     <p class="font-medium" style="color:#1A202C"><?= htmlspecialchars($r['cliente_nombre'] ?: $r['nombre'] ?? 'Sin nombre') ?></p>
-                                    <?php if (empty($sucursalSeleccionada) && $r['sucursal']): ?>
+                                    <?php if (($esAgente || empty($sucursalSeleccionada)) && $r['sucursal']): ?>
                                         <p class="text-xs" style="color:#64748B"><?= htmlspecialchars($r['sucursal']) ?></p>
                                     <?php endif; ?>
                                 </td>

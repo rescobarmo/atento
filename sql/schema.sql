@@ -85,6 +85,15 @@ CREATE TABLE IF NOT EXISTS metricas_campana (
     UNIQUE KEY unique_campaign_date (campana_id, fecha)
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS agente_sucursales (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    agente_id INT NOT NULL,
+    sucursal VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (agente_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_agente_sucursal (agente_id, sucursal)
+) ENGINE=InnoDB;
+
 CREATE TABLE IF NOT EXISTS conversiones (
     id INT AUTO_INCREMENT PRIMARY KEY,
     lead_id INT DEFAULT NULL,
