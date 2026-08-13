@@ -21,7 +21,7 @@ if (!$id || !$campo) {
     exit;
 }
 
-$camposPermitidos = ['categoria_cliente', 'obs', 'horario', 'presupuesto'];
+$camposPermitidos = ['categoria_cliente', 'obs', 'horario', 'presupuesto', 'agente_id'];
 if (!in_array($campo, $camposPermitidos)) {
     http_response_code(400);
     echo json_encode(['error' => 'Campo no permitido']);
@@ -35,6 +35,10 @@ if ($campo === 'obs' && mb_strlen($valor) > 200) {
 }
 
 if ($campo === 'presupuesto') {
+    $valor = $valor === '' ? null : (int)$valor;
+}
+
+if ($campo === 'agente_id') {
     $valor = $valor === '' ? null : (int)$valor;
 }
 

@@ -8,11 +8,13 @@ require_once __DIR__ . '/../includes/sucursal_filter.php';
 
 $esAgente = strtolower($usuario['rol_nombre'] ?? '') === 'agente de ventas';
 
-if ($esAgente && !empty($usuario['sucursal'])) {
-    $_SESSION['sucursal'] = $usuario['sucursal'];
-    $sucursalSeleccionada = $usuario['sucursal'];
-    $whereSuc = "AND c.sucursal = " . $pdo->quote($sucursalSeleccionada);
-    $whereSuc2 = "AND c2.sucursal = " . $pdo->quote($sucursalSeleccionada);
+if ($esAgente) {
+    $whereSuc = '';
+    $whereSuc2 = '';
+    if (!empty($usuario['sucursal'])) {
+        $_SESSION['sucursal'] = $usuario['sucursal'];
+        $sucursalSeleccionada = $usuario['sucursal'];
+    }
 }
 
 $filtroBusqueda = $_GET['busqueda'] ?? '';
@@ -20,6 +22,11 @@ $filtroBusqueda = $_GET['busqueda'] ?? '';
 $sql = "SELECT r.*, c.nombre as cliente_nombre, c.sucursal FROM redsalud r $joinSuc";
 $where = ["(LOWER(r.categoria_cliente) = 'cotizando' OR LOWER(r.categoria_cliente) = 'llamado')"];
 $params = [];
+
+if ($esAgente) {
+    $where[] = "r.agente_id = ?";
+    $params[] = (int)$usuario['id'];
+}
 
 if ($filtroBusqueda) {
     $where[] = "(r.nombre LIKE ? OR r.numero LIKE ? OR r.conversacion LIKE ?)";
@@ -47,6 +54,19 @@ $resumen = $pdo->prepare("
 ");
 $resumen->execute();
 $resumen = $resumen->fetch() ?: ['total' => 0, 'cotizando' => 0, 'contactados' => 0, 'presupuesto' => 0];
+if ($esAgente) {
+    $stmtR = $pdo->prepare("
+        SELECT
+            COUNT(*) as total,
+            SUM(CASE WHEN LOWER(r.categoria_cliente) = 'cotizando' THEN 1 ELSE 0 END) as cotizando,
+            SUM(CASE WHEN LOWER(r.categoria_cliente) = 'llamado' THEN 1 ELSE 0 END) as contactados,
+            COALESCE(SUM(r.presupuesto), 0) as presupuesto
+        FROM redsalud r
+        WHERE r.agente_id = ?
+    ");
+    $stmtR->execute([(int)$usuario['id']]);
+    $resumen = $stmtR->fetch() ?: ['total' => 0, 'cotizando' => 0, 'contactados' => 0, 'presupuesto' => 0];
+}
 ?>
 <?php $titulo = 'Panel Agente de Ventas'; include __DIR__ . '/../includes/header.php'; ?>
 <div class="flex min-h-screen">
