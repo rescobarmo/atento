@@ -264,6 +264,11 @@ if ($esAgente) {
                                     <span class="absolute bottom-2 right-2 text-[10px] text-slate-400 obs-count"><?= mb_strlen($r['obs'] ?? '') ?>/200</span>
                                 </div>
                             </div>
+                            <button type="button"
+                                    class="guardar-btn w-full px-4 py-2.5 rounded-xl text-sm font-medium text-white btn-primary transition-opacity flex items-center justify-center gap-2"
+                                    data-id="<?= htmlspecialchars($r['id']) ?>">
+                                <i class="fas fa-check"></i> Guardar cambios
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -275,37 +280,56 @@ if ($esAgente) {
 </div>
 
 <script>
-document.querySelectorAll('.contact-checkbox').forEach(cb => {
-    cb.addEventListener('change', function() {
-        const id = this.dataset.id;
-        const checked = this.checked;
-        const card = this.closest('.lead-card');
-        const obsInput = card.querySelector('.obs-input');
+function guardarTarjeta(card) {
+    const btn = card.querySelector('.guardar-btn');
+    const id = btn.dataset.id;
+    const checkbox = card.querySelector('.contact-checkbox');
+    const obsInput = card.querySelector('.obs-input');
+    const presupuestoInput = card.querySelector('.presupuesto-input');
+    const checked = checkbox.checked;
 
-        if (!checked) {
-            obsInput.value = '';
-            const counter = obsInput.parentElement.querySelector('.obs-count');
-            if (counter) counter.textContent = '0/200';
+    let obs = obsInput.value.trim();
+    if (!checked) obs = '';
 
-            fetch('<?= APP_URL ?>/api/update_redsalud.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({ id, campo: 'obs', valor: '' })
-            });
-        }
+    const valorCategoria = checked ? 'LLAMADO' : 'COTIZANDO';
+    const valorPresupuesto = presupuestoInput.value.replace(/\./g, '');
 
-        const valor = checked ? 'LLAMADO' : 'COTIZANDO';
+    const campos = [
+        { campo: 'categoria_cliente', valor: valorCategoria },
+        { campo: 'presupuesto', valor: valorPresupuesto },
+        { campo: 'obs', valor: obs }
+    ];
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+
+    Promise.all(campos.map(c =>
         fetch('<?= APP_URL ?>/api/update_redsalud.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({ id, campo: 'categoria_cliente', valor })
-        })
-        .then(r => r.json())
-        .then(data => {
-            if (data.success) location.reload();
-            else alert('Error: ' + (data.error || 'desconocido'));
-        })
-        .catch(() => alert('Error de conexión'));
+            body: new URLSearchParams({ id, campo: c.campo, valor: c.valor })
+        }).then(r => r.json())
+    ))
+    .then(resultados => {
+        const fallo = resultados.find(r => !r.success);
+        if (fallo) {
+            alert('Error: ' + (fallo.error || 'desconocido'));
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-check"></i> Guardar cambios';
+        } else {
+            location.reload();
+        }
+    })
+    .catch(() => {
+        alert('Error de conexión');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-check"></i> Guardar cambios';
+    });
+}
+
+document.querySelectorAll('.guardar-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        guardarTarjeta(this.closest('.lead-card'));
     });
 });
 
@@ -321,54 +345,14 @@ document.querySelectorAll('.presupuesto-input').forEach(input => {
     input.addEventListener('input', function() {
         this.value = this.value.replace(/[^0-9.]/g, '');
     });
-
-    let saveTimer;
-    input.addEventListener('input', function() {
-        clearTimeout(saveTimer);
-        saveTimer = setTimeout(() => {
-            const id = this.dataset.id;
-            const valor = this.value.replace(/\./g, '');
-
-            fetch('<?= APP_URL ?>/api/update_redsalud.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({ id, campo: 'presupuesto', valor })
-            })
-            .then(r => r.json())
-            .then(data => {
-                if (!data.success) alert('Error: ' + (data.error || 'desconocido'));
-            })
-            .catch(() => {});
-        }, 800);
-    });
 });
 
 document.querySelectorAll('.obs-input').forEach(input => {
-    const counter = input.parentElement.querySelector('.obs-count');
+    const counter = input.closest('.relative').querySelector('.obs-count');
 
     input.addEventListener('input', function() {
         const len = this.value.length;
         if (counter) counter.textContent = len + '/200';
-    });
-
-    let saveTimer;
-    input.addEventListener('input', function() {
-        clearTimeout(saveTimer);
-        saveTimer = setTimeout(() => {
-            const id = this.dataset.id;
-            const valor = this.value;
-
-            fetch('<?= APP_URL ?>/api/update_redsalud.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({ id, campo: 'obs', valor })
-            })
-            .then(r => r.json())
-            .then(data => {
-                if (!data.success) alert('Error: ' + (data.error || 'desconocido'));
-            })
-            .catch(() => {});
-        }, 800);
     });
 });
 </script>
