@@ -188,7 +188,7 @@ foreach ($asignadas as $a) {
                     <p class="text-sm mt-1">La lista de sucursales se obtiene de la tabla clientesredsalud.</p>
                 </div>
             <?php else: ?>
-                <form method="POST" class="card rounded-2xl overflow-hidden">
+                <form method="POST" id="form-asignar" class="card rounded-2xl overflow-hidden">
                     <input type="hidden" name="accion" value="asignar">
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm">
@@ -238,13 +238,9 @@ foreach ($asignadas as $a) {
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 text-right align-top whitespace-nowrap">
-                                        <form method="POST" id="form-agente-<?= (int)$a['id'] ?>" class="inline">
-                                            <input type="hidden" name="accion" value="guardar_agente">
-                                            <input type="hidden" name="agente_id" value="<?= (int)$a['id'] ?>">
-                                            <button type="submit" class="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors hover:bg-emerald-50" style="border:1px solid #E2E8F0;color:#16a34a">
-                                                <i class="fas fa-check mr-1"></i> Guardar
-                                            </button>
-                                        </form>
+                                        <button type="submit" form="form-agente-<?= (int)$a['id'] ?>" class="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors hover:bg-emerald-50" style="border:1px solid #E2E8F0;color:#16a34a">
+                                            <i class="fas fa-check mr-1"></i> Guardar
+                                        </button>
                                         <?php if ((int)$a['activo']): ?>
                                             <button type="button" onclick="desactivarAgente(<?= (int)$a['id'] ?>, '<?= htmlspecialchars(addslashes($a['nombre']), ENT_QUOTES) ?>')"
                                                     class="ml-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors hover:bg-red-50" style="border:1px solid #E2E8F0;color:#E53E3E">
@@ -264,6 +260,13 @@ foreach ($asignadas as $a) {
                         </button>
                     </div>
                 </form>
+
+                <?php foreach ($agentes as $a): ?>
+                    <form method="POST" id="form-agente-<?= (int)$a['id'] ?>" class="hidden">
+                        <input type="hidden" name="accion" value="guardar_agente">
+                        <input type="hidden" name="agente_id" value="<?= (int)$a['id'] ?>">
+                    </form>
+                <?php endforeach; ?>
             <?php endif; ?>
         </div>
     </main>
