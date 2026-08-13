@@ -82,6 +82,11 @@ $paginaActual = basename($_SERVER['PHP_SELF']);
                 <i class="fas fa-user-tag w-5 text-center"></i>
                 Mantenedor de Agentes
             </a>
+            <a href="<?= APP_URL ?>/pages/asignar_leads.php"
+               class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm <?= $paginaActual === 'asignar_leads.php' ? 'active text-white' : 'text-white/70' ?>">
+                <i class="fas fa-user-check w-5 text-center"></i>
+                Asignación de Leads
+            </a>
             <a href="<?= APP_URL ?>/pages/clientes.php"
                class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm <?= $paginaActual === 'clientes.php' ? 'active text-white' : 'text-white/70' ?>">
                 <i class="fas fa-address-book w-5 text-center"></i>

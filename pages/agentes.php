@@ -29,11 +29,13 @@ $params = [];
 
 if ($esAgente) {
     if (empty($sucursalesAgente)) {
-        $where[] = "1 = 0";
+        $where[] = "r.agente_id = ?";
+        $params[] = (int)$usuario['id'];
     } else {
         $in = implode(',', array_fill(0, count($sucursalesAgente), '?'));
-        $where[] = "c.sucursal IN ($in)";
+        $where[] = "(c.sucursal IN ($in) OR r.agente_id = ?)";
         foreach ($sucursalesAgente as $s) $params[] = $s;
+        $params[] = (int)$usuario['id'];
     }
 }
 
@@ -64,7 +66,14 @@ $resumen = $pdo->prepare("
 $resumen->execute();
 $resumen = $resumen->fetch() ?: ['total' => 0, 'cotizando' => 0, 'contactados' => 0, 'presupuesto' => 0];
 if ($esAgente) {
-    $whereResumen = empty($sucursalesAgente) ? "1 = 0" : "c.sucursal IN (" . implode(',', array_fill(0, count($sucursalesAgente), '?')) . ")";
+    if (empty($sucursalesAgente)) {
+        $whereResumen = "r.agente_id = " . (int)$usuario['id'];
+        $paramResumen = [];
+    } else {
+        $in = implode(',', array_fill(0, count($sucursalesAgente), '?'));
+        $whereResumen = "(c.sucursal IN ($in) OR r.agente_id = ?)";
+        $paramResumen = array_merge($sucursalesAgente, [(int)$usuario['id']]);
+    }
     $stmtR = $pdo->prepare("
         SELECT
             COUNT(*) as total,
@@ -76,7 +85,7 @@ if ($esAgente) {
         WHERE (LOWER(r.categoria_cliente) = 'cotizando' OR LOWER(r.categoria_cliente) = 'llamado')
         AND $whereResumen
     ");
-    $stmtR->execute($sucursalesAgente);
+    $stmtR->execute($paramResumen);
     $resumen = $stmtR->fetch() ?: ['total' => 0, 'cotizando' => 0, 'contactados' => 0, 'presupuesto' => 0];
 }
 ?>
