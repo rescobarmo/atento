@@ -16,6 +16,17 @@ try {
 }
 
 try {
+    $pdo->exec("ALTER TABLE usuarios ADD COLUMN username VARCHAR(50) DEFAULT NULL AFTER email");
+    echo "<div class='bg-green-900/50 border border-green-700 rounded p-3 mb-2 text-sm'>OK: columna 'username' agregada a usuarios</div>";
+} catch (Exception $e) {
+    if (str_contains($e->getMessage(), 'Duplicate column')) {
+        echo "<div class='bg-green-900/50 border border-green-700 rounded p-3 mb-2 text-sm'>OK: columna 'username' ya existe</div>";
+    } else {
+        echo "<div class='bg-yellow-900/50 border border-yellow-700 rounded p-3 mb-2 text-sm'>" . htmlspecialchars($e->getMessage()) . "</div>";
+    }
+}
+
+try {
     $pdo->exec("ALTER TABLE usuarios ADD COLUMN sucursal VARCHAR(255) DEFAULT NULL AFTER rol_id");
     echo "<div class='bg-green-900/50 border border-green-700 rounded p-3 mb-2 text-sm'>OK: columna 'sucursal' agregada a usuarios</div>";
 } catch (Exception $e) {
@@ -37,16 +48,20 @@ $stmt = $pdo->prepare("SELECT COUNT(*) FROM usuarios WHERE email = ?");
 $stmt->execute(['agente@redsalud.cl']);
 if ((int)$stmt->fetchColumn() === 0 && $rolId) {
     $sucursal = $sucursales[0] ?? null;
-    $pdo->prepare("INSERT INTO usuarios (nombre, email, username, password, rol_id, sucursal, activo) VALUES (?, ?, ?, ?, ?, ?, 1)")
-        ->execute([
-            'Agente de Ventas',
-            'agente@redsalud.cl',
-            'agente',
-            password_hash('r3dsalud', PASSWORD_DEFAULT),
-            $rolId,
-            $sucursal,
-        ]);
-    echo "<div class='bg-green-900/50 border border-green-700 rounded p-3 mb-2 text-sm'>OK: usuario 'agente' creado (agente@redsalud.cl / r3dsalud)" . ($sucursal ? " - Sucursal: $sucursal" : '') . "</div>";
+    try {
+        $pdo->prepare("INSERT INTO usuarios (nombre, email, username, password, rol_id, sucursal, activo) VALUES (?, ?, ?, ?, ?, ?, 1)")
+            ->execute([
+                'Agente de Ventas',
+                'agente@redsalud.cl',
+                'agente',
+                password_hash('r3dsalud', PASSWORD_DEFAULT),
+                $rolId,
+                $sucursal,
+            ]);
+        echo "<div class='bg-green-900/50 border border-green-700 rounded p-3 mb-2 text-sm'>OK: usuario 'agente' creado (agente@redsalud.cl / r3dsalud)" . ($sucursal ? " - Sucursal: $sucursal" : '') . "</div>";
+    } catch (Exception $e) {
+        echo "<div class='bg-red-900/50 border border-red-700 rounded p-3 mb-2 text-sm'>ERROR creando usuario: " . htmlspecialchars($e->getMessage()) . "</div>";
+    }
 } else {
     echo "<div class='bg-green-900/50 border border-green-700 rounded p-3 mb-2 text-sm'>OK: usuario 'agente' ya existe</div>";
 }
