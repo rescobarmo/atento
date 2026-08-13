@@ -46,6 +46,13 @@ $paginaActual = basename($_SERVER['PHP_SELF']);
         <?php endif; ?>
 
         <nav class="space-y-1">
+            <?php if ($esAgenteSidebar): ?>
+            <a href="<?= APP_URL ?>/pages/agentes.php"
+               class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm <?= $paginaActual === 'agentes.php' ? 'active text-white' : 'text-white/70' ?>">
+                <i class="fas fa-user-tie w-5 text-center"></i>
+                Agente de Ventas
+            </a>
+            <?php else: ?>
             <a href="<?= APP_URL ?>/dashboard.php"
                class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm <?= $paginaActual === 'dashboard.php' ? 'active text-white' : 'text-white/70' ?>">
                 <i class="fas fa-chart-pie w-5 text-center"></i>
@@ -85,6 +92,7 @@ $paginaActual = basename($_SERVER['PHP_SELF']);
                 <i class="fas fa-phone-slash w-5 text-center"></i>
                 No Contesta
             </a>
+            <?php endif; ?>
             <hr class="border-white/10 my-4">
             <a href="<?= APP_URL ?>/logout.php"
                class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-white/50 hover:text-white">
