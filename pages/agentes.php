@@ -184,86 +184,93 @@ if ($esAgente) {
                 </form>
             </div>
 
-            <div class="card rounded-2xl overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm">
-                        <thead>
-                            <tr class="text-left text-xs uppercase tracking-wider" style="color:#64748B;background:#F4F8F8">
-                                <th class="px-6 py-4 font-medium">Nombre</th>
-                                <th class="px-6 py-4 font-medium">Teléfono</th>
-                                <th class="px-6 py-4 font-medium">Conversación</th>
-                                <th class="px-6 py-4 font-medium">Categoría</th>
-                                <th class="px-6 py-4 font-medium">Horario</th>
-                                <th class="px-6 py-4 font-medium">Presupuesto</th>
-                                <th class="px-6 py-4 font-medium text-center">Contactado</th>
-                                <th class="px-6 py-4 font-medium">Notas</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y" style="border-color:#E2E8F0">
-                            <?php if (empty($leads)): ?>
-                                <tr><td colspan="8" class="px-6 py-12 text-center text-slate-400">No se encontraron leads para esta sucursal</td></tr>
+            <?php if (empty($leads)): ?>
+                <div class="card rounded-2xl p-12 text-center">
+                    <i class="fas fa-inbox text-4xl mb-4" style="color:#CBD5E1"></i>
+                    <p class="text-lg font-medium" style="color:#64748B">No se encontraron leads para esta sucursal</p>
+                </div>
+            <?php else: ?>
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+                <?php foreach ($leads as $r): ?>
+                <?php
+                    $cat = strtolower($r['categoria_cliente'] ?? '');
+                    $esLlamado = $cat === 'llamado';
+                    $colorBg = match($cat) {
+                        'cotizando' => '#dc2626',
+                        'respondio' => '#16a34a',
+                        'realizado' => '#2563eb',
+                        'llamado' => '#9333ea',
+                        default => '#64748b'
+                    };
+                    $inicial = mb_strtoupper(mb_substr(htmlspecialchars($r['cliente_nombre'] ?: $r['nombre'] ?? '?'), 0, 1));
+                ?>
+                <div class="card rounded-2xl overflow-hidden flex flex-col lead-card fade-in">
+                    <div class="px-5 py-4 flex items-center justify-between gap-3" style="border-left:4px solid <?= $colorBg ?>">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="flex items-center justify-center w-11 h-11 rounded-xl text-white font-bold text-lg shrink-0" style="background:<?= $colorBg ?>">
+                                <?= $inicial ?: '?' ?>
+                            </div>
+                            <div class="min-w-0">
+                                <p class="font-semibold truncate" style="color:#1A202C"><?= htmlspecialchars($r['cliente_nombre'] ?: $r['nombre'] ?? 'Sin nombre') ?></p>
+                                <p class="text-xs font-mono" style="color:#64748B"><?= htmlspecialchars($r['numero']) ?></p>
+                            </div>
+                        </div>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold text-white uppercase shrink-0" style="background:<?= $colorBg ?>">
+                            <?= htmlspecialchars($cat ?: 'SIN CATEGORÍA') ?>
+                        </span>
+                    </div>
+
+                    <div class="px-5 py-4 flex-1 flex flex-col gap-3">
+                        <div class="flex flex-wrap gap-x-4 gap-y-1.5 text-xs" style="color:#64748B">
+                            <?php if (($esAgente || empty($sucursalSeleccionada)) && $r['sucursal']): ?>
+                                <span><i class="fas fa-store mr-1.5" style="color:#008089"></i><?= htmlspecialchars($r['sucursal']) ?></span>
                             <?php endif; ?>
-                            <?php foreach ($leads as $r): ?>
-                            <?php
-                                $cat = strtolower($r['categoria_cliente'] ?? '');
-                                $esLlamado = $cat === 'llamado';
-                                $colorBg = match($cat) {
-                                    'cotizando' => '#dc2626',
-                                    'respondio' => '#16a34a',
-                                    'realizado' => '#2563eb',
-                                    'llamado' => '#9333ea',
-                                    default => '#64748b'
-                                };
-                            ?>
-                            <tr class="hover:bg-slate-50 transition-colors" data-id="<?= htmlspecialchars($r['id']) ?>">
-                                <td class="px-6 py-4">
-                                    <p class="font-medium" style="color:#1A202C"><?= htmlspecialchars($r['cliente_nombre'] ?: $r['nombre'] ?? 'Sin nombre') ?></p>
-                                    <?php if (($esAgente || empty($sucursalSeleccionada)) && $r['sucursal']): ?>
-                                        <p class="text-xs" style="color:#64748B"><?= htmlspecialchars($r['sucursal']) ?></p>
-                                    <?php endif; ?>
-                                </td>
-                                <td class="px-6 py-4 font-mono text-sm text-slate-600"><?= htmlspecialchars($r['numero']) ?></td>
-                                <td class="px-6 py-4 max-w-xs">
-                                    <p class="text-slate-600 truncate"><?= htmlspecialchars(mb_substr($r['conversacion'] ?? '', 0, 100)) ?></p>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold text-white" style="background:<?= $colorBg ?>">
-                                        <?= htmlspecialchars(strtoupper($cat ?: 'SIN CATEGORÍA')) ?>
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 text-sm" style="color:#64748B">
-                                    <?= htmlspecialchars($r['horario'] ?? '-') ?>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <input type="text" inputmode="numeric"
-                                           class="w-28 px-2 py-1.5 text-xs border border-slate-200 rounded-lg focus:border-purple-400 focus:ring-2 focus:ring-purple-100 outline-none presupuesto-input text-right"
-                                           value="<?= $r['presupuesto'] ? number_format((int)$r['presupuesto'], 0, ',', '.') : '' ?>"
-                                           data-id="<?= htmlspecialchars($r['id']) ?>"
-                                           placeholder="0">
-                                </td>
-                                <td class="px-6 py-4 text-center">
+                            <span><i class="far fa-clock mr-1.5" style="color:#008089"></i><?= htmlspecialchars($r['horario'] ?? '-') ?></span>
+                        </div>
+
+                        <?php if (!empty($r['conversacion'])): ?>
+                        <div class="rounded-xl px-3 py-2.5 text-xs leading-relaxed max-h-32 overflow-y-auto" style="background:#F4F8F8;color:#334155">
+                            <?= nl2br(htmlspecialchars($r['conversacion'])) ?>
+                        </div>
+                        <?php endif; ?>
+
+                        <div class="mt-auto pt-2 space-y-3">
+                            <div class="flex items-center justify-between gap-3">
+                                <label class="flex items-center gap-2 text-xs font-medium cursor-pointer select-none" style="color:#64748B">
                                     <input type="checkbox"
                                            class="w-5 h-5 rounded border-slate-300 text-purple-600 focus:ring-purple-500 cursor-pointer contact-checkbox"
                                            <?= $esLlamado ? 'checked' : '' ?>
                                            data-id="<?= htmlspecialchars($r['id']) ?>">
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center gap-2">
-                                        <input type="text"
-                                               class="w-40 px-2 py-1.5 text-xs border border-slate-200 rounded-lg focus:border-purple-400 focus:ring-2 focus:ring-purple-100 outline-none obs-input"
-                                               value="<?= htmlspecialchars($r['obs'] ?? '') ?>"
-                                               maxlength="200"
-                                               data-id="<?= htmlspecialchars($r['id']) ?>"
-                                               placeholder="Escribir nota...">
-                                        <span class="text-xs text-slate-400 obs-count"><?= mb_strlen($r['obs'] ?? '') ?>/200</span>
-                                    </div>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+                                    Contactado
+                                </label>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs font-medium" style="color:#64748B">Presupuesto</span>
+                                    <input type="text" inputmode="numeric"
+                                           class="w-28 px-2 py-1.5 text-xs text-right rounded-lg outline-none presupuesto-input"
+                                           style="border:1px solid #E2E8F0;background:#F4F8F8;color:#1A202C"
+                                           value="<?= $r['presupuesto'] ? number_format((int)$r['presupuesto'], 0, ',', '.') : '' ?>"
+                                           data-id="<?= htmlspecialchars($r['id']) ?>"
+                                           placeholder="0">
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <input type="text"
+                                           class="flex-1 px-3 py-2 text-xs rounded-lg outline-none obs-input"
+                                           style="border:1px solid #E2E8F0;background:#F4F8F8;color:#1A202C"
+                                           value="<?= htmlspecialchars($r['obs'] ?? '') ?>"
+                                           maxlength="200"
+                                           data-id="<?= htmlspecialchars($r['id']) ?>"
+                                           placeholder="Notas de seguimiento...">
+                                    <span class="text-[10px] text-slate-400 obs-count shrink-0"><?= mb_strlen($r['obs'] ?? '') ?>/200</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                <?php endforeach; ?>
             </div>
+            <?php endif; ?>
         </div>
     </main>
 </div>
@@ -273,8 +280,8 @@ document.querySelectorAll('.contact-checkbox').forEach(cb => {
     cb.addEventListener('change', function() {
         const id = this.dataset.id;
         const checked = this.checked;
-        const tr = this.closest('tr');
-        const obsInput = tr.querySelector('.obs-input');
+        const card = this.closest('.lead-card');
+        const obsInput = card.querySelector('.obs-input');
 
         if (!checked) {
             obsInput.value = '';
