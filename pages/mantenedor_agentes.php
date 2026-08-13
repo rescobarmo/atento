@@ -9,6 +9,16 @@ if (strtolower($usuario['rol_nombre'] ?? '') === 'agente de ventas') {
     exit;
 }
 
+foreach (['limite_leads' => "ALTER TABLE usuarios ADD COLUMN limite_leads INT DEFAULT 0 AFTER sucursal",
+          'numero_contacto' => "ALTER TABLE usuarios ADD COLUMN numero_contacto VARCHAR(50) DEFAULT NULL AFTER limite_leads"] as $col => $ddl) {
+    $existe = $pdo->query("SHOW COLUMNS FROM usuarios LIKE '" . $pdo->quote($col) . "'")->fetch();
+    if (!$existe) {
+        try {
+            $pdo->exec($ddl);
+        } catch (Exception $e) {}
+    }
+}
+
 $mensaje = '';
 $errorMensaje = '';
 
