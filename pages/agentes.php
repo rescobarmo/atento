@@ -254,15 +254,14 @@ if ($esAgente) {
                                 </div>
                             </div>
                             <div>
-                                <div class="flex items-center gap-2">
-                                    <input type="text"
-                                           class="flex-1 px-3 py-2 text-xs rounded-lg outline-none obs-input"
-                                           style="border:1px solid #E2E8F0;background:#F4F8F8;color:#1A202C"
-                                           value="<?= htmlspecialchars($r['obs'] ?? '') ?>"
-                                           maxlength="200"
-                                           data-id="<?= htmlspecialchars($r['id']) ?>"
-                                           placeholder="Notas de seguimiento...">
-                                    <span class="text-[10px] text-slate-400 obs-count shrink-0"><?= mb_strlen($r['obs'] ?? '') ?>/200</span>
+                                <div class="relative">
+                                    <textarea rows="3"
+                                              class="w-full px-3 py-2 text-xs rounded-lg outline-none resize-none obs-input pr-16"
+                                              style="border:1px solid #E2E8F0;background:#F4F8F8;color:#1A202C"
+                                              maxlength="200"
+                                              data-id="<?= htmlspecialchars($r['id']) ?>"
+                                              placeholder="Notas de seguimiento..."><?= htmlspecialchars($r['obs'] ?? '') ?></textarea>
+                                    <span class="absolute bottom-2 right-2 text-[10px] text-slate-400 obs-count"><?= mb_strlen($r['obs'] ?? '') ?>/200</span>
                                 </div>
                             </div>
                         </div>
