@@ -48,6 +48,10 @@ $where[] = "1=1 " . $whereSuc;
 $sql .= " WHERE " . implode(" AND ", $where);
 $sql .= " ORDER BY r.fecha_actualizacion DESC, r.fecha_creacion DESC";
 
+if ($esAgente && (int)$usuario['limite_leads'] > 0) {
+    $sql .= " LIMIT " . (int)$usuario['limite_leads'];
+}
+
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $leads = $stmt->fetchAll();
@@ -109,6 +113,17 @@ if ($esAgente) {
                             <p class="font-bold" style="color:#1A202C"><?= $esAgente ? (empty($sucursalesAgente) ? 'Sin asignar' : htmlspecialchars($sucursalSeleccionada)) : htmlspecialchars($sucursalSeleccionada ?: 'Todas') ?></p>
                         </div>
                     </div>
+                    <?php if ($esAgente && (int)$usuario['limite_leads'] > 0): ?>
+                    <div class="flex items-center gap-3 px-4 py-2.5 rounded-xl card">
+                        <span class="flex items-center justify-center w-10 h-10 rounded-xl" style="background:rgba(245,158,11,0.12)">
+                            <i class="fas fa-gauge-high text-lg" style="color:#F59E0B"></i>
+                        </span>
+                        <div>
+                            <p class="text-xs uppercase tracking-wider font-semibold" style="color:#64748B">Límite diario</p>
+                            <p class="font-bold" style="color:#1A202C"><?= (int)$usuario['limite_leads'] ?> leads</p>
+                        </div>
+                    </div>
+                    <?php endif; ?>
                 </div>
             </div>
 

@@ -16,6 +16,8 @@ CREATE TABLE IF NOT EXISTS usuarios (
     avatar VARCHAR(255) DEFAULT NULL,
     rol_id INT DEFAULT 1,
     sucursal VARCHAR(255) DEFAULT NULL,
+    limite_leads INT DEFAULT 0,
+    numero_contacto VARCHAR(50) DEFAULT NULL,
     activo TINYINT(1) DEFAULT 1,
     ultimo_acceso DATETIME DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

@@ -20,6 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $email = trim($_POST['email'] ?? '');
         $username = trim($_POST['username'] ?? '');
         $password = $_POST['password'] ?? '';
+        $numeroContacto = trim($_POST['numero_contacto'] ?? '');
+        $limiteLeads = max(0, (int)($_POST['limite_leads'] ?? 0));
 
         $rolId = $pdo->query("SELECT id FROM roles WHERE nombre = 'Agente de Ventas'")->fetchColumn();
 
@@ -31,14 +33,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             try {
                 $stmt = $pdo->prepare("
-                    INSERT INTO usuarios (nombre, email, username, password, rol_id, activo)
-                    VALUES (?, ?, ?, ?, ?, 1)
+                    INSERT INTO usuarios (nombre, email, username, password, rol_id, activo, numero_contacto, limite_leads)
+                    VALUES (?, ?, ?, ?, ?, 1, ?, ?)
                 ");
-                $stmt->execute([$nombre, $email, $username, password_hash($password, PASSWORD_DEFAULT), $rolId]);
+                $stmt->execute([$nombre, $email, $username, password_hash($password, PASSWORD_DEFAULT), $rolId, $numeroContacto ?: null, $limiteLeads]);
                 $mensaje = "Agente '$nombre' creado correctamente. Usuario: $username";
             } catch (Exception $e) {
                 $errorMensaje = 'Error al crear el agente: ' . $e->getMessage();
             }
+        }
+    } elseif ($accion === 'guardar_agente') {
+        $agenteId = (int)($_POST['agente_id'] ?? 0);
+        $numeroContacto = trim($_POST['numero_contacto'] ?? '');
+        $limiteLeads = max(0, (int)($_POST['limite_leads'] ?? 0));
+        if ($agenteId > 0) {
+            $pdo->prepare("UPDATE usuarios SET numero_contacto = ?, limite_leads = ? WHERE id = ?")
+                ->execute([$numeroContacto ?: null, $limiteLeads, $agenteId]);
+            $mensaje = 'Datos del agente actualizados.';
         }
     } elseif ($accion === 'desactivar') {
         $agenteId = (int)($_POST['agente_id'] ?? 0);
@@ -73,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $agentes = $pdo->query("
-    SELECT u.id, u.nombre, u.email, u.username, u.activo
+    SELECT u.id, u.nombre, u.email, u.username, u.activo, u.numero_contacto, u.limite_leads
     FROM usuarios u
     JOIN roles r ON u.rol_id = r.id
     WHERE r.nombre = 'Agente de Ventas'
@@ -136,6 +147,16 @@ foreach ($asignadas as $a) {
                         <input type="password" name="password" required placeholder="••••••••"
                                class="w-full px-3 py-2.5 rounded-xl outline-none text-sm" style="border:1px solid #E2E8F0;background:#F4F8F8;color:#1A202C">
                     </div>
+                    <div>
+                        <label class="block text-xs font-medium mb-1" style="color:#64748B">Número de contacto</label>
+                        <input type="text" name="numero_contacto" placeholder="+569..."
+                               class="w-full px-3 py-2.5 rounded-xl outline-none text-sm" style="border:1px solid #E2E8F0;background:#F4F8F8;color:#1A202C">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium mb-1" style="color:#64748B">Límite de leads</label>
+                        <input type="number" name="limite_leads" min="0" value="0"
+                               class="w-full px-3 py-2.5 rounded-xl outline-none text-sm" style="border:1px solid #E2E8F0;background:#F4F8F8;color:#1A202C">
+                    </div>
                     <div class="sm:col-span-2 lg:col-span-4 flex justify-end">
                         <button type="submit" class="btn-primary px-6 py-2.5 rounded-xl text-sm font-medium text-white">
                             <i class="fas fa-plus mr-1"></i> Crear Agente
@@ -164,6 +185,8 @@ foreach ($asignadas as $a) {
                             <thead>
                                 <tr class="text-left text-xs uppercase tracking-wider" style="color:#64748B;background:#F4F8F8">
                                     <th class="px-6 py-4 font-medium">Agente</th>
+                                    <th class="px-6 py-4 font-medium">Contacto</th>
+                                    <th class="px-6 py-4 font-medium">Límite</th>
                                     <th class="px-6 py-4 font-medium">Sucursales asignadas</th>
                                     <th class="px-6 py-4 font-medium text-right">Acciones</th>
                                 </tr>
@@ -181,6 +204,15 @@ foreach ($asignadas as $a) {
                                         <p class="text-xs mt-0.5" style="color:#94a3b8"><?= htmlspecialchars($a['email']) ?></p>
                                         <p class="text-xs mt-0.5 font-mono" style="color:#94a3b8">@<?= htmlspecialchars($a['username'] ?? $a['email']) ?></p>
                                     </td>
+                                    <td class="px-6 py-4 align-top">
+                                        <input type="text" form="form-agente-<?= (int)$a['id'] ?>" name="numero_contacto" value="<?= htmlspecialchars($a['numero_contacto'] ?? '') ?>"
+                                               placeholder="+569..."
+                                               class="w-40 px-2 py-1.5 text-xs rounded-lg outline-none" style="border:1px solid #E2E8F0;background:#F4F8F8;color:#1A202C">
+                                    </td>
+                                    <td class="px-6 py-4 align-top">
+                                        <input type="number" form="form-agente-<?= (int)$a['id'] ?>" name="limite_leads" min="0" value="<?= (int)$a['limite_leads'] ?>"
+                                               class="w-20 px-2 py-1.5 text-xs rounded-lg outline-none" style="border:1px solid #E2E8F0;background:#F4F8F8;color:#1A202C">
+                                    </td>
                                     <td class="px-6 py-4">
                                         <div class="flex flex-wrap gap-3">
                                             <?php foreach ($sucursales as $s): ?>
@@ -195,10 +227,17 @@ foreach ($asignadas as $a) {
                                             <?php endforeach; ?>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 text-right align-top">
+                                    <td class="px-6 py-4 text-right align-top whitespace-nowrap">
+                                        <form method="POST" id="form-agente-<?= (int)$a['id'] ?>" class="inline">
+                                            <input type="hidden" name="accion" value="guardar_agente">
+                                            <input type="hidden" name="agente_id" value="<?= (int)$a['id'] ?>">
+                                            <button type="submit" class="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors hover:bg-emerald-50" style="border:1px solid #E2E8F0;color:#16a34a">
+                                                <i class="fas fa-check mr-1"></i> Guardar
+                                            </button>
+                                        </form>
                                         <?php if ((int)$a['activo']): ?>
                                             <button type="button" onclick="desactivarAgente(<?= (int)$a['id'] ?>, '<?= htmlspecialchars(addslashes($a['nombre']), ENT_QUOTES) ?>')"
-                                                    class="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors hover:bg-red-50" style="border:1px solid #E2E8F0;color:#E53E3E">
+                                                    class="ml-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors hover:bg-red-50" style="border:1px solid #E2E8F0;color:#E53E3E">
                                                 <i class="fas fa-user-slash mr-1"></i> Desactivar
                                             </button>
                                         <?php endif; ?>

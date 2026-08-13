@@ -31,6 +31,28 @@ try {
     echo "<div class='bg-yellow-900/50 border border-yellow-700 rounded p-3 mb-2 text-sm'>" . htmlspecialchars($e->getMessage()) . "</div>";
 }
 
+try {
+    $pdo->exec("ALTER TABLE usuarios ADD COLUMN limite_leads INT DEFAULT 0 AFTER sucursal");
+    echo "<div class='bg-green-900/50 border border-green-700 rounded p-3 mb-2 text-sm'>OK: columna 'limite_leads' agregada a usuarios</div>";
+} catch (Exception $e) {
+    if (str_contains($e->getMessage(), 'Duplicate column')) {
+        echo "<div class='bg-green-900/50 border border-green-700 rounded p-3 mb-2 text-sm'>OK: columna 'limite_leads' ya existe</div>";
+    } else {
+        echo "<div class='bg-yellow-900/50 border border-yellow-700 rounded p-3 mb-2 text-sm'>" . htmlspecialchars($e->getMessage()) . "</div>";
+    }
+}
+
+try {
+    $pdo->exec("ALTER TABLE usuarios ADD COLUMN numero_contacto VARCHAR(50) DEFAULT NULL AFTER limite_leads");
+    echo "<div class='bg-green-900/50 border border-green-700 rounded p-3 mb-2 text-sm'>OK: columna 'numero_contacto' agregada a usuarios</div>";
+} catch (Exception $e) {
+    if (str_contains($e->getMessage(), 'Duplicate column')) {
+        echo "<div class='bg-green-900/50 border border-green-700 rounded p-3 mb-2 text-sm'>OK: columna 'numero_contacto' ya existe</div>";
+    } else {
+        echo "<div class='bg-yellow-900/50 border border-yellow-700 rounded p-3 mb-2 text-sm'>" . htmlspecialchars($e->getMessage()) . "</div>";
+    }
+}
+
 echo "<div class='mt-6 bg-blue-900/50 border border-blue-700 rounded p-4 text-blue-300'>";
 $rows = $pdo->query("SELECT u.nombre, GROUP_CONCAT(DISTINCT asg.sucursal ORDER BY asg.sucursal SEPARATOR ', ') as sucursales
     FROM usuarios u
