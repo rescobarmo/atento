@@ -46,12 +46,6 @@ try {
     $stmt = $pdo->prepare("UPDATE redsalud SET $campo = ?, fecha_actualizacion = NOW() WHERE id = ?");
     $stmt->execute([$valor, $id]);
 
-    if ($stmt->rowCount() === 0) {
-        http_response_code(404);
-        echo json_encode(['error' => 'Registro no encontrado']);
-        exit;
-    }
-
     echo json_encode(['success' => true, 'message' => 'Actualizado correctamente']);
 } catch (Exception $e) {
     http_response_code(500);
