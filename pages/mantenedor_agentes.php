@@ -80,14 +80,6 @@ $agentes = $pdo->query("
     ORDER BY u.activo DESC, u.nombre
 ")->fetchAll();
 
-$agentes = $pdo->query("
-    SELECT u.id, u.nombre, u.email, u.username, u.activo
-    FROM usuarios u
-    JOIN roles r ON u.rol_id = r.id
-    WHERE r.nombre = 'Agente de Ventas'
-    ORDER BY u.activo DESC, u.nombre
-")->fetchAll();
-
 $sucursales = $pdo->query("SELECT DISTINCT sucursal FROM clientesredsalud WHERE sucursal IS NOT NULL AND sucursal != '' ORDER BY sucursal")->fetchAll(PDO::FETCH_COLUMN);
 
 $asignadas = $pdo->query("SELECT agente_id, sucursal FROM agente_sucursales")->fetchAll();
@@ -205,13 +197,10 @@ foreach ($asignadas as $a) {
                                     </td>
                                     <td class="px-6 py-4 text-right align-top">
                                         <?php if ((int)$a['activo']): ?>
-                                            <form method="POST" onsubmit="return confirm('¿Desactivar a <?= htmlspecialchars(addslashes($a['nombre'])) ?>? Ya no podrá ingresar al sistema.')">
-                                                <input type="hidden" name="accion" value="desactivar">
-                                                <input type="hidden" name="agente_id" value="<?= (int)$a['id'] ?>">
-                                                <button type="submit" class="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors hover:bg-red-50" style="border:1px solid #E2E8F0;color:#E53E3E">
-                                                    <i class="fas fa-user-slash mr-1"></i> Desactivar
-                                                </button>
-                                            </form>
+                                            <button type="button" onclick="desactivarAgente(<?= (int)$a['id'] ?>, '<?= htmlspecialchars(addslashes($a['nombre']), ENT_QUOTES) ?>')"
+                                                    class="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors hover:bg-red-50" style="border:1px solid #E2E8F0;color:#E53E3E">
+                                                <i class="fas fa-user-slash mr-1"></i> Desactivar
+                                            </button>
                                         <?php endif; ?>
                                     </td>
                                 </tr>
@@ -230,4 +219,15 @@ foreach ($asignadas as $a) {
         </div>
     </main>
 </div>
+<script>
+function desactivarAgente(id, nombre) {
+    if (!confirm('¿Desactivar a ' + nombre + '? Ya no podrá ingresar al sistema.')) return;
+    const fd = new FormData();
+    fd.append('accion', 'desactivar');
+    fd.append('agente_id', id);
+    fetch(window.location.href, { method: 'POST', body: fd })
+        .then(r => { if (r.ok) window.location.reload(); else alert('Error al desactivar'); })
+        .catch(() => alert('Error de conexión'));
+}
+</script>
 <?php include __DIR__ . '/../includes/footer.php'; ?>
