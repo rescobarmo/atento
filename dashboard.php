@@ -164,7 +164,7 @@ function badgeClass($cat) {
                             <i class="fas fa-exclamation-triangle text-lg" style="color:#E53E3E"></i>
                         </div>
                     </div>
-                    <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format(max($contactados - $totalClientes, 0)) ?></p>
+                    <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format($pendientes) ?></p>
                 </div>
             </div>
 
