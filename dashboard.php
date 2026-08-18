@@ -129,7 +129,7 @@ function badgeClass($cat) {
                         </div>
                     </div>
                     <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format($totalClientes) ?></p>
-                    <p class="text-xs mt-1" style="color:#64748B">registros en clientesredsalud</p>
+                    <p class="text-xs mt-1" style="color:#64748B">registros enviados</p>
                 </div>
                 <div class="stat-card rounded-2xl p-5">
                     <div class="flex items-center justify-between mb-3">
