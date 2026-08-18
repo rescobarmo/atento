@@ -27,6 +27,12 @@ $totalClientes = $pdo->query("
 
 $pendientes = $redsalud['total_msgs'] - $redsalud['evaluados'];
 
+$contactados = $pdo->query("
+    SELECT COUNT(DISTINCT r.numero) FROM redsalud r
+    $joinSuc
+    WHERE 1=1 $whereSuc
+")->fetchColumn();
+
 $nulos = $pdo->query("
     SELECT COUNT(1) FROM redsalud r
     $joinSuc
@@ -133,13 +139,13 @@ function badgeClass($cat) {
                 </div>
                 <div class="stat-card rounded-2xl p-5">
                     <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:#64748B">Paciente Interesado</span>
+                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:#64748B">Contactado</span>
                         <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(0,128,137,0.12)">
                             <i class="fas fa-check-double text-lg" style="color:#008089"></i>
                         </div>
                     </div>
-                    <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format($nulos) ?></p>
-                    <p class="text-xs mt-1" style="color:#64748B">de <?= number_format($nulos + $pendientes) ?> registros</p>
+                    <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format($contactados) ?></p>
+                    <p class="text-xs mt-1" style="color:#64748B">de <?= number_format($totalClientes) ?> registros</p>
                 </div>
                 <div class="stat-card rounded-2xl p-5">
                     <div class="flex items-center justify-between mb-3">
