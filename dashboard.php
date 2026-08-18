@@ -155,6 +155,15 @@ function badgeClass($cat) {
                 </div>
                 <div class="stat-card rounded-2xl p-5">
                     <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:#64748B">Interesados</span>
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(0,128,137,0.12)">
+                            <i class="fas fa-thumbs-up text-lg" style="color:#008089"></i>
+                        </div>
+                    </div>
+                    <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format($interesados) ?></p>
+                </div>
+                <div class="stat-card rounded-2xl p-5">
+                    <div class="flex items-center justify-between mb-3">
                         <span class="text-xs font-semibold uppercase tracking-wider" style="color:#64748B">Con Horario de Llamada</span>
                         <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(245,158,11,0.12)">
                             <i class="fas fa-clock text-lg" style="color:#F59E0B"></i>
@@ -171,15 +180,6 @@ function badgeClass($cat) {
                         </div>
                     </div>
                     <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format($pendientes) ?></p>
-                </div>
-                <div class="stat-card rounded-2xl p-5">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:#64748B">Interesados</span>
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(0,128,137,0.12)">
-                            <i class="fas fa-thumbs-up text-lg" style="color:#008089"></i>
-                        </div>
-                    </div>
-                    <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format($interesados) ?></p>
                 </div>
             </div>
 
