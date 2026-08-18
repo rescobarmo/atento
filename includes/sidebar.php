@@ -114,7 +114,7 @@ function cambiarSucursal(valor) {
     if (valor) {
         url.searchParams.set('sucursal', valor);
     } else {
-        url.searchParams.delete('sucursal');
+        url.searchParams.set('sucursal', '');
     }
     window.location.href = url.toString();
 }

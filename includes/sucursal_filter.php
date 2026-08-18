@@ -1,5 +1,5 @@
 <?php
-if (isset($_GET['sucursal'])) {
+if (array_key_exists('sucursal', $_GET)) {
     $_SESSION['sucursal'] = $_GET['sucursal'];
 }
 
