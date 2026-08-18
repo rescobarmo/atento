@@ -20,6 +20,11 @@ $redsalud = $pdo->query("
     WHERE 1=1 $whereSuc
 ")->fetch();
 
+$totalClientes = $pdo->query("
+    SELECT COUNT(*) FROM clientesredsalud
+    WHERE 1=1 " . ($sucursalSeleccionada ? "AND sucursal = " . $pdo->quote($sucursalSeleccionada) : "")
+)->fetchColumn();
+
 $pendientes = $redsalud['total_msgs'] - $redsalud['evaluados'];
 
 $nulos = $pdo->query("
@@ -123,10 +128,8 @@ function badgeClass($cat) {
                             <i class="fas fa-percent text-lg" style="color:#008089"></i>
                         </div>
                     </div>
-                    <p class="text-2xl font-bold" style="color:#1A202C"><?= $cumplimiento ?>%</p>
-                    <div class="mt-2 h-1.5 rounded-full" style="background:#E2E8F0">
-                        <div class="h-1.5 rounded-full progress-bar" style="width:<?= $cumplimiento ?>%;background:#008089"></div>
-                    </div>
+                    <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format($totalClientes) ?></p>
+                    <p class="text-xs mt-1" style="color:#64748B">registros en clientesredsalud</p>
                 </div>
                 <div class="stat-card rounded-2xl p-5">
                     <div class="flex items-center justify-between mb-3">
