@@ -34,9 +34,9 @@ $contactados = $pdo->query("
 ")->fetchColumn();
 
 $interesados = $pdo->query("
-    SELECT COUNT(r.numero) FROM redsalud r
+    SELECT COUNT(DISTINCT r.numero) FROM redsalud r
     $joinSuc
-    WHERE LOWER(r.categoria_cliente) = 'respondio' $whereSuc
+    WHERE conversacion IS NULL AND LOWER(r.categoria_cliente) = 'respondio' $whereSuc
 ")->fetchColumn();
 
 $nulos = $pdo->query("
