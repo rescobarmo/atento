@@ -39,6 +39,12 @@ $interesados = $pdo->query("
     WHERE conversacion IS NULL AND LOWER(r.categoria_cliente) = 'respondio' $whereSuc
 ")->fetchColumn();
 
+$sinInteres = $pdo->query("
+    SELECT COUNT(DISTINCT r.numero) FROM redsalud r
+    $joinSuc
+    WHERE conversacion = 'no' AND LOWER(r.categoria_cliente) = 'cancelada' $whereSuc
+")->fetchColumn();
+
 $nulos = $pdo->query("
     SELECT COUNT(1) FROM redsalud r
     $joinSuc
@@ -179,7 +185,7 @@ function badgeClass($cat) {
                             <i class="fas fa-exclamation-triangle text-lg" style="color:#E53E3E"></i>
                         </div>
                     </div>
-                    <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format($pendientes) ?></p>
+                    <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format($sinInteres) ?></p>
                 </div>
             </div>
 
