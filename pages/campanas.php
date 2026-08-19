@@ -94,7 +94,7 @@ $coloresCategoria = [
                             <i class="fas fa-comments" style="color:#008089"></i>
                         </div>
                     </div>
-                    <p class="text-2xl font-bold" style="color:#1A202C"><?= $totalMensajes ?></p>
+                    <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format($totalMensajes) ?></p>
                     <p class="text-xs mt-1" style="color:#64748B">en la base de datos</p>
                 </div>
                 <div class="stat-card rounded-2xl p-5">
@@ -104,7 +104,7 @@ $coloresCategoria = [
                             <i class="fas fa-users" style="color:#008089"></i>
                         </div>
                     </div>
-                    <p class="text-2xl font-bold" style="color:#1A202C"><?= $resumen['contactos_unicos'] ?></p>
+                    <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format($resumen['contactos_unicos']) ?></p>
                     <p class="text-xs mt-1" style="color:#64748B">números distintos</p>
                 </div>
                 <div class="stat-card rounded-2xl p-5">
@@ -114,7 +114,7 @@ $coloresCategoria = [
                             <i class="fas fa-tags" style="color:#008089"></i>
                         </div>
                     </div>
-                    <p class="text-2xl font-bold" style="color:#1A202C"><?= $resumen['total_categorias'] ?></p>
+                    <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format($resumen['total_categorias']) ?></p>
                     <p class="text-xs mt-1" style="color:#64748B">tipos de cliente</p>
                 </div>
                 </div>
