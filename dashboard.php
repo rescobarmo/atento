@@ -75,7 +75,7 @@ $categorias = $pdo->query("
     FROM redsalud r $joinSuc
     WHERE 1=1 $whereSuc
     UNION ALL
-    SELECT 'RESPONDIO', COUNT(DISTINCT r.numero)
+    SELECT 'INTERESADOS', COUNT(DISTINCT r.numero)
     FROM redsalud r $joinSuc
     WHERE 1=1 $whereSuc AND LOWER(r.categoria_cliente) = 'respondio'
     UNION ALL
