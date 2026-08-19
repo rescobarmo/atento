@@ -48,7 +48,7 @@ function badgeClassReport($cat) {
     if (in_array($c, ['realizado', 'respondio', 'llamado'])) return 'badge-conforme';
     if ($c === 'cotizando') return 'badge-observacion';
     if ($c === 'noconforme') return 'badge-noconforme';
-    return 'bg-gray-100 text-gray-600';
+    return 'bg-white/10 text-white';
 }
 ?>
 <?php $titulo = 'Historial'; include __DIR__ . '/../includes/header.php'; ?>
@@ -58,8 +58,8 @@ function badgeClassReport($cat) {
         <div class="max-w-7xl mx-auto">
             <div class="flex items-center justify-between mb-8 fade-in">
                 <div>
-                    <h1 class="text-2xl font-bold" style="color:#1A202C">Historial y Reportes</h1>
-                    <p class="mt-1" style="color:#64748B">Registro completo de evaluaciones realizadas</p>
+                    <h1 class="text-2xl font-bold" style="color:#FFFFFF">Historial y Reportes</h1>
+                    <p class="mt-1" style="color:rgba(255,255,255,0.7)">Registro completo de evaluaciones realizadas</p>
                 </div>
                 <div class="flex items-center gap-3">
                     <a href="<?= APP_URL ?>/api/export_excel.php?<?= http_build_query($_GET) ?>"
@@ -74,9 +74,9 @@ function badgeClassReport($cat) {
                     <div class="flex-1">
                         <input type="text" name="busqueda" value="<?= htmlspecialchars($filtroBusqueda) ?>"
                                placeholder="Buscar por nombre o teléfono..."
-                               class="w-full px-4 py-2.5 rounded-xl text-sm outline-none" style="border:1px solid #E2E8F0;background:#F4F8F8;color:#1A202C">
+                               class="w-full px-4 py-2.5 rounded-xl text-sm outline-none" style="border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.08);color:#FFFFFF">
                     </div>
-                    <select name="estado" class="px-4 py-2.5 rounded-xl text-sm outline-none bg-white" style="border:1px solid #E2E8F0;color:#1A202C">
+                    <select name="estado" class="px-4 py-2.5 rounded-xl text-sm outline-none bg-white/5" style="border:1px solid rgba(255,255,255,0.15);color:#FFFFFF">
                         <option value="">Todos los estados</option>
                         <?php foreach ($estados as $e): ?>
                             <option value="<?= htmlspecialchars($e['cat']) ?>" <?= $filtroEstado === $e['cat'] ? 'selected' : '' ?>>
@@ -85,14 +85,14 @@ function badgeClassReport($cat) {
                         <?php endforeach; ?>
                     </select>
                     <input type="date" name="desde" value="<?= htmlspecialchars($filtroDesde) ?>"
-                           class="px-4 py-2.5 rounded-xl text-sm outline-none bg-white" style="border:1px solid #E2E8F0;color:#1A202C">
+                           class="px-4 py-2.5 rounded-xl text-sm outline-none bg-white/5" style="border:1px solid rgba(255,255,255,0.15);color:#FFFFFF">
                     <input type="date" name="hasta" value="<?= htmlspecialchars($filtroHasta) ?>"
-                           class="px-4 py-2.5 rounded-xl text-sm outline-none bg-white" style="border:1px solid #E2E8F0;color:#1A202C">
+                           class="px-4 py-2.5 rounded-xl text-sm outline-none bg-white/5" style="border:1px solid rgba(255,255,255,0.15);color:#FFFFFF">
                     <button type="submit" class="btn-primary px-6 py-2.5 rounded-xl text-sm font-medium text-white">
                         <i class="fas fa-filter mr-1"></i> Filtrar
                     </button>
                     <?php if ($filtroBusqueda || $filtroEstado || $filtroDesde !== date('Y-m-d', strtotime('-30 days')) || $filtroHasta !== date('Y-m-d')): ?>
-                        <a href="historial.php" class="px-4 py-2.5 rounded-xl text-sm font-medium" style="border:1px solid #E2E8F0;color:#64748B">
+                        <a href="historial.php" class="px-4 py-2.5 rounded-xl text-sm font-medium" style="border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.7)">
                             <i class="fas fa-times mr-1"></i> Limpiar
                         </a>
                     <?php endif; ?>
@@ -103,7 +103,7 @@ function badgeClassReport($cat) {
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">
                         <thead>
-                            <tr class="text-left text-xs uppercase tracking-wider" style="color:#64748B;background:#F4F8F8">
+                            <tr class="text-left text-xs uppercase tracking-wider" style="color:rgba(255,255,255,0.7);background:rgba(255,255,255,0.08)">
                                 <th class="px-6 py-4 font-medium">Contacto</th>
                                 <th class="px-6 py-4 font-medium">Teléfono</th>
                                 <th class="px-6 py-4 font-medium">Evaluación</th>
@@ -112,16 +112,16 @@ function badgeClassReport($cat) {
                                 <th class="px-6 py-4 font-medium text-right">Acción</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y" style="border-color:#E2E8F0">
+                        <tbody class="divide-y" style="border-color:rgba(255,255,255,0.15)">
                             <?php if (empty($registros)): ?>
-                                <tr><td colspan="6" class="px-6 py-12 text-center" style="color:#64748B">No se encontraron registros</td></tr>
+                                <tr><td colspan="6" class="px-6 py-12 text-center" style="color:rgba(255,255,255,0.7)">No se encontraron registros</td></tr>
                             <?php endif; ?>
                             <?php foreach ($registros as $r): ?>
-                            <tr class="hover:bg-gray-50 transition-colors">
+                            <tr class="hover:bg-white/5 transition-colors">
                                 <td class="px-6 py-4">
-                                    <p class="font-medium" style="color:#1A202C"><?= htmlspecialchars($r['nombre'] ?? 'Sin nombre') ?></p>
+                                    <p class="font-medium" style="color:#FFFFFF"><?= htmlspecialchars($r['nombre'] ?? 'Sin nombre') ?></p>
                                 </td>
-                                <td class="px-6 py-4 font-mono text-sm" style="color:#64748B"><?= htmlspecialchars($r['numero']) ?></td>
+                                <td class="px-6 py-4 font-mono text-sm" style="color:rgba(255,255,255,0.7)"><?= htmlspecialchars($r['numero']) ?></td>
                                 <td class="px-6 py-4">
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?= badgeClassReport($r['categoria_cliente']) ?>">
                                         <?php
@@ -138,11 +138,11 @@ function badgeClassReport($cat) {
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 max-w-xs">
-                                    <p class="text-sm truncate" style="color:#64748B"><?= htmlspecialchars($r['obs'] ?? '-') ?></p>
+                                    <p class="text-sm truncate" style="color:rgba(255,255,255,0.7)"><?= htmlspecialchars($r['obs'] ?? '-') ?></p>
                                 </td>
-                                <td class="px-6 py-4 text-sm whitespace-nowrap" style="color:#64748B"><?= date('d/m/Y H:i', strtotime($r['fecha_actualizacion'] ?: $r['fecha_creacion'])) ?></td>
+                                <td class="px-6 py-4 text-sm whitespace-nowrap" style="color:rgba(255,255,255,0.7)"><?= date('d/m/Y H:i', strtotime($r['fecha_actualizacion'] ?: $r['fecha_creacion'])) ?></td>
                                 <td class="px-6 py-4 text-right">
-                                    <span class="text-sm" style="color:#64748B">—</span>
+                                    <span class="text-sm" style="color:rgba(255,255,255,0.7)">—</span>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
@@ -151,7 +151,7 @@ function badgeClassReport($cat) {
                 </div>
             </div>
 
-            <div class="mt-4 text-xs" style="color:#64748B">
+            <div class="mt-4 text-xs" style="color:rgba(255,255,255,0.7)">
                 <i class="fas fa-database mr-1"></i> Total: <?= count($registros) ?> registros
             </div>
         </div>

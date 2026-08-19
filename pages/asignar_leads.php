@@ -68,11 +68,11 @@ $resumen = $resumen->fetch() ?: ['total' => 0, 'asignados' => 0];
         <div class="max-w-7xl mx-auto">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
                 <div>
-                    <h1 class="text-2xl font-bold" style="color:#1A202C">Asignación de Leads</h1>
-                    <p class="mt-1" style="color:#64748B">Asigna cada lead a un agente de ventas</p>
+                    <h1 class="text-2xl font-bold" style="color:#FFFFFF">Asignación de Leads</h1>
+                    <p class="mt-1" style="color:rgba(255,255,255,0.7)">Asigna cada lead a un agente de ventas</p>
                 </div>
-                <div class="flex items-center gap-3 text-sm" style="color:#64748B">
-                    <span class="inline-flex items-center px-3 py-1.5 rounded-full bg-blue-50 text-blue-700 font-medium">
+                <div class="flex items-center gap-3 text-sm" style="color:rgba(255,255,255,0.7)">
+                    <span class="inline-flex items-center px-3 py-1.5 rounded-full bg-[#00A3E0]/20 text-white font-medium">
                         <i class="fas fa-check-circle mr-1"></i> <?= (int)$resumen['asignados'] ?> / <?= (int)$resumen['total'] ?> asignados
                     </span>
                 </div>
@@ -83,9 +83,9 @@ $resumen = $resumen->fetch() ?: ['total' => 0, 'asignados' => 0];
                     <div class="flex-1">
                         <input type="text" name="busqueda" value="<?= htmlspecialchars($filtroBusqueda) ?>"
                                placeholder="Buscar por nombre, teléfono o conversación..."
-                               class="w-full px-4 py-2.5 rounded-xl outline-none text-sm" style="border:1px solid #E2E8F0;background:#F4F8F8;color:#1A202C">
+                               class="w-full px-4 py-2.5 rounded-xl outline-none text-sm" style="border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.08);color:#FFFFFF">
                     </div>
-                    <select name="agente" class="px-4 py-2.5 rounded-xl outline-none text-sm bg-white" style="border:1px solid #E2E8F0;color:#1A202C">
+                    <select name="agente" class="px-4 py-2.5 rounded-xl outline-none text-sm bg-white/5" style="border:1px solid rgba(255,255,255,0.15);color:#FFFFFF">
                         <option value="">Todos los agentes</option>
                         <option value="sin" <?= $filtroAgente === 'sin' ? 'selected' : '' ?>>Sin asignar</option>
                         <?php foreach ($agentes as $a): ?>
@@ -98,7 +98,7 @@ $resumen = $resumen->fetch() ?: ['total' => 0, 'asignados' => 0];
                         <i class="fas fa-filter mr-1"></i> Filtrar
                     </button>
                     <?php if ($filtroBusqueda || $filtroAgente !== ''): ?>
-                        <a href="asignar_leads.php" class="px-4 py-2.5 rounded-xl text-sm font-medium" style="border:1px solid #E2E8F0;color:#64748B">
+                        <a href="asignar_leads.php" class="px-4 py-2.5 rounded-xl text-sm font-medium" style="border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.7)">
                             <i class="fas fa-times mr-1"></i> Limpiar
                         </a>
                     <?php endif; ?>
@@ -109,7 +109,7 @@ $resumen = $resumen->fetch() ?: ['total' => 0, 'asignados' => 0];
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">
                         <thead>
-                            <tr class="text-left text-xs uppercase tracking-wider" style="color:#64748B;background:#F4F8F8">
+                            <tr class="text-left text-xs uppercase tracking-wider" style="color:rgba(255,255,255,0.7);background:rgba(255,255,255,0.08)">
                                 <th class="px-6 py-4 font-medium">Nombre</th>
                                 <th class="px-6 py-4 font-medium">Teléfono</th>
                                 <th class="px-6 py-4 font-medium">Sucursal</th>
@@ -117,9 +117,9 @@ $resumen = $resumen->fetch() ?: ['total' => 0, 'asignados' => 0];
                                 <th class="px-6 py-4 font-medium">Agente</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y" style="border-color:#E2E8F0">
+                        <tbody class="divide-y" style="border-color:rgba(255,255,255,0.15)">
                             <?php if (empty($leads)): ?>
-                                <tr><td colspan="5" class="px-6 py-12 text-center text-slate-400">No se encontraron leads</td></tr>
+                                <tr><td colspan="5" class="px-6 py-12 text-center text-white/50">No se encontraron leads</td></tr>
                             <?php endif; ?>
                             <?php foreach ($leads as $r): ?>
                             <?php
@@ -132,13 +132,13 @@ $resumen = $resumen->fetch() ?: ['total' => 0, 'asignados' => 0];
                                     default => '#64748b'
                                 };
                             ?>
-                            <tr class="hover:bg-slate-50 transition-colors" data-id="<?= htmlspecialchars($r['id']) ?>">
+                            <tr class="hover:bg-white/5 transition-colors" data-id="<?= htmlspecialchars($r['id']) ?>">
                                 <td class="px-6 py-4">
-                                    <p class="font-medium" style="color:#1A202C"><?= htmlspecialchars($r['cliente_nombre'] ?: $r['nombre'] ?? 'Sin nombre') ?></p>
-                                    <p class="text-xs truncate max-w-[260px]" style="color:#94a3b8"><?= htmlspecialchars(mb_substr($r['conversacion'] ?? '', 0, 80)) ?></p>
+                                    <p class="font-medium" style="color:#FFFFFF"><?= htmlspecialchars($r['cliente_nombre'] ?: $r['nombre'] ?? 'Sin nombre') ?></p>
+                                    <p class="text-xs truncate max-w-[260px]" style="color:rgba(255,255,255,0.5)"><?= htmlspecialchars(mb_substr($r['conversacion'] ?? '', 0, 80)) ?></p>
                                 </td>
-                                <td class="px-6 py-4 font-mono text-sm text-slate-600"><?= htmlspecialchars($r['numero']) ?></td>
-                                <td class="px-6 py-4 text-sm" style="color:#64748B"><?= htmlspecialchars($r['sucursal'] ?? '-') ?></td>
+                                <td class="px-6 py-4 font-mono text-sm text-white/70"><?= htmlspecialchars($r['numero']) ?></td>
+                                <td class="px-6 py-4 text-sm" style="color:rgba(255,255,255,0.7)"><?= htmlspecialchars($r['sucursal'] ?? '-') ?></td>
                                 <td class="px-6 py-4">
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold text-white" style="background:<?= $colorBg ?>">
                                         <?= htmlspecialchars(strtoupper($cat ?: 'SIN CATEGORÍA')) ?>
@@ -146,7 +146,7 @@ $resumen = $resumen->fetch() ?: ['total' => 0, 'asignados' => 0];
                                 </td>
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-2">
-                                        <select class="agente-select w-48 px-2 py-1.5 text-xs border border-slate-200 rounded-lg focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none bg-white"
+                                        <select class="agente-select w-48 px-2 py-1.5 text-xs border border-white/15 rounded-lg focus:border-[#00A3E0] focus:ring-2 focus:ring-[#00A3E0]/20 outline-none bg-white/5 text-white"
                                                 data-id="<?= htmlspecialchars($r['id']) ?>">
                                             <option value="">Sin asignar</option>
                                             <?php foreach ($agentes as $a): ?>

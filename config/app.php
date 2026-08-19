@@ -1,9 +1,9 @@
 <?php
 session_start();
 
-define('APP_NAME', 'RedSalud');
+define('APP_NAME', 'Atento');
 define('APP_VERSION', '2.0.0');
-define('APP_URL', '');
+define('APP_URL', '/Atento');
 
 date_default_timezone_set('America/Santiago');
 setlocale(LC_TIME, 'spanish');

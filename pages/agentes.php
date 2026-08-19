@@ -100,17 +100,17 @@ if ($esAgente) {
         <div class="max-w-7xl mx-auto">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
                 <div>
-                    <h1 class="text-2xl font-bold" style="color:#1A202C">Panel Agente de Ventas</h1>
-                    <p class="mt-1" style="color:#64748B">Visión de sucursal y seguimiento de leads</p>
+                    <h1 class="text-2xl font-bold" style="color:#FFFFFF">Panel Agente de Ventas</h1>
+                    <p class="mt-1" style="color:rgba(255,255,255,0.7)">Visión de sucursal y seguimiento de leads</p>
                 </div>
                 <div class="flex items-center gap-3">
                     <div class="flex items-center gap-3 px-4 py-2.5 rounded-xl card">
-                        <span class="flex items-center justify-center w-10 h-10 rounded-xl" style="background:rgba(0,128,137,0.12)">
-                            <i class="fas fa-store text-lg" style="color:#008089"></i>
+                        <span class="flex items-center justify-center w-10 h-10 rounded-xl" style="background:rgba(0,163,224,0.12)">
+                            <i class="fas fa-store text-lg" style="color:#00A3E0"></i>
                         </span>
                         <div>
-                            <p class="text-xs uppercase tracking-wider font-semibold" style="color:#64748B">Sucursal</p>
-                            <p class="font-bold" style="color:#1A202C"><?= $esAgente ? (empty($sucursalesAgente) ? 'Sin asignar' : htmlspecialchars($sucursalSeleccionada)) : htmlspecialchars($sucursalSeleccionada ?: 'Todas') ?></p>
+                            <p class="text-xs uppercase tracking-wider font-semibold" style="color:rgba(255,255,255,0.7)">Sucursal</p>
+                            <p class="font-bold" style="color:#FFFFFF"><?= $esAgente ? (empty($sucursalesAgente) ? 'Sin asignar' : htmlspecialchars($sucursalSeleccionada)) : htmlspecialchars($sucursalSeleccionada ?: 'Todas') ?></p>
                         </div>
                     </div>
                     <?php if ($esAgente && (int)$usuario['limite_leads'] > 0): ?>
@@ -119,8 +119,8 @@ if ($esAgente) {
                             <i class="fas fa-gauge-high text-lg" style="color:#F59E0B"></i>
                         </span>
                         <div>
-                            <p class="text-xs uppercase tracking-wider font-semibold" style="color:#64748B">Límite diario</p>
-                            <p class="font-bold" style="color:#1A202C"><?= (int)$usuario['limite_leads'] ?> leads</p>
+                            <p class="text-xs uppercase tracking-wider font-semibold" style="color:rgba(255,255,255,0.7)">Límite diario</p>
+                            <p class="font-bold" style="color:#FFFFFF"><?= (int)$usuario['limite_leads'] ?> leads</p>
                         </div>
                     </div>
                     <?php endif; ?>
@@ -130,39 +130,39 @@ if ($esAgente) {
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
                 <div class="stat-card rounded-2xl p-5">
                     <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:#64748B">Total Leads</span>
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(0,128,137,0.12)">
-                            <i class="fas fa-users text-lg" style="color:#008089"></i>
+                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:rgba(255,255,255,0.7)">Total Leads</span>
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(0,163,224,0.12)">
+                            <i class="fas fa-users text-lg" style="color:#00A3E0"></i>
                         </div>
                     </div>
-                    <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format((int)$resumen['total']) ?></p>
+                    <p class="text-2xl font-bold" style="color:#FFFFFF"><?= number_format((int)$resumen['total']) ?></p>
                 </div>
                 <div class="stat-card rounded-2xl p-5">
                     <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:#64748B">Cotizando</span>
+                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:rgba(255,255,255,0.7)">Cotizando</span>
                         <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(220,38,38,0.12)">
                             <i class="fas fa-file-invoice-dollar text-lg" style="color:#dc2626"></i>
                         </div>
                     </div>
-                    <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format((int)$resumen['cotizando']) ?></p>
+                    <p class="text-2xl font-bold" style="color:#FFFFFF"><?= number_format((int)$resumen['cotizando']) ?></p>
                 </div>
                 <div class="stat-card rounded-2xl p-5">
                     <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:#64748B">Contactados</span>
+                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:rgba(255,255,255,0.7)">Contactados</span>
                         <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(147,51,234,0.12)">
                             <i class="fas fa-phone-volume text-lg" style="color:#9333ea"></i>
                         </div>
                     </div>
-                    <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format((int)$resumen['contactados']) ?></p>
+                    <p class="text-2xl font-bold" style="color:#FFFFFF"><?= number_format((int)$resumen['contactados']) ?></p>
                 </div>
                 <div class="stat-card rounded-2xl p-5">
                     <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:#64748B">Presupuesto Total</span>
+                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:rgba(255,255,255,0.7)">Presupuesto Total</span>
                         <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(245,158,11,0.12)">
                             <i class="fas fa-coins text-lg" style="color:#F59E0B"></i>
                         </div>
                     </div>
-                    <p class="text-2xl font-bold" style="color:#1A202C">$<?= number_format((int)$resumen['presupuesto'], 0, ',', '.') ?></p>
+                    <p class="text-2xl font-bold" style="color:#FFFFFF">$<?= number_format((int)$resumen['presupuesto'], 0, ',', '.') ?></p>
                 </div>
             </div>
 
@@ -171,13 +171,13 @@ if ($esAgente) {
                     <div class="flex-1">
                         <input type="text" name="busqueda" value="<?= htmlspecialchars($filtroBusqueda) ?>"
                                placeholder="Buscar por nombre, teléfono o conversación..."
-                               class="w-full px-4 py-2.5 rounded-xl outline-none text-sm" style="border:1px solid #E2E8F0;background:#F4F8F8;color:#1A202C">
+                               class="w-full px-4 py-2.5 rounded-xl outline-none text-sm" style="border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.08);color:#FFFFFF">
                     </div>
                     <button type="submit" class="btn-primary px-6 py-2.5 rounded-xl text-sm font-medium text-white">
                         <i class="fas fa-search mr-1"></i> Buscar
                     </button>
                     <?php if ($filtroBusqueda): ?>
-                        <a href="agentes.php" class="px-4 py-2.5 rounded-xl text-sm font-medium" style="border:1px solid #E2E8F0;color:#64748B">
+                        <a href="agentes.php" class="px-4 py-2.5 rounded-xl text-sm font-medium" style="border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.7)">
                             <i class="fas fa-times mr-1"></i> Limpiar
                         </a>
                     <?php endif; ?>
@@ -187,7 +187,7 @@ if ($esAgente) {
             <?php if (empty($leads)): ?>
                 <div class="card rounded-2xl p-12 text-center">
                     <i class="fas fa-inbox text-4xl mb-4" style="color:#CBD5E1"></i>
-                    <p class="text-lg font-medium" style="color:#64748B">No se encontraron leads para esta sucursal</p>
+                    <p class="text-lg font-medium" style="color:rgba(255,255,255,0.7)">No se encontraron leads para esta sucursal</p>
                 </div>
             <?php else: ?>
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
@@ -211,8 +211,8 @@ if ($esAgente) {
                                 <?= $inicial ?: '?' ?>
                             </div>
                             <div class="min-w-0">
-                                <p class="font-semibold truncate" style="color:#1A202C"><?= htmlspecialchars($r['cliente_nombre'] ?: $r['nombre'] ?? 'Sin nombre') ?></p>
-                                <p class="text-xs font-mono" style="color:#64748B"><?= htmlspecialchars($r['numero']) ?></p>
+                                <p class="font-semibold truncate" style="color:#FFFFFF"><?= htmlspecialchars($r['cliente_nombre'] ?: $r['nombre'] ?? 'Sin nombre') ?></p>
+                                <p class="text-xs font-mono" style="color:rgba(255,255,255,0.7)"><?= htmlspecialchars($r['numero']) ?></p>
                             </div>
                         </div>
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold text-white uppercase shrink-0" style="background:<?= $colorBg ?>">
@@ -221,33 +221,33 @@ if ($esAgente) {
                     </div>
 
                     <div class="px-5 py-4 flex-1 flex flex-col gap-3">
-                        <div class="flex flex-wrap gap-x-4 gap-y-1.5 text-xs" style="color:#64748B">
+                        <div class="flex flex-wrap gap-x-4 gap-y-1.5 text-xs" style="color:rgba(255,255,255,0.7)">
                             <?php if (($esAgente || empty($sucursalSeleccionada)) && $r['sucursal']): ?>
-                                <span><i class="fas fa-store mr-1.5" style="color:#008089"></i><?= htmlspecialchars($r['sucursal']) ?></span>
+                                <span><i class="fas fa-store mr-1.5" style="color:#00A3E0"></i><?= htmlspecialchars($r['sucursal']) ?></span>
                             <?php endif; ?>
-                            <span><i class="far fa-clock mr-1.5" style="color:#008089"></i><?= htmlspecialchars($r['horario'] ?? '-') ?></span>
+                            <span><i class="far fa-clock mr-1.5" style="color:#00A3E0"></i><?= htmlspecialchars($r['horario'] ?? '-') ?></span>
                         </div>
 
                         <?php if (!empty($r['conversacion'])): ?>
-                        <div class="rounded-xl px-3 py-2.5 text-xs leading-relaxed max-h-32 overflow-y-auto" style="background:#F4F8F8;color:#334155">
+                        <div class="rounded-xl px-3 py-2.5 text-xs leading-relaxed max-h-32 overflow-y-auto" style="background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.85)">
                             <?= nl2br(htmlspecialchars($r['conversacion'])) ?>
                         </div>
                         <?php endif; ?>
 
                         <div class="mt-auto pt-2 space-y-3">
                             <div class="flex items-center justify-between gap-3">
-                                <label class="flex items-center gap-2 text-xs font-medium cursor-pointer select-none" style="color:#64748B">
+                                <label class="flex items-center gap-2 text-xs font-medium cursor-pointer select-none" style="color:rgba(255,255,255,0.7)">
                                     <input type="checkbox"
-                                           class="w-5 h-5 rounded border-slate-300 text-purple-600 focus:ring-purple-500 cursor-pointer contact-checkbox"
+                                           class="w-5 h-5 rounded border-white/30 text-[#00A3E0] focus:ring-[#00A3E0] cursor-pointer contact-checkbox"
                                            <?= $esLlamado ? 'checked' : '' ?>
                                            data-id="<?= htmlspecialchars($r['id']) ?>">
                                     Contactado
                                 </label>
                                 <div class="flex items-center gap-2">
-                                    <span class="text-xs font-medium" style="color:#64748B">Presupuesto</span>
+                                    <span class="text-xs font-medium" style="color:rgba(255,255,255,0.7)">Presupuesto</span>
                                     <input type="text" inputmode="numeric"
                                            class="w-28 px-2 py-1.5 text-xs text-right rounded-lg outline-none presupuesto-input"
-                                           style="border:1px solid #E2E8F0;background:#F4F8F8;color:#1A202C"
+                                           style="border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.08);color:#FFFFFF"
                                            value="<?= $r['presupuesto'] ? number_format((int)$r['presupuesto'], 0, ',', '.') : '' ?>"
                                            data-id="<?= htmlspecialchars($r['id']) ?>"
                                            placeholder="0">
@@ -257,11 +257,11 @@ if ($esAgente) {
                                 <div class="relative">
                                     <textarea rows="3"
                                               class="w-full px-3 py-2 text-xs rounded-lg outline-none resize-none obs-input pr-16"
-                                              style="border:1px solid #E2E8F0;background:#F4F8F8;color:#1A202C"
+                                              style="border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.08);color:#FFFFFF"
                                               maxlength="200"
                                               data-id="<?= htmlspecialchars($r['id']) ?>"
                                               placeholder="Notas de seguimiento..."><?= htmlspecialchars($r['obs'] ?? '') ?></textarea>
-                                    <span class="absolute bottom-2 right-2 text-[10px] text-slate-400 obs-count"><?= mb_strlen($r['obs'] ?? '') ?>/200</span>
+                                    <span class="absolute bottom-2 right-2 text-[10px] text-white/50 obs-count"><?= mb_strlen($r['obs'] ?? '') ?>/200</span>
                                 </div>
                             </div>
                             <button type="button"

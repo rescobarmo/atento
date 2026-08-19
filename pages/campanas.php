@@ -62,7 +62,7 @@ $categorias = $pdo->query("
 ")->fetchAll();
 
 $coloresCategoria = [
-    'Sin Categoría' => 'bg-gray-100 text-gray-600',
+    'Sin Categoría' => 'bg-white/10 text-white',
     'cotizando' => 'bg-red-600 text-white',
     'COTIZANDO' => 'bg-red-600 text-white',
     'respondio' => 'bg-green-600 text-white',
@@ -80,8 +80,8 @@ $coloresCategoria = [
         <div class="max-w-7xl mx-auto">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
                 <div>
-                    <h1 class="text-2xl font-bold" style="color:#1A202C">Red Salud</h1>
-                    <p class="mt-1" style="color:#64748B">Conversaciones y contactos</p>
+                    <h1 class="text-2xl font-bold" style="color:#FFFFFF">Red Salud</h1>
+                    <p class="mt-1" style="color:rgba(255,255,255,0.7)">Conversaciones y contactos</p>
                 </div>
 
             </div>
@@ -89,33 +89,33 @@ $coloresCategoria = [
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
                 <div class="stat-card rounded-2xl p-5">
                     <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:#64748B">Total Mensajes</span>
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(0,128,137,0.12)">
-                            <i class="fas fa-comments" style="color:#008089"></i>
+                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:rgba(255,255,255,0.7)">Total Mensajes</span>
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(0,163,224,0.12)">
+                            <i class="fas fa-comments" style="color:#00A3E0"></i>
                         </div>
                     </div>
-                    <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format($totalMensajes) ?></p>
-                    <p class="text-xs mt-1" style="color:#64748B">en la base de datos</p>
+                    <p class="text-2xl font-bold" style="color:#FFFFFF"><?= number_format($totalMensajes) ?></p>
+                    <p class="text-xs mt-1" style="color:rgba(255,255,255,0.7)">en la base de datos</p>
                 </div>
                 <div class="stat-card rounded-2xl p-5">
                     <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:#64748B">Contactos Únicos</span>
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(0,128,137,0.12)">
-                            <i class="fas fa-users" style="color:#008089"></i>
+                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:rgba(255,255,255,0.7)">Contactos Únicos</span>
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(0,163,224,0.12)">
+                            <i class="fas fa-users" style="color:#00A3E0"></i>
                         </div>
                     </div>
-                    <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format($resumen['contactos_unicos']) ?></p>
-                    <p class="text-xs mt-1" style="color:#64748B">números distintos</p>
+                    <p class="text-2xl font-bold" style="color:#FFFFFF"><?= number_format($resumen['contactos_unicos']) ?></p>
+                    <p class="text-xs mt-1" style="color:rgba(255,255,255,0.7)">números distintos</p>
                 </div>
                 <div class="stat-card rounded-2xl p-5">
                     <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:#64748B">Categorías</span>
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(0,128,137,0.12)">
-                            <i class="fas fa-tags" style="color:#008089"></i>
+                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:rgba(255,255,255,0.7)">Categorías</span>
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(0,163,224,0.12)">
+                            <i class="fas fa-tags" style="color:#00A3E0"></i>
                         </div>
                     </div>
-                    <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format($resumen['total_categorias']) ?></p>
-                    <p class="text-xs mt-1" style="color:#64748B">tipos de cliente</p>
+                    <p class="text-2xl font-bold" style="color:#FFFFFF"><?= number_format($resumen['total_categorias']) ?></p>
+                    <p class="text-xs mt-1" style="color:rgba(255,255,255,0.7)">tipos de cliente</p>
                 </div>
                 </div>
             </div>
@@ -125,9 +125,9 @@ $coloresCategoria = [
                     <div class="flex-1">
                         <input type="text" name="busqueda" value="<?= htmlspecialchars($filtroBusqueda) ?>"
                                placeholder="Buscar por nombre, teléfono o conversación..."
-                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none text-sm">
+                               class="w-full px-4 py-2.5 rounded-xl border border-white/15 focus:border-[#00A3E0] focus:ring-2 focus:ring-[#00A3E0]/20 outline-none text-sm bg-white/5 text-white">
                     </div>
-                    <select name="categoria" class="px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none text-sm bg-white">
+                    <select name="categoria" class="px-4 py-2.5 rounded-xl border border-white/15 focus:border-[#00A3E0] focus:ring-2 focus:ring-[#00A3E0]/20 outline-none text-sm bg-white/5 text-white">
                         <option value="">Todas las categorías</option>
                         <?php foreach ($categorias as $cat): ?>
                             <option value="<?= htmlspecialchars($cat['categoria_cliente']) ?>" <?= $filtroCategoria === $cat['categoria_cliente'] ? 'selected' : '' ?>>
@@ -139,11 +139,11 @@ $coloresCategoria = [
                         <i class="fas fa-search mr-1"></i> Filtrar
                     </button>
                     <a href="<?= APP_URL ?>/api/export_excel.php?<?= http_build_query($_GET) ?>"
-                       class="btn-primary px-6 py-2.5 rounded-xl text-sm font-medium text-white flex items-center gap-2" style="background:#026168">
+                       class="btn-primary px-6 py-2.5 rounded-xl text-sm font-medium text-white flex items-center gap-2" style="background:#00A3E0">
                         <i class="fas fa-file-excel"></i> Exportar Excel
                     </a>
                     <?php if ($filtroBusqueda || $filtroCategoria): ?>
-                        <a href="campanas.php" class="px-4 py-2.5 border border-slate-200 text-slate-600 rounded-xl text-sm font-medium hover:bg-slate-50 transition-colors">
+                        <a href="campanas.php" class="px-4 py-2.5 border border-white/15 text-white/70 rounded-xl text-sm font-medium hover:bg-white/5 transition-colors">
                             <i class="fas fa-times mr-1"></i> Limpiar
                         </a>
                     <?php endif; ?>
@@ -152,9 +152,9 @@ $coloresCategoria = [
 
             <div class="card rounded-2xl overflow-hidden">
                 <?php if (empty($conversaciones)): ?>
-                <div class="px-6 py-12 text-center" style="color:#64748B">No se encontraron registros</div>
+                <div class="px-6 py-12 text-center" style="color:rgba(255,255,255,0.7)">No se encontraron registros</div>
                 <?php endif; ?>
-                <div class="divide-y" style="border-color:#E2E8F0">
+                <div class="divide-y" style="border-color:rgba(255,255,255,0.15)">
                     <?php foreach ($grupos as $nombre => $rows):
                         $total = count($rows);
                         $ultimo = $rows[0];
@@ -168,54 +168,54 @@ $coloresCategoria = [
                         };
                     ?>
                     <div class="grupo-contacto">
-                        <div class="grupo-header flex items-center justify-between px-6 py-4 cursor-pointer hover:bg-gray-50 transition-colors" onclick="toggleGrupo(this)">
+                        <div class="grupo-header flex items-center justify-between px-6 py-4 cursor-pointer hover:bg-white/5 transition-colors" onclick="toggleGrupo(this)">
                             <div class="flex items-center gap-3 flex-1 min-w-0">
-                                <i class="fas fa-chevron-right text-xs transition-transform" style="color:#64748B"></i>
+                                <i class="fas fa-chevron-right text-xs transition-transform" style="color:rgba(255,255,255,0.7)"></i>
                                 <div class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white flex-shrink-0" style="background:<?= $colorBg ?>">
                                     <?= strtoupper(substr($nombre, 0, 2)) ?>
                                 </div>
                                 <div class="min-w-0">
-                                    <p class="font-semibold text-sm" style="color:#1A202C"><?= htmlspecialchars($nombre) ?></p>
+                                    <p class="font-semibold text-sm" style="color:#FFFFFF"><?= htmlspecialchars($nombre) ?></p>
                                     <?php if ($rows[0]['cliente_nombre'] && $rows[0]['sucursal']): ?>
-                                        <p class="text-xs" style="color:#64748B"><?= htmlspecialchars($rows[0]['sucursal']) ?></p>
+                                        <p class="text-xs" style="color:rgba(255,255,255,0.7)"><?= htmlspecialchars($rows[0]['sucursal']) ?></p>
                                     <?php endif; ?>
                                 </div>
                             </div>
-                            <div class="flex items-center gap-4 text-xs" style="color:#64748B">
+                            <div class="flex items-center gap-4 text-xs" style="color:rgba(255,255,255,0.7)">
                                 <span><i class="far fa-comment mr-1"></i><?= $total ?> msgs</span>
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold text-white" style="background:<?= $colorBg ?>">
                                     <?= strtoupper(htmlspecialchars($ultimo['categoria_cliente'] ?? 'SIN CATEGORÍA')) ?>
                                 </span>
                             </div>
                         </div>
-                        <div class="grupo-body hidden border-t" style="border-color:#E2E8F0">
+                        <div class="grupo-body hidden border-t" style="border-color:rgba(255,255,255,0.15)">
                             <div class="overflow-x-auto">
                                 <table class="w-full text-sm">
                                     <thead>
-                                        <tr class="text-left text-xs uppercase tracking-wider" style="color:#94a3b8;background:#FAFAFA">
+                                        <tr class="text-left text-xs uppercase tracking-wider" style="color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.08)">
                                             <th class="px-6 py-3 font-medium pl-14">Teléfono</th>
                                             <th class="px-6 py-3 font-medium">Conversación</th>
                                             <th class="px-6 py-3 font-medium">Categoría</th>
                                             <th class="px-6 py-3 font-medium text-right">Fecha</th>
                                         </tr>
                                     </thead>
-                                    <tbody class="divide-y" style="border-color:#F1F5F9">
+                                    <tbody class="divide-y" style="border-color:rgba(255,255,255,0.1)">
                                         <?php foreach ($rows as $row): ?>
-                                        <tr class="hover:bg-gray-50 transition-colors">
-                                            <td class="px-6 py-3 pl-14 font-mono text-sm" style="color:#64748B"><?= htmlspecialchars($row['numero']) ?></td>
+                                        <tr class="hover:bg-white/5 transition-colors">
+                                            <td class="px-6 py-3 pl-14 font-mono text-sm" style="color:rgba(255,255,255,0.7)"><?= htmlspecialchars($row['numero']) ?></td>
                                             <td class="px-6 py-3 max-w-md">
-                                                <p class="truncate" style="color:#1A202C"><?= htmlspecialchars($row['conversacion'] ?? '') ?></p>
+                                                <p class="truncate" style="color:#FFFFFF"><?= htmlspecialchars($row['conversacion'] ?? '') ?></p>
                                                 <?php if (!empty($row['obs'])): ?>
-                                                    <p class="text-xs mt-0.5 truncate" style="color:#94a3b8"><?= htmlspecialchars($row['obs']) ?></p>
+                                                    <p class="text-xs mt-0.5 truncate" style="color:rgba(255,255,255,0.5)"><?= htmlspecialchars($row['obs']) ?></p>
                                                 <?php endif; ?>
                                             </td>
                                             <td class="px-6 py-3">
                                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                                                    <?= $coloresCategoria[$row['categoria_cliente']] ?? 'bg-slate-100 text-slate-600' ?>">
+                                                    <?= $coloresCategoria[$row['categoria_cliente']] ?? 'bg-white/10 text-white' ?>">
                                                     <?= strtoupper(htmlspecialchars($row['categoria_cliente'])) ?>
                                                 </span>
                                             </td>
-                                            <td class="px-6 py-3 text-right whitespace-nowrap text-xs" style="color:#64748B">
+                                            <td class="px-6 py-3 text-right whitespace-nowrap text-xs" style="color:rgba(255,255,255,0.7)">
                                                 <?= date('d/m/Y', strtotime($row['fecha_creacion'])) ?> <?= date('H:i', strtotime($row['fecha_creacion'])) ?>
                                             </td>
                                         </tr>

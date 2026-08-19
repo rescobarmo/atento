@@ -2,14 +2,14 @@
 $usuario = usuarioActual();
 $paginaActual = basename($_SERVER['PHP_SELF']);
 ?>
-<aside class="fixed left-0 top-0 h-full w-64 z-50 sidebar overflow-y-auto" style="background:#026168">
+<aside class="fixed left-0 top-0 h-full w-64 z-50 sidebar overflow-y-auto" style="background:#001C46">
     <div class="p-6">
         <div class="flex justify-center mb-8">
-            <img src="<?= APP_URL ?>/assets/img/logo01.jpeg" alt="RedSalud" class="h-20 w-auto rounded-2xl">
+            <img src="<?= APP_URL ?>/assets/img/atento-logo-blanco.svg" alt="Atento" class="h-20 w-auto rounded-2xl">
         </div>
 
         <div class="flex items-center gap-3 px-3 py-3 bg-white/5 rounded-xl mb-6">
-            <div class="w-9 h-9 rounded-full flex items-center justify-center" style="background:rgba(0,128,137,0.3)">
+            <div class="w-9 h-9 rounded-full flex items-center justify-center" style="background:rgba(0,163,224,0.3)">
                 <span class="font-semibold text-sm" style="color:#C3E298">
                     <?= strtoupper(substr($usuario['nombre'], 0, 2)) ?>
                 </span>

@@ -41,32 +41,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <style>
         * { font-family: 'Inter', sans-serif; }
         .login-bg {
-            background: #F4F8F8;
+            background: #001C46;
         }
         .login-card {
-            background: #FFFFFF;
-            border: 1px solid #E2E8F0;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
         .login-input {
-            background: #F4F8F8;
-            border: 1px solid #E2E8F0;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
             transition: all 0.3s ease;
-            color: #1A202C;
+            color: #FFFFFF;
         }
         .login-input:focus {
-            border-color: #008089;
-            box-shadow: 0 0 0 3px rgba(0, 128, 137, 0.12);
-            background: #fff;
+            border-color: #00A3E0;
+            box-shadow: 0 0 0 3px rgba(0, 163, 224, 0.25);
+            background: rgba(255,255,255,0.12);
         }
         .login-btn {
-            background: #008089;
+            background: #00A3E0;
             transition: all 0.3s ease;
             color: #fff;
         }
         .login-btn:hover {
-            background: #026168;
-            box-shadow: 0 4px 12px rgba(0, 128, 137, 0.3);
+            background: #33B5E6;
+            box-shadow: 0 4px 12px rgba(0, 163, 224, 0.4);
             transform: translateY(-1px);
         }
     </style>
@@ -75,10 +75,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="w-full max-w-md">
         <div class="text-center mb-8">
             <div class="mb-4">
-                <img src="assets/img/logo01.jpeg" alt="RedSalud" class="h-16 mx-auto rounded-2xl">
+                <img src="assets/img/atento-logo-blanco.svg" alt="Atento" class="h-16 mx-auto rounded-2xl">
             </div>
-            <h1 class="text-3xl font-bold" style="color:#026168">RedSalud</h1>
-            <p class="mt-1" style="color:#64748B">Sistema de Evaluaciones</p>
+            <h1 class="text-3xl font-bold" style="color:#FFFFFF">Atento</h1>
+            <p class="mt-1" style="color:rgba(255,255,255,0.7)">Sistema de Evaluaciones</p>
         </div>
 
         <div class="login-card rounded-2xl p-8">
@@ -91,16 +91,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <form method="POST" class="space-y-5">
                 <div>
-                    <label class="block text-sm font-medium mb-2" for="username" style="color:#64748B">
-                        <i class="fas fa-user mr-1" style="color:#64748B"></i> Usuario
+                    <label class="block text-sm font-medium mb-2" for="username" style="color:rgba(255,255,255,0.7)">
+                        <i class="fas fa-user mr-1" style="color:rgba(255,255,255,0.7)"></i> Usuario
                     </label>
                     <input type="text" id="username" name="username" required
                            class="login-input w-full rounded-xl px-4 py-3 placeholder-slate-400 focus:outline-none"
                            placeholder="admin" value="<?= htmlspecialchars($_POST['username'] ?? '') ?>">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-2" for="password" style="color:#64748B">
-                        <i class="fas fa-lock mr-1" style="color:#64748B"></i> Contraseña
+                    <label class="block text-sm font-medium mb-2" for="password" style="color:rgba(255,255,255,0.7)">
+                        <i class="fas fa-lock mr-1" style="color:rgba(255,255,255,0.7)"></i> Contraseña
                     </label>
                     <input type="password" id="password" name="password" required
                            class="login-input w-full rounded-xl px-4 py-3 placeholder-slate-400 focus:outline-none"
@@ -113,8 +113,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </button>
             </form>
 
-            <div class="mt-6 pt-6" style="border-top:1px solid #E2E8F0">
-                <p class="text-xs text-center" style="color:#64748B">
+            <div class="mt-6 pt-6" style="border-top:1px solid rgba(255,255,255,0.12)">
+                <p class="text-xs text-center" style="color:rgba(255,255,255,0.7)">
                     <i class="fas fa-shield-alt mr-1"></i>
                     Credenciales: <span style="color:#C3E298">admin</span> / <span style="color:#C3E298">r3dsalud</span>
                 </p>

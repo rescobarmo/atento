@@ -31,8 +31,8 @@ $conversaciones = $stmt->fetchAll();
         <div class="max-w-7xl mx-auto">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
                 <div>
-                    <h1 class="text-2xl font-bold" style="color:#1A202C">Contactos Cotizando</h1>
-                    <p class="mt-1" style="color:#64748B">Gestiona contactos que están cotizando y registra llamadas</p>
+                    <h1 class="text-2xl font-bold" style="color:#FFFFFF">Contactos Cotizando</h1>
+                    <p class="mt-1" style="color:rgba(255,255,255,0.7)">Gestiona contactos que están cotizando y registra llamadas</p>
                 </div>
                 <div class="flex items-center gap-3">
                     <a href="<?= APP_URL ?>/api/export_excel.php?leads=1&busqueda=<?= urlencode($filtroBusqueda) ?>" class="btn-primary px-5 py-2.5 rounded-xl text-sm font-medium text-white inline-flex items-center gap-2">
@@ -46,13 +46,13 @@ $conversaciones = $stmt->fetchAll();
                     <div class="flex-1">
                         <input type="text" name="busqueda" value="<?= htmlspecialchars($filtroBusqueda) ?>"
                                placeholder="Buscar por nombre, teléfono o conversación..."
-                               class="w-full px-4 py-2.5 rounded-xl outline-none text-sm" style="border:1px solid #E2E8F0;background:#F4F8F8;color:#1A202C">
+                               class="w-full px-4 py-2.5 rounded-xl outline-none text-sm" style="border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.08);color:#FFFFFF">
                     </div>
                     <button type="submit" class="btn-primary px-6 py-2.5 rounded-xl text-sm font-medium text-white">
                         <i class="fas fa-search mr-1"></i> Buscar
                     </button>
                     <?php if ($filtroBusqueda): ?>
-                        <a href="leads.php" class="px-4 py-2.5 rounded-xl text-sm font-medium" style="border:1px solid #E2E8F0;color:#64748B">
+                        <a href="leads.php" class="px-4 py-2.5 rounded-xl text-sm font-medium" style="border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.7)">
                             <i class="fas fa-times mr-1"></i> Limpiar
                         </a>
                     <?php endif; ?>
@@ -63,7 +63,7 @@ $conversaciones = $stmt->fetchAll();
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">
                         <thead>
-                            <tr class="text-left text-xs uppercase tracking-wider" style="color:#64748B;background:#F4F8F8">
+                            <tr class="text-left text-xs uppercase tracking-wider" style="color:rgba(255,255,255,0.7);background:rgba(255,255,255,0.08)">
                                 <th class="px-6 py-4 font-medium">Nombre</th>
                                 <th class="px-6 py-4 font-medium">Teléfono</th>
                                 <th class="px-6 py-4 font-medium">Categoría</th>
@@ -71,9 +71,9 @@ $conversaciones = $stmt->fetchAll();
                                 <th class="px-6 py-4 font-medium">Agente Asignado</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y" style="border-color:#E2E8F0">
+                        <tbody class="divide-y" style="border-color:rgba(255,255,255,0.15)">
                             <?php if (empty($conversaciones)): ?>
-                                <tr><td colspan="5" class="px-6 py-12 text-center text-slate-400">No se encontraron registros</td></tr>
+                                <tr><td colspan="5" class="px-6 py-12 text-center text-white/50">No se encontraron registros</td></tr>
                             <?php endif; ?>
                             <?php foreach ($conversaciones as $r): ?>
                             <?php
@@ -86,30 +86,30 @@ $conversaciones = $stmt->fetchAll();
                                     default => '#64748b'
                                 };
                             ?>
-                            <tr class="hover:bg-slate-50 transition-colors" data-id="<?= htmlspecialchars($r['id']) ?>">
+                            <tr class="hover:bg-white/5 transition-colors" data-id="<?= htmlspecialchars($r['id']) ?>">
                                 <td class="px-6 py-4">
-                                    <p class="font-medium" style="color:#1A202C"><?= htmlspecialchars($r['cliente_nombre'] ?: $r['nombre'] ?? 'Sin nombre') ?></p>
+                                    <p class="font-medium" style="color:#FFFFFF"><?= htmlspecialchars($r['cliente_nombre'] ?: $r['nombre'] ?? 'Sin nombre') ?></p>
                                     <?php if ($r['cliente_nombre'] && $r['sucursal']): ?>
-                                        <p class="text-xs" style="color:#64748B"><?= htmlspecialchars($r['sucursal']) ?></p>
+                                        <p class="text-xs" style="color:rgba(255,255,255,0.7)"><?= htmlspecialchars($r['sucursal']) ?></p>
                                     <?php endif; ?>
                                 </td>
-                                <td class="px-6 py-4 font-mono text-sm text-slate-600"><?= htmlspecialchars($r['numero']) ?></td>
+                                <td class="px-6 py-4 font-mono text-sm text-white/70"><?= htmlspecialchars($r['numero']) ?></td>
                                 <td class="px-6 py-4">
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold text-white" style="background:<?= $colorBg ?>">
                                         <?= htmlspecialchars(strtoupper($cat ?: 'SIN CATEGORÍA')) ?>
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 text-sm" style="color:#64748B">
+                                <td class="px-6 py-4 text-sm" style="color:rgba(255,255,255,0.7)">
                                     <?= htmlspecialchars($r['horario'] ?? '-') ?>
                                 </td>
                                 <td class="px-6 py-4">
                                     <?php if (!empty($r['agente_nombre'])): ?>
-                                        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-lg text-xs font-medium" style="background:rgba(0,128,137,0.1);color:#026168">
+                                        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-lg text-xs font-medium" style="background:rgba(0,163,224,0.1);color:#FFFFFF">
                                             <i class="fas fa-user-tie"></i>
                                             <?= htmlspecialchars($r['agente_nombre']) ?>
                                         </span>
                                     <?php else: ?>
-                                        <span class="text-xs text-slate-400">Sin asignar</span>
+                                        <span class="text-xs text-white/50">Sin asignar</span>
                                     <?php endif; ?>
                                 </td>
                             </tr>

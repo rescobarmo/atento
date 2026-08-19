@@ -114,7 +114,7 @@ function badgeClass($cat) {
     if (in_array($c, ['realizado', 'respondio'])) return 'badge-conforme';
     if (in_array($c, ['cotizando'])) return 'badge-observacion';
     if (in_array($c, ['llamado'])) return 'badge-conforme';
-    return 'bg-gray-100 text-gray-600';
+    return 'bg-white/10 text-white';
 }
 ?>
 <?php $titulo = 'Dashboard'; include __DIR__ . '/includes/header.php'; ?>
@@ -126,17 +126,17 @@ function badgeClass($cat) {
         <div class="max-w-7xl mx-auto">
             <div class="flex items-center justify-between mb-8 fade-in">
                 <div>
-                    <h1 class="text-2xl font-bold" style="color:#1A202C">Panel de Control</h1>
-                    <p class="mt-1" style="color:#64748B">Bienvenido de nuevo, <?= htmlspecialchars(explode(' ', $usuario['nombre'])[0]) ?></p>
+                    <h1 class="text-2xl font-bold" style="color:#FFFFFF">Panel de Control</h1>
+                    <p class="mt-1" style="color:rgba(255,255,255,0.7)">Bienvenido de nuevo, <?= htmlspecialchars(explode(' ', $usuario['nombre'])[0]) ?></p>
                 </div>
-                <div class="flex items-center gap-3 text-sm" style="color:#64748B">
+                <div class="flex items-center gap-3 text-sm" style="color:rgba(255,255,255,0.7)">
                     <i class="fas fa-calendar"></i>
                     <span><?= (new DateTime())->format('d/m/Y') ?></span>
                 </div>
             </div>
 
             <?php if (!$tieneDatos): ?>
-            <div class="flex flex-col items-center justify-center h-96" style="color:#64748B">
+            <div class="flex flex-col items-center justify-center h-96" style="color:rgba(255,255,255,0.7)">
                 <i class="fas fa-clipboard-list text-6xl mb-4 opacity-30"></i>
                 <p class="text-xl font-medium">No hay datos registrados</p>
                 <p class="text-sm">Los indicadores aparecerán cuando existan evaluaciones</p>
@@ -146,77 +146,77 @@ function badgeClass($cat) {
             <div class="grid grid-cols-2 lg:grid-cols-5 gap-5 mb-8 fade-in">
                 <div class="stat-card rounded-2xl p-5">
                     <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:#64748B">Cumplimiento General</span>
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(0,128,137,0.12)">
-                            <i class="fas fa-percent text-lg" style="color:#008089"></i>
+                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:rgba(255,255,255,0.7)">Cumplimiento General</span>
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(0,163,224,0.12)">
+                            <i class="fas fa-percent text-lg" style="color:#00A3E0"></i>
                         </div>
                     </div>
-                    <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format($totalClientes) ?></p>
-                    <p class="text-xs mt-1" style="color:#64748B">registros enviados</p>
+                    <p class="text-2xl font-bold" style="color:#FFFFFF"><?= number_format($totalClientes) ?></p>
+                    <p class="text-xs mt-1" style="color:rgba(255,255,255,0.7)">registros enviados</p>
                 </div>
                 <div class="stat-card rounded-2xl p-5">
                     <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:#64748B">Contactado</span>
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(0,128,137,0.12)">
-                            <i class="fas fa-check-double text-lg" style="color:#008089"></i>
+                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:rgba(255,255,255,0.7)">Contactado</span>
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(0,163,224,0.12)">
+                            <i class="fas fa-check-double text-lg" style="color:#00A3E0"></i>
                         </div>
                     </div>
-                    <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format($contactados) ?></p>
-                    <p class="text-xs mt-1" style="color:#64748B">de <?= number_format($totalClientes) ?> registros</p>
+                    <p class="text-2xl font-bold" style="color:#FFFFFF"><?= number_format($contactados) ?></p>
+                    <p class="text-xs mt-1" style="color:rgba(255,255,255,0.7)">de <?= number_format($totalClientes) ?> registros</p>
                 </div>
                 <div class="stat-card rounded-2xl p-5">
                     <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:#64748B">Interesados</span>
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(0,128,137,0.12)">
-                            <i class="fas fa-thumbs-up text-lg" style="color:#008089"></i>
+                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:rgba(255,255,255,0.7)">Interesados</span>
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(0,163,224,0.12)">
+                            <i class="fas fa-thumbs-up text-lg" style="color:#00A3E0"></i>
                         </div>
                     </div>
-                    <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format($interesados) ?></p>
+                    <p class="text-2xl font-bold" style="color:#FFFFFF"><?= number_format($interesados) ?></p>
                 </div>
                 <div class="stat-card rounded-2xl p-5">
                     <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:#64748B">Con Horario de Llamada</span>
+                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:rgba(255,255,255,0.7)">Con Horario de Llamada</span>
                         <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(245,158,11,0.12)">
                             <i class="fas fa-clock text-lg" style="color:#F59E0B"></i>
                         </div>
                     </div>
-                    <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format($redsalud['cotizando']) ?></p>
-                    <p class="text-xs mt-1" style="color:#64748B">en proceso de cotización</p>
+                    <p class="text-2xl font-bold" style="color:#FFFFFF"><?= number_format($redsalud['cotizando']) ?></p>
+                    <p class="text-xs mt-1" style="color:rgba(255,255,255,0.7)">en proceso de cotización</p>
                 </div>
                 <div class="stat-card rounded-2xl p-5">
                     <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:#64748B">Paciente Sin Interes</span>
+                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:rgba(255,255,255,0.7)">Paciente Sin Interes</span>
                         <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(229,62,62,0.12)">
                             <i class="fas fa-exclamation-triangle text-lg" style="color:#E53E3E"></i>
                         </div>
                     </div>
-                    <p class="text-2xl font-bold" style="color:#1A202C"><?= number_format($sinInteres) ?></p>
+                    <p class="text-2xl font-bold" style="color:#FFFFFF"><?= number_format($sinInteres) ?></p>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 fade-in">
                 <div class="lg:col-span-2 card rounded-2xl p-6">
                     <div class="flex items-center justify-between mb-6">
-                        <h3 class="font-semibold" style="color:#1A202C">Actividad por Día</h3>
-                        <span class="text-xs" style="color:#64748B">Últimos 14 días</span>
+                        <h3 class="font-semibold" style="color:#FFFFFF">Actividad por Día</h3>
+                        <span class="text-xs" style="color:rgba(255,255,255,0.7)">Últimos 14 días</span>
                     </div>
                     <?php if (!empty($msgsPorDia)): ?>
                     <div style="height: 280px;"><canvas id="chartMsgs"></canvas></div>
                     <?php else: ?>
-                    <div class="h-64 flex items-center justify-center" style="color:#64748B">
+                    <div class="h-64 flex items-center justify-center" style="color:rgba(255,255,255,0.7)">
                         <p>Sin datos en los últimos 14 días</p>
                     </div>
                     <?php endif; ?>
                 </div>
                 <div class="card rounded-2xl p-6">
                     <div class="flex items-center justify-between mb-6">
-                        <h3 class="font-semibold" style="color:#1A202C">Estado Evaluaciones</h3>
-                        <span class="text-xs" style="color:#64748B">distribución</span>
+                        <h3 class="font-semibold" style="color:#FFFFFF">Estado Evaluaciones</h3>
+                        <span class="text-xs" style="color:rgba(255,255,255,0.7)">distribución</span>
                     </div>
                     <?php if (!empty($categorias)): ?>
                     <div style="height: 280px;"><canvas id="chartCategorias"></canvas></div>
                     <?php else: ?>
-                    <div class="h-64 flex items-center justify-center" style="color:#64748B">
+                    <div class="h-64 flex items-center justify-center" style="color:rgba(255,255,255,0.7)">
                         <p>Sin datos</p>
                     </div>
                     <?php endif; ?>
@@ -225,30 +225,30 @@ function badgeClass($cat) {
 
             <div class="card rounded-2xl p-6 fade-in">
                 <div class="flex items-center justify-between mb-6">
-                    <h3 class="font-semibold" style="color:#1A202C">Últimos Contactos</h3>
-                    <a href="<?= APP_URL ?>/pages/campanas.php" class="text-xs font-medium" style="color:#008089">Ver todos →</a>
+                    <h3 class="font-semibold" style="color:#FFFFFF">Últimos Contactos</h3>
+                    <a href="<?= APP_URL ?>/pages/campanas.php" class="text-xs font-medium" style="color:#00A3E0">Ver todos →</a>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">
                         <thead>
-                            <tr class="text-left text-xs uppercase tracking-wider" style="color:#64748B">
+                            <tr class="text-left text-xs uppercase tracking-wider" style="color:rgba(255,255,255,0.7)">
                                 <th class="pb-3 font-medium">Contacto</th>
                                 <th class="pb-3 font-medium">Teléfono</th>
                                 <th class="pb-3 font-medium">Estado</th>
                                 <th class="pb-3 font-medium">Último mensaje</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y" style="border-color:#E2E8F0">
+                        <tbody class="divide-y" style="border-color:rgba(255,255,255,0.15)">
                             <?php foreach ($ultimosContactos as $c): ?>
-                            <tr class="hover:bg-gray-50 transition-colors">
-                                <td class="py-3 font-medium" style="color:#1A202C"><?= htmlspecialchars($c['nombre'] ?? 'Sin nombre') ?></td>
-                                <td class="py-3 font-mono" style="color:#64748B"><?= htmlspecialchars($c['numero']) ?></td>
+                            <tr class="hover:bg-white/5 transition-colors">
+                                <td class="py-3 font-medium" style="color:#FFFFFF"><?= htmlspecialchars($c['nombre'] ?? 'Sin nombre') ?></td>
+                                <td class="py-3 font-mono" style="color:rgba(255,255,255,0.7)"><?= htmlspecialchars($c['numero']) ?></td>
                                 <td class="py-3">
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?= badgeClass($c['categoria_cliente']) ?>">
                                         <?= strtoupper(htmlspecialchars($c['categoria_cliente'] ?? 'SIN EVALUAR')) ?>
                                     </span>
                                 </td>
-                                <td class="py-3" style="color:#64748B"><?= date('d/m/Y H:i', strtotime($c['ultimo'])) ?></td>
+                                <td class="py-3" style="color:rgba(255,255,255,0.7)"><?= date('d/m/Y H:i', strtotime($c['ultimo'])) ?></td>
                             </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -271,7 +271,7 @@ new Chart(document.getElementById('chartMsgs'), {
         datasets: [{
             label: 'Registros',
             data: [<?php foreach ($msgsPorDia as $m): ?><?= $m['total'] ?>,<?php endforeach; ?>],
-            backgroundColor: 'rgba(0,128,137,0.7)',
+            backgroundColor: 'rgba(0,163,224,0.7)',
             borderRadius: 6
         }]
     },
@@ -281,7 +281,7 @@ new Chart(document.getElementById('chartMsgs'), {
         plugins: { legend: { display: false } },
         scales: {
             y: { beginAtZero: true, ticks: { stepSize: 1 } },
-            x: { grid: { display: false }, ticks: { color: '#64748B' } }
+            x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.7)' } }
         },
         animation: { duration: 600, easing: 'easeOutQuart' }
     }
@@ -295,7 +295,7 @@ new Chart(document.getElementById('chartCategorias'), {
         labels: [<?php foreach ($categorias as $c): ?>'<?= $c['cat'] ?>',<?php endforeach; ?>],
         datasets: [{
             data: [<?php foreach ($categorias as $c): ?><?= $c['total'] ?>,<?php endforeach; ?>],
-            <?php $coloresCat = ['PACIENTE SIN INTERES' => '#E53E3E', 'CON HORARIO DE LLAMADA' => '#F59E0B', 'INTERESADOS' => '#008089', 'CONTACTADO' => '#C3E298']; ?>
+            <?php $coloresCat = ['PACIENTE SIN INTERES' => '#E53E3E', 'CON HORARIO DE LLAMADA' => '#F59E0B', 'INTERESADOS' => '#00A3E0', 'CONTACTADO' => '#C3E298']; ?>
             backgroundColor: [<?php foreach ($categorias as $c): ?>'<?= $coloresCat[$c['cat']] ?? '#94a3b8' ?>',<?php endforeach; ?>],
             borderWidth: 0
         }]
@@ -304,7 +304,7 @@ new Chart(document.getElementById('chartCategorias'), {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-            legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8, padding: 12, color: '#64748B' } }
+            legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8, padding: 12, color: 'rgba(255,255,255,0.7)' } }
         },
         cutout: '65%'
     }

@@ -39,18 +39,18 @@ $visitasPorCanal = $pdo->query("
     <main class="flex-1 ml-64 p-6 lg:p-8">
         <div class="max-w-7xl mx-auto">
             <div class="mb-8">
-                <h1 class="text-2xl font-bold text-slate-800">Analíticas</h1>
-                <p class="text-slate-500 mt-1">Métricas detalladas de rendimiento</p>
+                <h1 class="text-2xl font-bold" style="color:#FFFFFF">Analíticas</h1>
+                <p class="mt-1" style="color:rgba(255,255,255,0.7)">Métricas detalladas de rendimiento</p>
             </div>
 
-            <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden mb-8">
-                <div class="p-6 border-b border-slate-100">
-                    <h3 class="font-semibold text-slate-800">Rendimiento Mensual</h3>
+            <div class="bg-white/5 rounded-2xl border border-white/15 overflow-hidden mb-8">
+                <div class="p-6 border-b border-white/10">
+                    <h3 class="font-semibold" style="color:#FFFFFF">Rendimiento Mensual</h3>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">
                         <thead>
-                            <tr class="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+                            <tr class="bg-white/5 text-left text-xs uppercase tracking-wider text-white/60">
                                 <th class="px-6 py-4 font-medium">Mes</th>
                                 <th class="px-6 py-4 font-medium text-right">Impresiones</th>
                                 <th class="px-6 py-4 font-medium text-right">Clicks</th>
@@ -62,18 +62,18 @@ $visitasPorCanal = $pdo->query("
                                 <th class="px-6 py-4 font-medium text-right">ROI</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100">
+<tbody class="divide-y divide-white/10">
                             <?php foreach ($analytics as $a): ?>
-                            <tr class="hover:bg-slate-50 transition-colors">
-                                <td class="px-6 py-4 font-medium text-slate-800"><?= $a['mes'] ?></td>
-                                <td class="px-6 py-4 text-right text-slate-600"><?= number_format($a['impresiones']) ?></td>
-                                <td class="px-6 py-4 text-right text-slate-600"><?= number_format($a['clicks']) ?></td>
-                                <td class="px-6 py-4 text-right font-medium <?= $a['ctr'] >= 2 ? 'text-green-600' : 'text-yellow-600' ?>"><?= $a['ctr'] ?>%</td>
-                                <td class="px-6 py-4 text-right text-slate-600"><?= $a['conversiones'] ?></td>
-                                <td class="px-6 py-4 text-right font-medium <?= $a['tasa_conversion'] >= 3 ? 'text-green-600' : 'text-yellow-600' ?>"><?= $a['tasa_conversion'] ?>%</td>
-                                <td class="px-6 py-4 text-right font-semibold text-green-600">$<?= number_format($a['ingresos'], 0, ',', '.') ?></td>
-                                <td class="px-6 py-4 text-right text-red-600">$<?= number_format($a['gasto'], 0, ',', '.') ?></td>
-                                <td class="px-6 py-4 text-right font-bold <?= $a['roi'] >= 0 ? 'text-green-600' : 'text-red-600' ?>"><?= $a['roi'] ?>%</td>
+                            <tr class="hover:bg-white/5 transition-colors">
+                                <td class="px-6 py-4 font-medium" style="color:#FFFFFF"><?= $a['mes'] ?></td>
+                                <td class="px-6 py-4 text-right text-white/70"><?= number_format($a['impresiones']) ?></td>
+                                <td class="px-6 py-4 text-right text-white/70"><?= number_format($a['clicks']) ?></td>
+                                <td class="px-6 py-4 text-right font-medium <?= $a['ctr'] >= 2 ? 'text-green-400' : 'text-yellow-400' ?>"><?= $a['ctr'] ?>%</td>
+                                <td class="px-6 py-4 text-right text-white/70"><?= $a['conversiones'] ?></td>
+                                <td class="px-6 py-4 text-right font-medium <?= $a['tasa_conversion'] >= 3 ? 'text-green-400' : 'text-yellow-400' ?>"><?= $a['tasa_conversion'] ?>%</td>
+                                <td class="px-6 py-4 text-right font-semibold text-green-400">$<?= number_format($a['ingresos'], 0, ',', '.') ?></td>
+                                <td class="px-6 py-4 text-right text-red-400">$<?= number_format($a['gasto'], 0, ',', '.') ?></td>
+                                <td class="px-6 py-4 text-right font-bold <?= $a['roi'] >= 0 ? 'text-green-400' : 'text-red-400' ?>"><?= $a['roi'] ?>%</td>
                             </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -83,22 +83,22 @@ $visitasPorCanal = $pdo->query("
 
             <?php if (!empty($visitasPorCanal)): ?>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="bg-white rounded-2xl p-6 border border-slate-100">
-                    <h3 class="font-semibold text-slate-800 mb-6">Tráfico por Canal</h3>
+                <div class="bg-white/5 rounded-2xl p-6 border border-white/15">
+                    <h3 class="font-semibold mb-6" style="color:#FFFFFF">Tráfico por Canal</h3>
                     <canvas id="chartTraficoCanal" height="300"></canvas>
                 </div>
-                <div class="bg-white rounded-2xl p-6 border border-slate-100">
-                    <h3 class="font-semibold text-slate-800 mb-6">Resumen por Canal</h3>
+                <div class="bg-white/5 rounded-2xl p-6 border border-white/15">
+                    <h3 class="font-semibold mb-6" style="color:#FFFFFF">Resumen por Canal</h3>
                     <div class="space-y-4">
                         <?php foreach ($visitasPorCanal as $vc): ?>
-                        <div class="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+                        <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg">
                             <div class="flex items-center gap-3">
                                 <span class="w-3 h-3 rounded-full" style="background:<?= htmlspecialchars($vc['color']) ?>"></span>
-                                <span class="font-medium text-sm text-slate-700"><?= htmlspecialchars($vc['nombre']) ?></span>
+                                <span class="font-medium text-sm" style="color:#FFFFFF"><?= htmlspecialchars($vc['nombre']) ?></span>
                             </div>
                             <div class="text-right">
-                                <span class="font-semibold text-slate-700"><?= number_format($vc['visitantes']) ?></span>
-                                <span class="text-xs text-slate-400 ml-2">visitantes</span>
+                                <span class="font-semibold" style="color:#FFFFFF"><?= number_format($vc['visitantes']) ?></span>
+                                <span class="text-xs text-white/50 ml-2">visitantes</span>
                             </div>
                         </div>
                         <?php endforeach; ?>
