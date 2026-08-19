@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS BD_Atento CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE BD_Atento;
+CREATE DATABASE IF NOT EXISTS bd_atento CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE bd_atento;
 
 CREATE TABLE IF NOT EXISTS roles (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -124,6 +124,33 @@ CREATE TABLE IF NOT EXISTS visitas_sitio (
 ) ENGINE=InnoDB;
 
 INSERT INTO roles (id, nombre) VALUES (1, 'Administrador'), (2, 'Editor'), (3, 'Visualizador'), (4, 'Agente de Ventas') ON DUPLICATE KEY UPDATE nombre=VALUES(nombre);
+
+CREATE TABLE IF NOT EXISTS redsalud (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    numero VARCHAR(50) DEFAULT NULL,
+    nombre VARCHAR(255) DEFAULT NULL,
+    conversacion TEXT DEFAULT NULL,
+    mensaje TEXT DEFAULT NULL,
+    categoria_cliente VARCHAR(100) DEFAULT 'Sin Categoría',
+    obs VARCHAR(200) DEFAULT NULL,
+    horario VARCHAR(50) DEFAULT NULL,
+    presupuesto INT DEFAULT NULL,
+    agente_id INT DEFAULT NULL,
+    fecha_creacion DATETIME DEFAULT NULL,
+    fecha_actualizacion DATETIME DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_numero (numero),
+    INDEX idx_categoria (categoria_cliente)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS clientesredsalud (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL,
+    numero VARCHAR(50) NOT NULL,
+    sucursal VARCHAR(255) DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_numero (numero)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO usuarios (nombre, email, password, rol_id) VALUES
 ('Admin Marketing', 'admin@redsalud.cl', '$2y$10$.oWKnlMbgojApr/2n4WBnuCmKSd/FV4kEmRMxghaTw7oxVATcjMO6', 1),
