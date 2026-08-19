@@ -36,6 +36,11 @@ foreach ($conversaciones as $row) {
     $grupos[$nombre][] = $row;
 }
 
+$totalMensajes = $pdo->query("
+    SELECT COUNT(*) FROM clientesredsalud
+    WHERE 1=1 " . ($sucursalSeleccionada ? "AND sucursal = " . $pdo->quote($sucursalSeleccionada) : "")
+)->fetchColumn();
+
 $resumen = $pdo->query("
     SELECT
         COUNT(*) as total,
@@ -89,7 +94,7 @@ $coloresCategoria = [
                             <i class="fas fa-comments" style="color:#008089"></i>
                         </div>
                     </div>
-                    <p class="text-2xl font-bold" style="color:#1A202C"><?= $resumen['total'] ?></p>
+                    <p class="text-2xl font-bold" style="color:#1A202C"><?= $totalMensajes ?></p>
                     <p class="text-xs mt-1" style="color:#64748B">en la base de datos</p>
                 </div>
                 <div class="stat-card rounded-2xl p-5">
@@ -243,9 +248,9 @@ function cargarNuevos() {
     fetch('<?= APP_URL ?>/api/checkdata.php')
         .then(r => r.json())
         .then(d => {
-            if (d.redsalud !== undefined) {
+            if (d.clientesredsalud !== undefined) {
                 const cards = document.querySelectorAll('.stat-card p.text-2xl');
-                if (cards.length >= 4) cards[0].textContent = d.redsalud;
+                if (cards.length >= 4) cards[0].textContent = d.clientesredsalud;
             }
         })
         .catch(() => {});

@@ -5,7 +5,7 @@ header('Content-Type: application/json; charset=utf-8');
 
 try {
     $pdo = getDB();
-    $tablas = ['redsalud', 'campanas', 'canales', 'leads', 'metricas_campana', 'conversiones', 'visitas_sitio'];
+    $tablas = ['redsalud', 'clientesredsalud', 'campanas', 'canales', 'leads', 'metricas_campana', 'conversiones', 'visitas_sitio'];
     $result = [];
     foreach ($tablas as $t) {
         $row = $pdo->query("SELECT COUNT(*) as c FROM `$t`")->fetch();
