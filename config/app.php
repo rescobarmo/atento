@@ -3,7 +3,7 @@ session_start();
 
 define('APP_NAME', 'Atento');
 define('APP_VERSION', '2.0.0');
-define('APP_URL', '/Atento');
+define('APP_URL', '');
 
 date_default_timezone_set('America/Santiago');
 setlocale(LC_TIME, 'spanish');
