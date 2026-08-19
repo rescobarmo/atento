@@ -71,18 +71,26 @@ $msgsPorDia = $pdo->query("
 ")->fetchAll();
 
 $categorias = $pdo->query("
-    SELECT
-        CASE WHEN LOWER(r.categoria_cliente) = 'cotizando' THEN 'COTIZANDO'
-             WHEN LOWER(r.categoria_cliente) = 'respondio' THEN 'RESPONDIO'
-             WHEN LOWER(r.categoria_cliente) = 'realizado' THEN 'REALIZADO'
-             WHEN LOWER(r.categoria_cliente) = 'llamado' THEN 'CONTACTADO'
-             WHEN conversacion = 'no' AND LOWER(r.categoria_cliente) = 'cancelada' THEN 'PACIENTE SIN INTERES'
-        END as cat,
-        COUNT(DISTINCT r.numero) as total
-    FROM redsalud r
-    $joinSuc
+    SELECT 'CON HORARIO DE LLAMADA' as cat, COUNT(DISTINCT CASE WHEN LOWER(r.categoria_cliente) = 'cotizando' THEN r.id END) as total
+    FROM redsalud r $joinSuc
     WHERE 1=1 $whereSuc
-    GROUP BY cat HAVING cat IS NOT NULL ORDER BY total DESC
+    UNION ALL
+    SELECT 'RESPONDIO', COUNT(DISTINCT r.numero)
+    FROM redsalud r $joinSuc
+    WHERE 1=1 $whereSuc AND LOWER(r.categoria_cliente) = 'respondio'
+    UNION ALL
+    SELECT 'REALIZADO', COUNT(DISTINCT r.numero)
+    FROM redsalud r $joinSuc
+    WHERE 1=1 $whereSuc AND LOWER(r.categoria_cliente) = 'realizado'
+    UNION ALL
+    SELECT 'CONTACTADO', COUNT(DISTINCT r.numero)
+    FROM redsalud r $joinSuc
+    WHERE 1=1 $whereSuc AND LOWER(r.categoria_cliente) = 'llamado'
+    UNION ALL
+    SELECT 'PACIENTE SIN INTERES', COUNT(DISTINCT r.numero)
+    FROM redsalud r $joinSuc
+    WHERE 1=1 $whereSuc AND conversacion = 'no' AND LOWER(r.categoria_cliente) = 'cancelada'
+    ORDER BY total DESC
 ")->fetchAll();
 
 $ultimosContactos = $pdo->query("
