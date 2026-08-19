@@ -76,12 +76,13 @@ $categorias = $pdo->query("
              WHEN LOWER(r.categoria_cliente) = 'respondio' THEN 'RESPONDIO'
              WHEN LOWER(r.categoria_cliente) = 'realizado' THEN 'REALIZADO'
              WHEN LOWER(r.categoria_cliente) = 'llamado' THEN 'CONTACTADO'
-             ELSE 'SIN EVALUAR' END as cat,
+             WHEN conversacion = 'no' AND LOWER(r.categoria_cliente) = 'cancelada' THEN 'PACIENTE SIN INTERES'
+        END as cat,
         COUNT(DISTINCT r.numero) as total
     FROM redsalud r
     $joinSuc
     WHERE 1=1 $whereSuc
-    GROUP BY cat ORDER BY total DESC
+    GROUP BY cat HAVING cat IS NOT NULL ORDER BY total DESC
 ")->fetchAll();
 
 $ultimosContactos = $pdo->query("
