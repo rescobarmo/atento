@@ -6,4 +6,3 @@ node_modules/
 .idea/
 *.sql
 !sql/schema.sql
-.env
