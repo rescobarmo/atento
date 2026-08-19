@@ -116,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="mt-6 pt-6" style="border-top:1px solid rgba(255,255,255,0.12)">
                 <p class="text-xs text-center" style="color:rgba(255,255,255,0.7)">
                     <i class="fas fa-shield-alt mr-1"></i>
-                    Credenciales: <span style="color:#C3E298">admin</span> / <span style="color:#C3E298">r3dsalud</span>
+                    Credenciales: <span style="color:#C3E298">admin@redsalud.cl</span> / <span style="color:#C3E298">password</span>
                 </p>
             </div>
         </div>
