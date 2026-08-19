@@ -295,7 +295,8 @@ new Chart(document.getElementById('chartCategorias'), {
         labels: [<?php foreach ($categorias as $c): ?>'<?= $c['cat'] ?>',<?php endforeach; ?>],
         datasets: [{
             data: [<?php foreach ($categorias as $c): ?><?= $c['total'] ?>,<?php endforeach; ?>],
-            backgroundColor: ['#E53E3E', '#C3E298', '#008089', '#F59E0B', '#94a3b8'],
+            <?php $coloresCat = ['PACIENTE SIN INTERES' => '#E53E3E', 'CON HORARIO DE LLAMADA' => '#F59E0B', 'INTERESADOS' => '#008089', 'CONTACTADO' => '#C3E298']; ?>
+            backgroundColor: [<?php foreach ($categorias as $c): ?>'<?= $coloresCat[$c['cat']] ?? '#94a3b8' ?>',<?php endforeach; ?>],
             borderWidth: 0
         }]
     },
