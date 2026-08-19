@@ -86,7 +86,7 @@ $coloresCategoria = [
 
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
                 <div class="stat-card rounded-2xl p-5">
                     <div class="flex items-center justify-between mb-3">
                         <span class="text-xs font-semibold uppercase tracking-wider" style="color:#64748B">Total Mensajes</span>
@@ -117,15 +117,6 @@ $coloresCategoria = [
                     <p class="text-2xl font-bold" style="color:#1A202C"><?= $resumen['total_categorias'] ?></p>
                     <p class="text-xs mt-1" style="color:#64748B">tipos de cliente</p>
                 </div>
-                <div class="stat-card rounded-2xl p-5">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-semibold uppercase tracking-wider" style="color:#64748B">Categorizados</span>
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(0,128,137,0.12)">
-                            <i class="fas fa-check-circle" style="color:#008089"></i>
-                        </div>
-                    </div>
-                    <p class="text-2xl font-bold" style="color:#1A202C"><?= $resumen['categorizados'] ?></p>
-                    <p class="text-xs mt-1" style="color:#64748B">con categoría asignada</p>
                 </div>
             </div>
 
