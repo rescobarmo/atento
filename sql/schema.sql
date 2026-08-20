@@ -152,9 +152,10 @@ CREATE TABLE IF NOT EXISTS clientesredsalud (
     INDEX idx_numero (numero)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO usuarios (nombre, email, password, rol_id) VALUES
-('Admin Marketing', 'admin@redsalud.cl', '$2y$10$.oWKnlMbgojApr/2n4WBnuCmKSd/FV4kEmRMxghaTw7oxVATcjMO6', 1),
-('Editor Marketing', 'editor@redsalud.cl', '$2y$10$.oWKnlMbgojApr/2n4WBnuCmKSd/FV4kEmRMxghaTw7oxVATcjMO6', 2)
+INSERT INTO usuarios (nombre, email, username, password, rol_id) VALUES
+('Admin Marketing', 'admin@redsalud.cl', 'admin', '$2y$10$.oWKnlMbgojApr/2n4WBnuCmKSd/FV4kEmRMxghaTw7oxVATcjMO6', 1),
+('Editor Marketing', 'editor@redsalud.cl', 'editor', '$2y$10$.oWKnlMbgojApr/2n4WBnuCmKSd/FV4kEmRMxghaTw7oxVATcjMO6', 2),
+('Atento', 'contacto@atento.cl', 'atento', '$2y$10$qf/DmHlBrIFWRMNo5SSwRuphum8zWqi363.QpUg2EriOIYWzISWbS', 1)
 ON DUPLICATE KEY UPDATE nombre=VALUES(nombre);
 
 INSERT INTO canales (nombre, tipo, icono, color) VALUES
