@@ -24,7 +24,7 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $conversaciones = $stmt->fetchAll();
 ?>
-<?php $titulo = 'Contactos Red Salud'; include __DIR__ . '/../includes/header.php'; ?>
+<?php $titulo = 'Contactos Atento'; include __DIR__ . '/../includes/header.php'; ?>
 <div class="flex min-h-screen">
     <?php include __DIR__ . '/../includes/sidebar.php'; ?>
     <main class="flex-1 ml-64 p-6 lg:p-8">

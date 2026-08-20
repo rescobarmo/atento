@@ -30,7 +30,7 @@ $total = $pdo->query("SELECT COUNT(*) FROM clientesredsalud" . ($sucursalSelecci
         <div class="max-w-7xl mx-auto">
             <div class="flex items-center justify-between mb-8 fade-in">
                 <div>
-                    <h1 class="text-2xl font-bold" style="color:#FFFFFF">Clientes Red Salud</h1>
+                    <h1 class="text-2xl font-bold" style="color:#FFFFFF">Clientes Atento</h1>
                     <p class="mt-1" style="color:rgba(255,255,255,0.7)"><?= $total ?> registros</p>
                 </div>
                 <a href="importar_clientes.php" class="btn-primary px-5 py-2.5 rounded-xl text-sm font-medium text-white flex items-center gap-2">

@@ -75,7 +75,7 @@ $paginaActual = basename($_SERVER['PHP_SELF']);
             <a href="<?= APP_URL ?>/pages/campanas.php"
                class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm <?= $paginaActual === 'campanas.php' ? 'active text-white' : 'text-white/70' ?>">
                 <i class="fas fa-comments w-5 text-center"></i>
-                Red Salud
+                Atento
             </a>
             <a href="<?= APP_URL ?>/pages/leads.php"
                class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm <?= $paginaActual === 'leads.php' ? 'active text-white' : 'text-white/70' ?>">
@@ -91,7 +91,7 @@ $paginaActual = basename($_SERVER['PHP_SELF']);
             <a href="<?= APP_URL ?>/pages/clientes.php"
                class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm <?= $paginaActual === 'clientes.php' ? 'active text-white' : 'text-white/70' ?>">
                 <i class="fas fa-address-book w-5 text-center"></i>
-                Clientes Red Salud
+                Clientes Atento
             </a>
             <a href="<?= APP_URL ?>/pages/no_contesta.php"
                class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm <?= $paginaActual === 'no_contesta.php' ? 'active text-white' : 'text-white/70' ?>">

@@ -73,14 +73,14 @@ $coloresCategoria = [
     'LLAMADO' => 'bg-purple-600 text-white',
 ];
 ?>
-<?php $titulo = 'Red Salud'; include __DIR__ . '/../includes/header.php'; ?>
+<?php $titulo = 'Atento'; include __DIR__ . '/../includes/header.php'; ?>
 <div class="flex min-h-screen">
     <?php include __DIR__ . '/../includes/sidebar.php'; ?>
     <main class="flex-1 ml-64 p-6 lg:p-8">
         <div class="max-w-7xl mx-auto">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
                 <div>
-                    <h1 class="text-2xl font-bold" style="color:#FFFFFF">Red Salud</h1>
+                    <h1 class="text-2xl font-bold" style="color:#FFFFFF">Atento</h1>
                     <p class="mt-1" style="color:rgba(255,255,255,0.7)">Conversaciones y contactos</p>
                 </div>
 
